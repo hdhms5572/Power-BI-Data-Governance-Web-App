@@ -1,0 +1,62 @@
+Dover Data & Analytics
+Summer Internship 2025 Plan
+Expectations
+•	As summer interns, you’re expected to actively contribute to building a streamlined web app using Python, BI tools, and Streamlit.
+•	You'll collaborate closely to translate data governance needs into actionable insights and intuitive visualizations.
+•	This experience will help you develop technical, analytical, and communication skills in a real-world BI environment.
+•	At the end of your internship, you will present your results to the Dover Data & Analytics team. More details will be shared during your internship. 
+Values and soft skills to be evaluated
+•	Curiosity & Initiative: Proactively ask questions, seek to understand the "why" behind tasks, and explore beyond assigned work.
+•	Collaboration & Communication: Work well with others, share ideas clearly, and ask for help or feedback when needed.
+•	Creativity & Problem-Solving: Propose new approaches or features and think critically when faced with challenges.
+Project Focus: Power BI Data Governance Web App
+Key Areas of Insight:
+•	Active vs. inactive users
+•	Most/least used reports and datasets
+•	Dataset refresh patterns and failures
+•	Orphaned or outdated content
+•	Usage trends by OpCo (Operations Companies)
+•	Admin/ownership gaps
+ 
+Week 1: Onboarding & Setup (June 9–13)
+Goals:
+•	Learn Streamlit basics: learn how to display titles, dataframes, and simple charts. 
+•	Get familiar with key datasets and governance concepts (e.g., usage metrics, metadata).
+•	Get familiar with Dover Power BI Data Governance data and relevant insights for our team. 
+Tasks (both interns):
+•	Install tools: Anaconda and Power BI Desktop. https://www.anaconda.com/download and https://www.microsoft.com/en-us/download/details.aspx?id=58494 
+•	Join meeting: Receive and study a sample Python script to make basic REST API calls (e.g., get users, workspaces)
+•	Read and implement the following documentation: https://medium.com/@chaitanyasirivuri/building-your-first-streamlit-app-a-step-by-step-tutorial-e058d5dfe5f4 
+
+Week 2: Data Exploration & API Integration (June 16–20)
+Goals:
+•	Build a prototype of a web app showing real business data. Not relevant to show insights yet. Make sure you are capable to build a Streamlit app with real time data. One page with a couple sample tables and graphs will be sufficient. 
+Tasks (both interns):
+•	Collaborate together to present one integrated app.
+Tasks for Haridass (App Dev):
+•	Create an initial app layout with sidebars and placeholders for charts/tables.
+•	Implement sample API calls in Streamlit (e.g., list all users, list of all workspaces, list of all semantic model, list of all reports, etc.).
+Tasks for Nandhitha (BI Tools):
+•	Begin cleaning and structuring API response data for BI use.
+•	First list of Power BI assets categorized as active/inactive.
+•	Create couple visualizations. 
+
+Week 3: Research and Integrations (June 23–27)
+Goals:
+•	Build a prototype that is capable to implement Row Level Security and embed a Power BI report.
+•	Research. Expectations are for you to come up with solutions and proposals. 
+Tasks for Haridass (App Dev):
+•	Create different pages for user activity, dataset usage, and most accessed reports.
+•	Explore and research Row Level Security on a Streamlit App. For example, users who use the app from OpCo ABC are not able to see OpCo XYZ data.
+Tasks for Nandhitha (BI Tools):
+•	Identify and calculate top used assets (reports/datasets) per OpCo.
+•	Explore and research how to embed a Power BI dashboard into a Streamlit App.
+
+Week 4: Efficiency and Replication (June 30–July 4)
+Goals
+•	A solid Streamlit applications is already built. Expectation is to present first app Demo to relevant team members and receive feedback.
+•	Prepare and present your first Demo.
+Tasks for Haridass (App Dev):
+•	Think about efficiency. How much time your API calls are taking. How much resources are you consuming. Optimize your app and show actions implemented.
+Tasks for Nandhitha (BI Tools):
+•	Replicate relevant PBI dashboard visualizations using Python visualizations. (Feel free to propose new ways of visualizations). 

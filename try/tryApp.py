@@ -23,11 +23,14 @@ def call_powerbi_api(url, token):
         st.error(f"API call failed: {response.status_code} - {response.text}")
         return None
 
+# Main logic
 if access_token and workspace_id and user_email:
+    # API Endpoints
     reports_url = f"https://api.powerbi.com/v1.0/myorg/groups/{workspace_id}/reports"
     datasets_url = f"https://api.powerbi.com/v1.0/myorg/groups/{workspace_id}/datasets"
     users_url = f"https://api.powerbi.com/v1.0/myorg/groups/{workspace_id}/users"
 
+    # Fetch data
     reports_data = call_powerbi_api(reports_url, access_token)
     datasets_data = call_powerbi_api(datasets_url, access_token)
     users_data = call_powerbi_api(users_url, access_token)
@@ -37,111 +40,109 @@ if access_token and workspace_id and user_email:
         datasets_df = pd.DataFrame(datasets_data["value"])
         users_df = pd.DataFrame(users_data["value"])
 
-        # Extract domain from logged-in user's email
+        # RLS Filtering: based on email domain
         domain = user_email.split('@')[-1]
+        filtered_datasets_df = datasets_df[datasets_df["configuredBy"].str.endswith(domain, na=False)]
+        allowed_dataset_ids = filtered_datasets_df["id"].tolist()
+        filtered_reports_df = reports_df[reports_df["datasetId"].isin(allowed_dataset_ids)]
+        filtered_users_df = users_df[users_df.get("emailAddress", "").str.endswith(domain, na=False)]
 
-        # Apply RLS: Filter datasets by domain of configuredBy
-        datasets_df = datasets_df[datasets_df["configuredBy"].str.endswith(domain, na=False)]
-
-        # Track allowed dataset IDs
-        allowed_dataset_ids = datasets_df["id"].tolist()
-
-        # Filter reports to allowed datasets only
-        reports_df = reports_df[reports_df["datasetId"].isin(allowed_dataset_ids)]
-
-        # Filter users to same domain
-        if "emailAddress" in users_df.columns:
-            users_df = users_df[users_df["emailAddress"].str.endswith(domain, na=False)]
-
-        # Clean columns
-        users_df = users_df.drop(columns=['identifier'], errors='ignore')
-        users_df.dropna(subset=['emailAddress'], inplace=True)
-        reports_df = reports_df.drop(columns=['subscriptions'], errors='ignore')
-        datasets_df = datasets_df.drop(columns=['upstreamDatasets'], errors='ignore')
-
-        # Dataset processing
-        datasets_df["createdDate"] = pd.to_datetime(datasets_df["createdDate"], errors="coerce").dt.tz_localize(None)
+        # Cleanup
+        filtered_users_df = filtered_users_df.drop(columns=['identifier'], errors='ignore')
+        filtered_users_df.dropna(subset=['emailAddress'], inplace=True)
+        filtered_datasets_df["createdDate"] = pd.to_datetime(filtered_datasets_df["createdDate"], errors="coerce").dt.tz_localize(None)
         cutoff = pd.Timestamp.now() - pd.DateOffset(months=12)
-        datasets_df["outdated"] = datasets_df["createdDate"] < cutoff
-        datasets_df["datasetStatus"] = datasets_df["isRefreshable"].apply(lambda x: "Active" if x else "Inactive")
+        filtered_datasets_df["outdated"] = filtered_datasets_df["createdDate"] < cutoff
+        filtered_datasets_df["datasetStatus"] = filtered_datasets_df["isRefreshable"].apply(lambda x: "Active" if x else "Inactive")
 
-        # Merge dataset status into reports
-        reports_df = reports_df.merge(
-            datasets_df[['id', 'datasetStatus', 'outdated']],
+        # Merge status into reports
+        filtered_reports_df = filtered_reports_df.merge(
+            filtered_datasets_df[['id', 'datasetStatus', 'outdated']],
             left_on="datasetId",
             right_on="id",
             how="left"
         )
 
+        # Report classification
         def classify_report(row):
             if row['datasetStatus'] == "Inactive":
                 return "Inactive"
             elif row['datasetStatus'] == "Active" and row["outdated"]:
                 return 'Active (Outdated)'
-            elif row['datasetStatus'] == "Active" and not row["outdated"]:
+            elif row['datasetStatus'] == "Active":
                 return 'Active'
-            else:
-                return 'Unknown'
+            return 'Unknown'
 
-        reports_df["reportstatus"] = reports_df.apply(classify_report, axis=1)
+        filtered_reports_df["reportstatus"] = filtered_reports_df.apply(classify_report, axis=1)
 
         # Display
-        st.title("🔒 Power BI Workspace Overview (Filtered by Domain)")
+        st.title("🔒 Power BI Workspace Overview (Restricted by Email Domain)")
 
         st.subheader("📄 Reports")
-        st.dataframe(reports_df)
+        st.dataframe(filtered_reports_df)
 
         st.subheader("📊 Datasets")
-        st.dataframe(datasets_df)
+        st.dataframe(filtered_datasets_df)
 
         st.subheader("👥 Users")
-        st.dataframe(users_df[["displayName", "emailAddress", "groupUserAccessRight", "principalType"]])
+        st.dataframe(filtered_users_df[["displayName", "emailAddress", "groupUserAccessRight", "principalType"]])
 
-        # Visualizations
-        st.subheader("📊 Report Status Count")
-        fig1, ax1 = plt.subplots()
-        sns.countplot(data=reports_df, x="reportstatus", palette="Set2", ax=ax1)
-        ax1.set_title("Number of Reports by Status")
-        ax1.set_xlabel("Status")
-        ax1.set_ylabel("Count")
-        st.pyplot(fig1)
+        # --- VISUALIZATIONS ---
+        sns.set_style("whitegrid")
 
-        st.subheader("🥧 Report Status Share")
-        fig2, ax2 = plt.subplots()
-        status_counts = reports_df["reportstatus"].value_counts()
-        ax2.pie(status_counts, labels=status_counts.index, autopct="%1.1f%%", colors=sns.color_palette("Set3"), startangle=140)
-        ax2.axis("equal")
-        st.pyplot(fig2)
+        # Layout in columns
+        col1, col2 = st.columns(2)
 
-        st.subheader("📚 Dataset Status vs Freshness")
-        grouped = datasets_df.groupby(["datasetStatus", "outdated"]).size().unstack(fill_value=0)
-        fig3, ax3 = plt.subplots()
-        grouped.plot(kind="bar", stacked=True, ax=ax3, colormap="coolwarm")
-        ax3.set_title("Dataset Activity by Freshness")
-        ax3.set_ylabel("Count")
-        ax3.set_xlabel("Status")
-        st.pyplot(fig3)
+        with col1:
+            st.subheader("📊 Report Status Count")
+            fig1, ax1 = plt.subplots(figsize=(6, 4))
+            sns.countplot(data=filtered_reports_df, x="reportstatus", palette={"Active": "green", "Inactive": "red", "Active (Outdated)": "orange"}, ax=ax1)
+            ax1.set_title("Reports by Status")
+            ax1.set_xlabel("Status")
+            ax1.set_ylabel("Count")
+            st.pyplot(fig1)
 
-        st.subheader("🌡️ Report and Dataset Status Heatmap")
-        cross = pd.crosstab(reports_df["reportstatus"], reports_df["datasetStatus"])
-        fig4, ax4 = plt.subplots()
-        sns.heatmap(cross, annot=True, fmt="d", cmap="YlGnBu", ax=ax4)
-        ax4.set_title("Report vs Dataset Status")
-        st.pyplot(fig4)
+        with col2:
+            st.subheader("🥧 Report Status Share")
+            fig2, ax2 = plt.subplots(figsize=(5, 5))
+            counts = filtered_reports_df["reportstatus"].value_counts()
+            ax2.pie(counts, labels=counts.index, autopct="%1.1f%%", colors=["green", "red", "orange"], startangle=150)
+            ax2.axis("equal")
+            st.pyplot(fig2)
+
+        col3, col4 = st.columns(2)
+
+        with col3:
+            st.subheader("📚 Dataset Status vs Freshness")
+            group = filtered_datasets_df.groupby(["datasetStatus", "outdated"]).size().unstack(fill_value=0)
+            fig3, ax3 = plt.subplots(figsize=(6, 4))
+            group.plot(kind="bar", stacked=True, ax=ax3, colormap="coolwarm")
+            ax3.set_title("Dataset Activity by Freshness")
+            ax3.set_ylabel("Count")
+            ax3.set_xlabel("Status")
+            st.pyplot(fig3)
+
+        with col4:
+            st.subheader("🌡️ Heatmap: Report vs Dataset Status")
+            cross = pd.crosstab(filtered_reports_df["reportstatus"], filtered_reports_df["datasetStatus"])
+            fig4, ax4 = plt.subplots(figsize=(6, 4))
+            sns.heatmap(cross, annot=True, fmt="d", cmap="Blues", ax=ax4)
+            ax4.set_title("Heatmap: Reports vs Dataset Status")
+            st.pyplot(fig4)
 
         st.subheader("📆 Dataset Creation Year Distribution")
-        datasets_df["createdYear"] = datasets_df["createdDate"].dt.year
-        fig5, ax5 = plt.subplots()
-        sns.histplot(datasets_df["createdYear"].dropna(), bins=range(2015, 2026), kde=False, ax=ax5, color="teal")
-        ax5.set_title("Datasets Created by Year")
+        fig5, ax5 = plt.subplots(figsize=(12, 3))
+        filtered_datasets_df["createdYear"] = filtered_datasets_df["createdDate"].dt.year
+        sns.histplot(filtered_datasets_df["createdYear"].dropna(), bins=range(2015, 2026), kde=False, ax=ax5, color="#4C72B0")
+        ax5.set_title("Dataset Created by Year")
         ax5.set_xlabel("Year")
         ax5.set_ylabel("Count")
         st.pyplot(fig5)
 
         st.subheader("🕒 Report Freshness Classification")
-        fig6, ax6 = plt.subplots()
-        sns.countplot(data=reports_df, x="reportstatus", hue="outdated", palette="pastel", ax=ax6)
-        ax6.set_title("Report Status by Dataset Freshness")
+        fig6, ax6 = plt.subplots(figsize=(8, 4))
+        sns.countplot(data=filtered_reports_df, x="reportstatus", hue="outdated", palette={True: "orange", False: "green"}, ax=ax6)
+        ax6.set_title("Report Status vs Dataset Freshness")
         ax6.set_xlabel("Report Status")
         ax6.set_ylabel("Count")
         st.pyplot(fig6)

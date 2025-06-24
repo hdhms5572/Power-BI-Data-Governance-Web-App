@@ -1,0 +1,74 @@
+{
+  "@odata.context": "https://wabi-us-north-central-e-primary-redirect.analysis.windows.net/v1.0/myorg/groups/d459e975-fd2e-4db5-a602-03f515215de2/$metadata#users",
+  "value": [
+    {
+      "emailAddress": "s-platform-dev-powerbi@dovercorp.com",
+      "groupUserAccessRight": "Admin",
+      "displayName": "platform- dev-powerbi",
+      "identifier": "s-platform-dev-powerbi@dovercorp.com",
+      "principalType": "User"
+    },
+    {
+      "emailAddress": "abharadwaj@dovercorp.com",
+      "groupUserAccessRight": "Admin",
+      "displayName": "Amith Bharadwaj",
+      "identifier": "abharadwaj@dovercorp.com",
+      "principalType": "User"
+    },
+    {
+      "groupUserAccessRight": "Admin",
+      "displayName": "powerbi-adf-refresh",
+      "identifier": "7e870c2f-22c0-4f81-b0fd-0738d7cbae29",
+      "principalType": "App"
+    },
+    {
+      "emailAddress": "lalfaromontoya@dovercorp.com",
+      "groupUserAccessRight": "Admin",
+      "displayName": "Luis Alfaro Montoya",
+      "identifier": "lalfaromontoya@dovercorp.com",
+      "principalType": "User"
+    },
+    {
+      "emailAddress": "gmaki@dovercorp.com",
+      "groupUserAccessRight": "Viewer",
+      "displayName": "Garrett Maki",
+      "identifier": "gmaki@dovercorp.com",
+      "principalType": "User"
+    },
+    {
+      "emailAddress": "svc-pbi-rest-api@dovercorp.com",
+      "groupUserAccessRight": "Admin",
+      "displayName": "svc-pbi-rest-api",
+      "identifier": "svc-pbi-rest-api@dovercorp.com",
+      "principalType": "User"
+    },
+    {
+      "emailAddress": "c-djoshi3@dovercorp.com",
+      "groupUserAccessRight": "Viewer",
+      "displayName": "Dhaval (Contractor) Joshi",
+      "identifier": "c-djoshi3@dovercorp.com",
+      "principalType": "User"
+    },
+    {
+      "emailAddress": "c-jvadhvana@dovercorp.com",
+      "groupUserAccessRight": "Contributor",
+      "displayName": "Jeet (Contractor) Vadhvana",
+      "identifier": "c-jvadhvana@dovercorp.com",
+      "principalType": "User"
+    },
+    {
+      "emailAddress": "c-hs@dovercorp.com",
+      "groupUserAccessRight": "Admin",
+      "displayName": "Haridass (Contractor) S",
+      "identifier": "c-hs@dovercorp.com",
+      "principalType": "User"
+    },
+    {
+      "emailAddress": "c-nk3@dovercorp.com",
+      "groupUserAccessRight": "Admin",
+      "displayName": "Nandhitha (Contractor) K",
+      "identifier": "c-nk3@dovercorp.com",
+      "principalType": "User"
+    }
+  ]
+}

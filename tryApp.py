@@ -2,23 +2,17 @@ import streamlit as st
 import requests
 import pandas as pd
 
-# Sidebar Inputs
+# Input fields in the Streamlit sidebar
 st.sidebar.title("Power BI API Settings")
 access_token = st.sidebar.text_input("Access Token", type="password")
 workspace_id = st.sidebar.text_input("Workspace ID", value="d459e975-fd2e-4db5-a602-03f515215de2")
+user_email = st.sidebar.text_input("Your Email Address")  # NEW: user input to simulate identity
 
-# Dummy function to map users to company (You can replace with actual mapping logic)
-def get_user_company(email):
-    company_map = {
-        "user1@abc.com": "ABC Corp",
-        "user2@xyz.com": "XYZ Ltd",
-        "admin@global.com": "Global Admin"
-    }
-    return company_map.get(email.lower(), None)
-
-# Power BI API Call
+# API call function
 def call_powerbi_api(url, token):
-    headers = {"Authorization": f"Bearer {token}"}
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         return response.json()
@@ -26,8 +20,8 @@ def call_powerbi_api(url, token):
         st.error(f"API call failed: {response.status_code} - {response.text}")
         return None
 
-# Start processing if token is provided
-if access_token and workspace_id:
+# Main logic
+if access_token and workspace_id and user_email:
     reports_url = f"https://api.powerbi.com/v1.0/myorg/groups/{workspace_id}/reports"
     datasets_url = f"https://api.powerbi.com/v1.0/myorg/groups/{workspace_id}/datasets"
     users_url = f"https://api.powerbi.com/v1.0/myorg/groups/{workspace_id}/users"
@@ -41,31 +35,36 @@ if access_token and workspace_id:
         datasets_df = pd.DataFrame(datasets_data["value"])
         users_df = pd.DataFrame(users_data["value"])
 
-        st.title("Power BI Workspace Overview")
+        # Extract domain from logged-in user's email
+        domain = user_email.split('@')[-1]
 
-        # --- 👤 Login User Selection for Demo Purpose ---
-        user_email = st.selectbox("Select User", users_df['emailAddress'].unique())
-        user_company = get_user_company(user_email)
+        # Apply RLS: Filter datasets by domain of configuredBy
+        filtered_datasets_df = datasets_df[datasets_df["configuredBy"].str.endswith(domain, na=False)]
 
-        if user_company:
-            st.success(f"Access granted for: {user_email} ({user_company})")
+        # Get dataset IDs user is allowed to see
+        allowed_dataset_ids = filtered_datasets_df["id"].tolist()
 
-            # --- 🔐 Apply RLS Filter Based on Company ---
-            # For demo, assume dataset/report names contain company name
-            filtered_reports_df = reports_df[reports_df['name'].str.contains(user_company, case=False)]
-            filtered_datasets_df = datasets_df[datasets_df['name'].str.contains(user_company, case=False)]
+        # Filter reports whose datasetId is in allowed list
+        filtered_reports_df = reports_df[reports_df["datasetId"].isin(allowed_dataset_ids)]
 
-            st.subheader("📄 Reports (Company Restricted)")
-            st.write(filtered_reports_df)
-
-            st.subheader("📊 Datasets (Company Restricted)")
-            st.write(filtered_datasets_df)
-
-            st.subheader("👥 All Workspace Users")
-            st.write(users_df)
+        # Filter users from same domain
+        if "emailAddress" in users_df.columns:
+            filtered_users_df = users_df[users_df["emailAddress"].str.endswith(domain, na=False)]
         else:
-            st.error("This user has no company mapping. Access Denied.")
+            filtered_users_df = users_df  # fallback if column missing
+
+        # Display filtered data
+        st.title("🔒 Power BI Workspace (Filtered by Domain)")
+
+        st.subheader("📄 Reports")
+        st.write(filtered_reports_df)
+
+        st.subheader("📊 Datasets")
+        st.write(filtered_datasets_df)
+
+        st.subheader("👥 Users")
+        st.write(filtered_users_df)
     else:
         st.warning("Could not fetch all data. Please check your token and workspace ID.")
 else:
-    st.info("Enter your access token and workspace ID in the sidebar to begin.")
+    st.info("Enter your access token, email, and workspace ID in the sidebar to begin.")

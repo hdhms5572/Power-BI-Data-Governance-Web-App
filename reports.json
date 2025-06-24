@@ -1,0 +1,89 @@
+{
+  "@odata.context": "https://wabi-us-north-central-e-primary-redirect.analysis.windows.net/v1.0/myorg/groups/d459e975-fd2e-4db5-a602-03f515215de2/$metadata#reports",
+  "value": [
+    {
+      "id": "09ff583b-e552-48af-8324-a8ea5380cd1f",
+      "reportType": "PowerBIReport",
+      "name": "Safety",
+      "webUrl": "https://app.powerbi.com/groups/d459e975-fd2e-4db5-a602-03f515215de2/reports/09ff583b-e552-48af-8324-a8ea5380cd1f",
+      "embedUrl": "https://app.powerbi.com/reportEmbed?reportId=09ff583b-e552-48af-8324-a8ea5380cd1f&groupId=d459e975-fd2e-4db5-a602-03f515215de2&w=2&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "isFromPbix": true,
+      "isOwnedByMe": true,
+      "datasetId": "8f071da9-900b-408b-81f9-80b1fd420a30",
+      "datasetWorkspaceId": "d459e975-fd2e-4db5-a602-03f515215de2",
+      "users": [],
+      "subscriptions": [],
+      "reportFlags": 0
+    },
+    {
+      "id": "2ad12785-8b97-4e53-bb3a-ed7351a28687",
+      "reportType": "PowerBIReport",
+      "name": "Quality",
+      "webUrl": "https://app.powerbi.com/groups/d459e975-fd2e-4db5-a602-03f515215de2/reports/2ad12785-8b97-4e53-bb3a-ed7351a28687",
+      "embedUrl": "https://app.powerbi.com/reportEmbed?reportId=2ad12785-8b97-4e53-bb3a-ed7351a28687&groupId=d459e975-fd2e-4db5-a602-03f515215de2&w=2&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "isFromPbix": true,
+      "isOwnedByMe": true,
+      "datasetId": "f202e625-8b91-43e3-99e8-104bdd5e179a",
+      "datasetWorkspaceId": "d459e975-fd2e-4db5-a602-03f515215de2",
+      "users": [],
+      "subscriptions": [],
+      "reportFlags": 0
+    },
+    {
+      "id": "38e909ae-8077-4617-a9f5-4506e5480a21",
+      "reportType": "PowerBIReport",
+      "name": "Daily Metrics",
+      "webUrl": "https://app.powerbi.com/groups/d459e975-fd2e-4db5-a602-03f515215de2/reports/38e909ae-8077-4617-a9f5-4506e5480a21",
+      "embedUrl": "https://app.powerbi.com/reportEmbed?reportId=38e909ae-8077-4617-a9f5-4506e5480a21&groupId=d459e975-fd2e-4db5-a602-03f515215de2&w=2&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "isFromPbix": true,
+      "isOwnedByMe": true,
+      "datasetId": "3b9245ab-55de-42f7-b147-23e421b4b5ff",
+      "datasetWorkspaceId": "d459e975-fd2e-4db5-a602-03f515215de2",
+      "users": [],
+      "subscriptions": [],
+      "reportFlags": 0
+    },
+    {
+      "id": "e6cd6b55-fbac-4011-b40b-c43fabb4c7b0",
+      "reportType": "PowerBIReport",
+      "name": "Delivery",
+      "webUrl": "https://app.powerbi.com/groups/d459e975-fd2e-4db5-a602-03f515215de2/reports/e6cd6b55-fbac-4011-b40b-c43fabb4c7b0",
+      "embedUrl": "https://app.powerbi.com/reportEmbed?reportId=e6cd6b55-fbac-4011-b40b-c43fabb4c7b0&groupId=d459e975-fd2e-4db5-a602-03f515215de2&w=2&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "isFromPbix": true,
+      "isOwnedByMe": true,
+      "datasetId": "1c5ce65f-57a9-4503-8060-92f2154ae4c2",
+      "datasetWorkspaceId": "d459e975-fd2e-4db5-a602-03f515215de2",
+      "users": [],
+      "subscriptions": [],
+      "reportFlags": 0
+    },
+    {
+      "id": "a32a4e04-d07b-418b-9556-22772239aacd",
+      "reportType": "PowerBIReport",
+      "name": "Productivity",
+      "webUrl": "https://app.powerbi.com/groups/d459e975-fd2e-4db5-a602-03f515215de2/reports/a32a4e04-d07b-418b-9556-22772239aacd",
+      "embedUrl": "https://app.powerbi.com/reportEmbed?reportId=a32a4e04-d07b-418b-9556-22772239aacd&groupId=d459e975-fd2e-4db5-a602-03f515215de2&w=2&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "isFromPbix": true,
+      "isOwnedByMe": true,
+      "datasetId": "ed672e06-53a1-4f53-8450-8f2f46658c26",
+      "datasetWorkspaceId": "d459e975-fd2e-4db5-a602-03f515215de2",
+      "users": [],
+      "subscriptions": [],
+      "reportFlags": 0
+    },
+    {
+      "id": "24692671-5a77-40a1-8762-c7d59cb3be9b",
+      "reportType": "PowerBIReport",
+      "name": "Inventory",
+      "webUrl": "https://app.powerbi.com/groups/d459e975-fd2e-4db5-a602-03f515215de2/reports/24692671-5a77-40a1-8762-c7d59cb3be9b",
+      "embedUrl": "https://app.powerbi.com/reportEmbed?reportId=24692671-5a77-40a1-8762-c7d59cb3be9b&groupId=d459e975-fd2e-4db5-a602-03f515215de2&w=2&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "isFromPbix": true,
+      "isOwnedByMe": true,
+      "datasetId": "d4c58d64-0d5a-410d-a2d8-6951c9989527",
+      "datasetWorkspaceId": "d459e975-fd2e-4db5-a602-03f515215de2",
+      "users": [],
+      "subscriptions": [],
+      "reportFlags": 0
+    }
+  ]
+}

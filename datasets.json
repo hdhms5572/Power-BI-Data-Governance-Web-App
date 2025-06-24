@@ -1,0 +1,131 @@
+{
+  "@odata.context": "https://wabi-us-north-central-e-primary-redirect.analysis.windows.net/v1.0/myorg/groups/d459e975-fd2e-4db5-a602-03f515215de2/$metadata#datasets",
+  "value": [
+    {
+      "id": "8f071da9-900b-408b-81f9-80b1fd420a30",
+      "name": "Safety",
+      "webUrl": "https://app.powerbi.com/groups/d459e975-fd2e-4db5-a602-03f515215de2/datasets/8f071da9-900b-408b-81f9-80b1fd420a30",
+      "addRowsAPIEnabled": false,
+      "configuredBy": "abharadwaj@dovercorp.com",
+      "isRefreshable": true,
+      "isEffectiveIdentityRequired": false,
+      "isEffectiveIdentityRolesRequired": false,
+      "isOnPremGatewayRequired": false,
+      "targetStorageMode": "Abf",
+      "createdDate": "2025-03-19T08:15:41.627Z",
+      "createReportEmbedURL": "https://app.powerbi.com/reportEmbed?config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "qnaEmbedURL": "https://app.powerbi.com/qnaEmbed?config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "upstreamDatasets": [],
+      "users": [],
+      "queryScaleOutSettings": {
+        "autoSyncReadOnlyReplicas": true,
+        "maxReadOnlyReplicas": 0
+      }
+    },
+    {
+      "id": "f202e625-8b91-43e3-99e8-104bdd5e179a",
+      "name": "Quality",
+      "webUrl": "https://app.powerbi.com/groups/d459e975-fd2e-4db5-a602-03f515215de2/datasets/f202e625-8b91-43e3-99e8-104bdd5e179a",
+      "addRowsAPIEnabled": false,
+      "configuredBy": "abharadwaj@dovercorp.com",
+      "isRefreshable": true,
+      "isEffectiveIdentityRequired": false,
+      "isEffectiveIdentityRolesRequired": false,
+      "isOnPremGatewayRequired": false,
+      "targetStorageMode": "Abf",
+      "createdDate": "2025-03-19T08:18:28.377Z",
+      "createReportEmbedURL": "https://app.powerbi.com/reportEmbed?config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "qnaEmbedURL": "https://app.powerbi.com/qnaEmbed?config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "upstreamDatasets": [],
+      "users": [],
+      "queryScaleOutSettings": {
+        "autoSyncReadOnlyReplicas": true,
+        "maxReadOnlyReplicas": 0
+      }
+    },
+    {
+      "id": "3b9245ab-55de-42f7-b147-23e421b4b5ff",
+      "name": "Daily Metrics",
+      "webUrl": "https://app.powerbi.com/groups/d459e975-fd2e-4db5-a602-03f515215de2/datasets/3b9245ab-55de-42f7-b147-23e421b4b5ff",
+      "addRowsAPIEnabled": false,
+      "configuredBy": "abharadwaj@dovercorp.com",
+      "isRefreshable": true,
+      "isEffectiveIdentityRequired": false,
+      "isEffectiveIdentityRolesRequired": false,
+      "isOnPremGatewayRequired": false,
+      "targetStorageMode": "Abf",
+      "createdDate": "2025-03-19T08:35:32.467Z",
+      "createReportEmbedURL": "https://app.powerbi.com/reportEmbed?config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "qnaEmbedURL": "https://app.powerbi.com/qnaEmbed?config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "upstreamDatasets": [],
+      "users": [],
+      "queryScaleOutSettings": {
+        "autoSyncReadOnlyReplicas": true,
+        "maxReadOnlyReplicas": 0
+      }
+    },
+    {
+      "id": "1c5ce65f-57a9-4503-8060-92f2154ae4c2",
+      "name": "Delivery",
+      "webUrl": "https://app.powerbi.com/groups/d459e975-fd2e-4db5-a602-03f515215de2/datasets/1c5ce65f-57a9-4503-8060-92f2154ae4c2",
+      "addRowsAPIEnabled": false,
+      "configuredBy": "abharadwaj@dovercorp.com",
+      "isRefreshable": true,
+      "isEffectiveIdentityRequired": false,
+      "isEffectiveIdentityRolesRequired": false,
+      "isOnPremGatewayRequired": false,
+      "targetStorageMode": "Abf",
+      "createdDate": "2025-04-03T21:19:34.687Z",
+      "createReportEmbedURL": "https://app.powerbi.com/reportEmbed?config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "qnaEmbedURL": "https://app.powerbi.com/qnaEmbed?config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "upstreamDatasets": [],
+      "users": [],
+      "queryScaleOutSettings": {
+        "autoSyncReadOnlyReplicas": true,
+        "maxReadOnlyReplicas": 0
+      }
+    },
+    {
+      "id": "ed672e06-53a1-4f53-8450-8f2f46658c26",
+      "name": "Productivity",
+      "webUrl": "https://app.powerbi.com/groups/d459e975-fd2e-4db5-a602-03f515215de2/datasets/ed672e06-53a1-4f53-8450-8f2f46658c26",
+      "addRowsAPIEnabled": false,
+      "configuredBy": "abharadwaj@dovercorp.com",
+      "isRefreshable": true,
+      "isEffectiveIdentityRequired": false,
+      "isEffectiveIdentityRolesRequired": false,
+      "isOnPremGatewayRequired": false,
+      "targetStorageMode": "Abf",
+      "createdDate": "2025-04-25T12:45:55.803Z",
+      "createReportEmbedURL": "https://app.powerbi.com/reportEmbed?config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "qnaEmbedURL": "https://app.powerbi.com/qnaEmbed?config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "upstreamDatasets": [],
+      "users": [],
+      "queryScaleOutSettings": {
+        "autoSyncReadOnlyReplicas": true,
+        "maxReadOnlyReplicas": 0
+      }
+    },
+    {
+      "id": "d4c58d64-0d5a-410d-a2d8-6951c9989527",
+      "name": "Inventory",
+      "webUrl": "https://app.powerbi.com/groups/d459e975-fd2e-4db5-a602-03f515215de2/datasets/d4c58d64-0d5a-410d-a2d8-6951c9989527",
+      "addRowsAPIEnabled": false,
+      "configuredBy": "abharadwaj@dovercorp.com",
+      "isRefreshable": true,
+      "isEffectiveIdentityRequired": false,
+      "isEffectiveIdentityRolesRequired": false,
+      "isOnPremGatewayRequired": false,
+      "targetStorageMode": "Abf",
+      "createdDate": "2025-05-27T09:04:08.93Z",
+      "createReportEmbedURL": "https://app.powerbi.com/reportEmbed?config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "qnaEmbedURL": "https://app.powerbi.com/qnaEmbed?config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLU5PUlRILUNFTlRSQUwtRS1QUklNQVJZLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
+      "upstreamDatasets": [],
+      "users": [],
+      "queryScaleOutSettings": {
+        "autoSyncReadOnlyReplicas": true,
+        "maxReadOnlyReplicas": 0
+      }
+    }
+  ]
+}

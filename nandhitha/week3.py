@@ -108,10 +108,10 @@ if access_token and workspace_id:
 
         # Get only the most recent access per ArtifactId
         #Dropping Duplicate records based on Artifact ID
-        latest_access = activity_df.sort_values("Activity time").drop_duplicates(subset="ArtifactId", keep="last")
+        #latest_access = activity_df.sort_values("Activity time").drop_duplicates(subset="ArtifactId", keep="last")
         # Display that table
-        st.subheader("📌 Most Recently Accessed Artifacts based on artifactid")
-        st.dataframe(latest_access)
+       # st.subheader("📌 Most Recently Accessed Artifacts based on artifactid")
+        #st.dataframe(latest_access)
 
         #Dropping Duplicate records based on Artifact Name
         latest_access1 = activity_df.sort_values("Activity time").drop_duplicates(subset="Artifact Name", keep="last")

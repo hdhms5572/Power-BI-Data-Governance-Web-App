@@ -108,10 +108,10 @@ if access_token and workspace_id:
 
         # Get only the most recent access per ArtifactId
         #Dropping Duplicate records based on Artifact ID
-        #latest_access = activity_df.sort_values("Activity time").drop_duplicates(subset="ArtifactId", keep="last")
+        latest_access = activity_df.sort_values("Activity time").drop_duplicates(subset="ArtifactId", keep="last")
         # Display that table
-       # st.subheader("📌 Most Recently Accessed Artifacts based on artifactid")
-        #st.dataframe(latest_access)
+        st.subheader("📌 Most Recently Accessed Artifacts based on artifactid")
+        st.dataframe(latest_access)
 
         #Dropping Duplicate records based on Artifact Name
         latest_access1 = activity_df.sort_values("Activity time").drop_duplicates(subset="Artifact Name", keep="last")
@@ -136,31 +136,7 @@ if access_token and workspace_id:
         latest_access1["ArtifactType"] = latest_access1["ArtifactId"].apply(classify_artifact_type)
 
         # Merge report status where applicable
-        
-        latest_access1 = latest_access1.merge(
-            reports_df[["id", "reportstatus"]],
-            left_on="ArtifactId",
-            right_on="id",
-            how="left"
-        ).rename(columns={"reportstatus": "ReportStatus"}).drop(columns=["id"])
-
-        # Merge dataset status where applicable
-        latest_access1 = latest_access1.merge(
-            datasets_df[["id", "datasetStatus"]],
-            left_on="ArtifactId",
-            right_on="id",
-            how="left"
-        ).rename(columns={"datasetStatus": "DatasetStatus"}).drop(columns=["id"])
-
-        def resolve_status(row):
-            if row["ArtifactType"] == "Report":
-                return row["ReportStatus"]
-            elif row["ArtifactType"] == "Dataset":
-                return row["DatasetStatus"]
-            else:
-                return "Unknown"
-
-        latest_access1["ArtifactStatus"] = latest_access1.apply(resolve_status, axis=1)
+    
 
         st.dataframe(latest_access1)
         

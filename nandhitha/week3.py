@@ -105,14 +105,6 @@ if access_token and workspace_id:
         else:
             st.error("❌ 'Activity time' column not found. Please verify the file.")
 
-
-        # Get only the most recent access per ArtifactId
-        #Dropping Duplicate records based on Artifact ID
-        latest_access = activity_df.sort_values("Activity time").drop_duplicates(subset="ArtifactId", keep="last")
-        # Display that table
-        st.subheader("📌 Most Recently Accessed Artifacts based on artifactid")
-        st.dataframe(latest_access)
-
         #Dropping Duplicate records based on Artifact Name
         latest_access1 = activity_df.sort_values("Activity time").drop_duplicates(subset="Artifact Name", keep="last")
         latest_access1.rename(columns={"Activity time": "Latest Activity"}, inplace=True)
@@ -120,10 +112,8 @@ if access_token and workspace_id:
        
         # Display that table
         st.subheader("📌 Most Recently Accessed Artifacts based on artifactName")
-        st.dataframe(latest_access1)
         report_ids = set(reports_df["id"])
         dataset_ids = set(datasets_df["id"])
-        
         #Classify Artifact Type based on its ID
         def classify_artifact_type(artifact_id):
             if artifact_id in report_ids:
@@ -135,29 +125,29 @@ if access_token and workspace_id:
 
         latest_access1["ArtifactType"] = latest_access1["ArtifactId"].apply(classify_artifact_type)
 
-        # Merge report status where applicable
-    
-
+        #st.subheader("📌 Most Recently Accessed Artifacts based on artifactName")
         st.dataframe(latest_access1)
-        
-
         active_user_emails = activity_df["User email"].dropna().unique()
         
         #Classifying Active Users
         users_df["activityStatus"] = users_df["emailAddress"].apply(lambda x: "Active" if x in active_user_emails else "Inactive")
+
+        st.subheader("📌Displaying Users Status")
         st.dataframe(users_df)
 
         #Classifying Report Status
+
         # Convert artifact IDs to a set for faster lookup
         active_artifact_ids = set(latest_access1["ArtifactId"])
+
         # Define a function to check if either ID or dataset ID is in the artifact list
+
         dataset_to_report = reports_df[["datasetId", "id"]].dropna().drop_duplicates()
         dataset_to_report_dict = dict(zip(dataset_to_report["datasetId"], dataset_to_report["id"]))
-
+        #Report Status
         def get_status(row):
             return "Active" if row["id"] in active_artifact_ids or row["datasetId"] in active_artifact_ids else "Inactive"
-        #def get_da_status(row):
-           # return "Active" if row["id"] in active_artifact_ids else "Inactive"
+        #Dataset Status
         def get_da_status(row):
             dataset_id = row["id"]
             related_report_id = dataset_to_report_dict.get(dataset_id)
@@ -170,6 +160,7 @@ if access_token and workspace_id:
         # Apply the function row-wise
         reports_df["activityStatus2"] = reports_df.apply(get_status, axis=1)
         datasets_df["activityStatus2"] = datasets_df.apply(get_da_status, axis=1)
+
         # Prepare a lookup dictionary: ArtifactId → Latest Activity
         artifact_activity_map = dict(zip(latest_access1["ArtifactId"], latest_access1["Latest Activity"]))
 
@@ -186,14 +177,6 @@ if access_token and workspace_id:
 
         reports_df["Latest Artifact Activity"] = reports_df.apply(get_report_activity, axis=1)
 
-        # ------------------ Datasets DF ------------------
-
-        #def get_dataset_activity(row):
-            # Just check dataset ID
-           # return artifact_activity_map.get(row["id"])
-        # Step 1: Build a lookup table for datasetId → reportId
-       
-        # Step 2: Define fallback activity lookup function
         def get_dataset_activity(row):
             dataset_id = row["id"]
             # First, try using the dataset ID
@@ -209,10 +192,22 @@ if access_token and workspace_id:
 
         datasets_df["Latest Artifact Activity"] = datasets_df.apply(get_dataset_activity, axis=1)
 
-
-        # Display the updated DataFrame
+        st.subheader("📌 Reports with Latest Activity time based on Report ID and Dataset id")
         st.dataframe(reports_df)
-        st.dataframe(datasets_df)                
+        st.subheader("📌 Dataset with Latest Activity time based on Dataset ID and Report id")
+        st.dataframe(datasets_df)     
+
+        #Visualisations for Active users and Inactive Users 
+        st.subheader("📊 Report Status Count")
+        fig1, ax1 = plt.subplots(figsize=(6, 4))
+        sns.countplot(data=users_df, x="activityStatus", palette={"Active": "green", "Inactive": "red", "Active (Outdated)": "orange"}, ax=ax1)
+        ax1.set_title("Reports by Status")
+        ax1.set_xlabel("Status")
+        ax1.set_ylabel("Count")
+        st.pyplot(fig1)   
+
+
+                    
 
     else:
         st.warning("❌ Could not fetch all data. Please check your token and workspace ID.")

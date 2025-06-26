@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import calendar
 
 # Streamlit config
 st.set_page_config(page_title="Power BI Workspace Overview", layout="wide")
@@ -129,7 +130,7 @@ if access_token and workspace_id:
         st.dataframe(latest_access1)
         active_user_emails = activity_df["User email"].dropna().unique()
         
-        #Classifying Active Users
+        #Classifying Active Users based on Activity table
         users_df["activityStatus"] = users_df["emailAddress"].apply(lambda x: "Active" if x in active_user_emails else "Inactive")
 
         st.subheader("📌Displaying Users Status")
@@ -176,6 +177,8 @@ if access_token and workspace_id:
 
 
         reports_df["Latest Artifact Activity"] = reports_df.apply(get_report_activity, axis=1)
+       
+        #Dataset----DF
 
         def get_dataset_activity(row):
             dataset_id = row["id"]
@@ -206,8 +209,48 @@ if access_token and workspace_id:
         ax1.set_ylabel("Count")
         st.pyplot(fig1)   
 
+        # Group by user and artifact name to count access frequency
+        heatmap_data = activity_df.groupby(["User email", "Artifact Name"]).size().unstack(fill_value=0)
 
-                    
+        # Create the heatmap
+        st.subheader("📊 Artifact Access Heatmap (Users × Artifact Names)")
+        fig, ax = plt.subplots(figsize=(12, 6))
+        sns.heatmap(heatmap_data, cmap="YlGnBu", linewidths=0.5)
+        st.pyplot(fig)
+
+        top_reports = activity_df["Artifact Name"].value_counts().head(10).reset_index()
+        top_reports.columns = ["Report Name", "Access Count"]
+
+        st.subheader("📈 Top 10 Most Accessed Reports")
+        fig, ax = plt.subplots()
+        sns.barplot(data=top_reports, x="Access Count", y="Report Name", palette="crest", ax=ax)
+        st.pyplot(fig)
+
+        # Convert activity time to datetime
+        activity_df["Activity time"] = pd.to_datetime(activity_df["Activity time"], errors='coerce')
+
+        # Create a new column for Year-Month
+        activity_df["YearMonth"] = activity_df["Activity time"].dt.to_period("M").astype(str)
+
+        # Group by Year-Month and count activity
+        monthly_usage = activity_df.groupby("YearMonth").size().reset_index(name="Access Count")
+
+        # Sort by YearMonth chronologically
+        monthly_usage["YearMonth"] = pd.to_datetime(monthly_usage["YearMonth"])
+        monthly_usage = monthly_usage.sort_values("YearMonth")
+
+        # Plot
+        st.subheader("📊 Monthly Usage Trend (All Artifacts)")
+        fig, ax = plt.subplots()
+        sns.barplot(data=monthly_usage, x="YearMonth", y="Access Count", color="skyblue", ax=ax)
+        ax.set_ylabel("Access Count")
+        ax.set_xlabel("Month")
+        ax.set_xticklabels([d.strftime('%b %Y') for d in monthly_usage["YearMonth"]], rotation=45)
+        st.pyplot(fig)
+
+
+
+
 
     else:
         st.warning("❌ Could not fetch all data. Please check your token and workspace ID.")

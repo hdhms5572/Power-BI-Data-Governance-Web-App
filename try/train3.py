@@ -114,127 +114,128 @@ if access_token and workspace_id and user_email:
             # ------------------ Page Setup ------------------
             st.set_page_config(page_title="🔍 Activity Log Insights", layout="wide")
             sns.set_theme(style="whitegrid")  # Seaborn theme
-            plt.rcParams["figure.figsize"] = (10, 5)  # Default plot size
-
+            plt.rcParams["figure.figsize"] = (8, 4)  # Smaller default plot size
+            
             # ------------------ Load Data ------------------
             st.title("🔍 Activity Log Insights")
-
+            
             activity_df = pd.read_csv(r"C:\\Users\\10094790\\Downloads\\data.csv")
             st.dataframe(activity_df)
-
+            
             # ------------------ Preprocessing ------------------
             activity_df["Activity time"] = pd.to_datetime(activity_df["Activity time"], errors="coerce")
             activity_df = activity_df.sort_values("Activity time")
-
+            
             latest_access1 = activity_df.drop_duplicates(subset="Artifact Name", keep="last")
             latest_access1.rename(columns={"Activity time": "Latest Activity"}, inplace=True)
-
+            
             # ------------------ Artifact Type Classification ------------------
             report_ids = set(reports_df["id"])
             dataset_ids = set(datasets_df["id"])
-
+            
             def classify_artifact_type(artifact_id):
                 if artifact_id in report_ids:
                     return "Report"
                 elif artifact_id in dataset_ids:
                     return "Dataset"
                 return "Unknown"
-
+            
             latest_access1["ArtifactType"] = latest_access1["ArtifactId"].apply(classify_artifact_type)
-
+            
             # ------------------ Recently Accessed Artifacts ------------------
             st.subheader("📌 Most Recently Accessed Artifacts")
             st.dataframe(latest_access1)
-
+            
             # ------------------ User Activity Status ------------------
             active_user_emails = activity_df["User email"].dropna().unique()
             users_df["activityStatus"] = users_df["emailAddress"].apply(
                 lambda x: "Active" if x in active_user_emails else "Inactive"
             )
-
+            
             st.subheader("📌 Users Activity Status")
             st.dataframe(users_df)
-
+            
             # ------------------ Artifact Activity Status ------------------
             active_artifact_ids = set(latest_access1["ArtifactId"])
             dataset_to_report_dict = dict(zip(reports_df["datasetId"], reports_df["id"]))
-
+            
             reports_df["activityStatus2"] = reports_df.apply(
                 lambda row: "Active" if row["id"] in active_artifact_ids or row["datasetId"] in active_artifact_ids else "Inactive",
                 axis=1
             )
-
+            
             datasets_df["activityStatus2"] = datasets_df.apply(
                 lambda row: "Active" if row["id"] in active_artifact_ids or dataset_to_report_dict.get(row["id"]) in active_artifact_ids else "Inactive",
                 axis=1
             )
-
+            
             # ------------------ Latest Artifact Activity ------------------
             artifact_activity_map = dict(zip(latest_access1["ArtifactId"], latest_access1["Latest Activity"]))
-
+            
             reports_df["Latest Artifact Activity"] = reports_df.apply(
                 lambda row: artifact_activity_map.get(row["id"]) or artifact_activity_map.get(row["datasetId"]),
                 axis=1
             )
-
+            
             datasets_df["Latest Artifact Activity"] = datasets_df.apply(
                 lambda row: artifact_activity_map.get(row["id"]) or artifact_activity_map.get(dataset_to_report_dict.get(row["id"])),
                 axis=1
             )
-
+            
             st.subheader("📌 Reports Latest Activity")
             st.dataframe(reports_df)
-
+            
             st.subheader("📌 Datasets Latest Activity")
             st.dataframe(datasets_df)
-
+            
             # ------------------ Charts ------------------
-
-            # 📊 User Status Count
-            st.subheader("📊 User Status Count")
-            with st.container():
-                fig, ax = plt.subplots()
+            
+            # 📊 User Status Count and Artifact Heatmap (side-by-side)
+            st.subheader("📊 User Insights")
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("**User Activity Status**")
+                fig, ax = plt.subplots(figsize=(6, 3))
                 sns.countplot(data=users_df, x="activityStatus", palette={"Active": "green", "Inactive": "red"}, ax=ax)
-                ax.set_title("User Activity Status")
-                plt.tight_layout()
+                ax.set_title("User Activity")
                 st.pyplot(fig)
-
-            # 📊 Artifact Access Heatmap
-            st.subheader("📊 Artifact Access Heatmap")
-            heatmap_data = activity_df.groupby(["User email", "Artifact Name"]).size().unstack(fill_value=0)
-            with st.container():
-                fig, ax = plt.subplots(figsize=(12, 6))
-                sns.heatmap(heatmap_data, cmap="YlGnBu", linewidths=0.5, ax=ax)
-                ax.set_title("Heatmap of Artifact Access")
-                plt.tight_layout()
+            
+            with col2:
+                st.markdown("**Artifact Access Heatmap**")
+                heatmap_data = activity_df.groupby(["User email", "Artifact Name"]).size().unstack(fill_value=0)
+                fig, ax = plt.subplots(figsize=(6, 3))
+                sns.heatmap(heatmap_data, cmap="YlGnBu", linewidths=0.3, ax=ax, cbar=False)
+                ax.set_title("Access Heatmap")
                 st.pyplot(fig)
-
-            # 📈 Top 10 Accessed Reports
-            top_reports = activity_df["Artifact Name"].value_counts().head(10).reset_index()
-            top_reports.columns = ["Report Name", "Access Count"]
-
-            st.subheader("📈 Top 10 Accessed Reports")
-            with st.container():
-                fig, ax = plt.subplots()
+            
+            # 📈 Top Accessed Reports and Monthly Trend (side-by-side)
+            st.subheader("📈 Usage Trends")
+            col3, col4 = st.columns(2)
+            
+            with col3:
+                st.markdown("**Top 10 Accessed Reports**")
+                top_reports = activity_df["Artifact Name"].value_counts().head(10).reset_index()
+                top_reports.columns = ["Report Name", "Access Count"]
+            
+                fig, ax = plt.subplots(figsize=(6, 3))
                 sns.barplot(data=top_reports, x="Access Count", y="Report Name", palette="crest", ax=ax)
-                ax.set_title("Top 10 Accessed Reports")
-                plt.tight_layout()
+                ax.set_title("Top Reports")
                 st.pyplot(fig)
-
-            # 📊 Monthly Usage Trend
-            activity_df["YearMonth"] = activity_df["Activity time"].dt.to_period("M").astype(str)
-            monthly_usage = activity_df.groupby("YearMonth").size().reset_index(name="Access Count")
-            monthly_usage["YearMonth"] = pd.to_datetime(monthly_usage["YearMonth"])
-            monthly_usage = monthly_usage.sort_values("YearMonth")
-
-            st.subheader("📊 Monthly Usage Trend")
-            with st.container():
-                fig, ax = plt.subplots()
+            
+            with col4:
+                st.markdown("**Monthly Usage Trend**")
+                activity_df["YearMonth"] = activity_df["Activity time"].dt.to_period("M").astype(str)
+                monthly_usage = activity_df.groupby("YearMonth").size().reset_index(name="Access Count")
+                monthly_usage["YearMonth"] = pd.to_datetime(monthly_usage["YearMonth"])
+                monthly_usage = monthly_usage.sort_values("YearMonth")
+            
+                fig, ax = plt.subplots(figsize=(6, 3))
                 sns.barplot(data=monthly_usage, x="YearMonth", y="Access Count", color="skyblue", ax=ax)
-                ax.set_title("Monthly Usage Trend")
+                ax.set_title("Monthly Usage")
                 ax.set_xticklabels([d.strftime('%b %Y') for d in monthly_usage["YearMonth"]], rotation=45)
-                plt.tight_layout()
                 st.pyplot(fig)
+
 
     else:
         st.warning("❌ Could not fetch all data. Please check your token and workspace ID.")

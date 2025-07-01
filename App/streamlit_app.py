@@ -1,4 +1,3 @@
-# --- 0_Home.py ---
 import streamlit as st
 import requests
 
@@ -7,9 +6,13 @@ st.title("📊 Power BI Governance Dashboard")
 
 # Workspace options (replace with actual names and IDs from API if needed)
 workspace_options = {
-    "Sales Team Workspace": "1b602ded-5fca-42ed-a4fc-583fdac83a64",
-    "Marketing Workspace": "2a8c5e12-5b4b-4d13-824c-2c963f4dc2ff",
-    "Finance Workspace": "3d6f3411-6a33-4abc-91d0-8d8f7fe0e1aa"
+    "D&A Data Governance": "cf7a33dd-365c-465d-b3a6-89cd2a3ef08c",
+    "D&A SCDP": "dc5090e8-0007-4391-9ce4-2966879e575e",
+    "D&A SQDIP - DEV": "d459e975-fd2e-4db5-a602-03f515215de2",
+    "D&A TEST   ": "1b602ded-5fca-42ed-a4fc-583fdac83a64",
+    "Maag-BI-Dev": "371cc649-ec08-4e28-abd7-535945fd401d",
+    "OPW_BI_REPORTING_UAT": "023c2768-9f9d-4b5d-b360-548df84ec240",
+    "PSG HYDRO UAT": "f5e057fd-df7b-4ea0-b9f8-d8fda3e4aafe"
 }
 
 st.sidebar.title("🔐 Power BI API Settings")
@@ -46,4 +49,3 @@ st.session_state.workspace_id = available_workspaces[selected_workspace_name]
 # Show selected workspace ID
 st.sidebar.markdown(f"**Workspace ID:** `{st.session_state.workspace_id}`")
 st.success("✅ Credentials and matching workspace loaded. Use the sidebar to navigate between pages.")
-

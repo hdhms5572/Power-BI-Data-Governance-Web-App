@@ -11,7 +11,7 @@ st.set_page_config(page_title="Power BI Workspace Overview", layout="wide")
 # Sidebar for credentials
 st.sidebar.title("🔐 Power BI API Settings")
 access_token = st.sidebar.text_input("Access Token", type="password")
-# workspace_id = st.sidebar.text_input("Workspace ID", value="cf7a33dd-365c-465d-b3a6-89cd2a3ef08c")
+# workspace_id = st.sidebar.text_input("Workspace ID", value="cf7a33dd-365c-465d-b3a6-89cd2a3ef08c") 
 workspace_id = st.sidebar.text_input("Workspace ID", value="1b602ded-5fca-42ed-a4fc-583fdac83a64")
 user_email = st.sidebar.text_input("Your Email Address")
 page = st.selectbox("What are looking for...", ("Reports", "Datasets", "Users", "Activity Analysis"), index=None, placeholder="Please Select")
@@ -42,7 +42,7 @@ if access_token and workspace_id and user_email:
         datasets_df = pd.DataFrame(datasets_data["value"])
         users_df = pd.DataFrame(users_data["value"])
 
-        #
+        # RLS base on email domain
         domain = user_email.split('@')[-1]
         filtered_datasets_df = datasets_df[datasets_df["configuredBy"].str.endswith(domain, na=False)]
         allowed_dataset_ids = set(filtered_datasets_df["id"].tolist())
@@ -62,6 +62,11 @@ if access_token and workspace_id and user_email:
             right_on="id",
             how="left"
         )
+
+        filtered_reports_df.drop(columns=['id_y','users','subscriptions'], inplace=True)
+        filtered_reports_df.rename(columns={"id_x":"id"}, inplace=True)
+
+        filtered_datasets_df.drop(columns=["upstreamDatasets","users"], inplace=True)
 
         def classify_report(row):
             if row['datasetStatus'] == "Inactive":
@@ -156,8 +161,8 @@ if access_token and workspace_id and user_email:
                 latest_access1.rename(columns={"Activity time": "Latest Activity"}, inplace=True)
                 
                 # ------------------ Artifact Type Classification ------------------
-                report_ids = set(reports_df["id"])
-                dataset_ids = set(datasets_df["id"])
+                report_ids = set(filtered_reports_df["id"])
+                dataset_ids = set(filtered_datasets_df["id"])
                 
                 def classify_artifact_type(artifact_id):
                     if artifact_id in report_ids:
@@ -183,14 +188,14 @@ if access_token and workspace_id and user_email:
                 
                 # ------------------ Artifact Activity Status ------------------
                 active_artifact_ids = set(latest_access1["ArtifactId"])
-                dataset_to_report_dict = dict(zip(reports_df["datasetId"], reports_df["id"]))
+                dataset_to_report_dict = dict(zip(filtered_reports_df["datasetId"], filtered_reports_df["id"]))
                 
-                reports_df["activityStatus2"] = reports_df.apply(
+                filtered_reports_df["activityStatus2"] = filtered_reports_df.apply(
                     lambda row: "Active" if row["id"] in active_artifact_ids or row["datasetId"] in active_artifact_ids else "Inactive",
                     axis=1
                 )
                 
-                datasets_df["activityStatus2"] = datasets_df.apply(
+                filtered_datasets_df["activityStatus2"] = filtered_datasets_df.apply(
                     lambda row: "Active" if row["id"] in active_artifact_ids or dataset_to_report_dict.get(row["id"]) in active_artifact_ids else "Inactive",
                     axis=1
                 )
@@ -198,21 +203,21 @@ if access_token and workspace_id and user_email:
                 # ------------------ Latest Artifact Activity ------------------
                 artifact_activity_map = dict(zip(latest_access1["ArtifactId"], latest_access1["Latest Activity"]))
                 
-                reports_df["Latest Artifact Activity"] = reports_df.apply(
+                filtered_reports_df["Latest Artifact Activity"] = filtered_reports_df.apply(
                     lambda row: artifact_activity_map.get(row["id"]) or artifact_activity_map.get(row["datasetId"]),
                     axis=1
                 )
                 
-                datasets_df["Latest Artifact Activity"] = datasets_df.apply(
+                filtered_datasets_df["Latest Artifact Activity"] = filtered_datasets_df.apply(
                     lambda row: artifact_activity_map.get(row["id"]) or artifact_activity_map.get(dataset_to_report_dict.get(row["id"])),
                     axis=1
                 )
                 
                 st.subheader("📌 Reports Latest Activity")
-                st.dataframe(reports_df)
+                st.dataframe(filtered_reports_df)
                 
                 st.subheader("📌 Datasets Latest Activity")
-                st.dataframe(datasets_df)
+                st.dataframe(filtered_datasets_df)
                 
                 # ------------------ Charts ------------------
                 

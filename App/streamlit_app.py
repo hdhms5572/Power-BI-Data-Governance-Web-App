@@ -46,6 +46,4 @@ if not available_workspaces:
 selected_workspace_name = st.sidebar.selectbox("Select Workspace", list(available_workspaces.keys()))
 st.session_state.workspace_id = available_workspaces[selected_workspace_name]
 
-# Show selected workspace ID
-st.sidebar.markdown(f"**Workspace ID:** `{st.session_state.workspace_id}`")
 st.success("✅ Credentials and matching workspace loaded. Use the sidebar to navigate between pages.")

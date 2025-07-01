@@ -151,13 +151,17 @@ if access_token and workspace_id and user_email:
             activity_data = st.file_uploader("Upload csv file...")
             if activity_data:
                 activity_df = pd.read_csv(activity_data)
-                st.dataframe(activity_df)
+
+                # RLS for activity dataframe
+                filtered_activity_df = activity_df[activity_df.get("User email", "").str.endswith(domain, na=False)]
+
+                st.dataframe(filtered_activity_df)
                 
                 # ------------------ Preprocessing ------------------
-                activity_df["Activity time"] = pd.to_datetime(activity_df["Activity time"], errors="coerce")
-                activity_df = activity_df.sort_values("Activity time")
+                filtered_activity_df["Activity time"] = pd.to_datetime(filtered_activity_df["Activity time"], errors="coerce")
+                filtered_activity_df = filtered_activity_df.sort_values("Activity time")
                 
-                latest_access1 = activity_df.drop_duplicates(subset="Artifact Name", keep="last")
+                latest_access1 = filtered_activity_df.drop_duplicates(subset="Artifact Name", keep="last")
                 latest_access1.rename(columns={"Activity time": "Latest Activity"}, inplace=True)
                 
                 # ------------------ Artifact Type Classification ------------------
@@ -178,13 +182,13 @@ if access_token and workspace_id and user_email:
                 st.dataframe(latest_access1)
                 
                 # ------------------ User Activity Status ------------------
-                active_user_emails = activity_df["User email"].dropna().unique()
-                users_df["activityStatus"] = users_df["emailAddress"].apply(
+                active_user_emails = filtered_activity_df["User email"].dropna().unique()
+                filtered_users_df["activityStatus"] = filtered_users_df["emailAddress"].apply(
                     lambda x: "Active" if x in active_user_emails else "Inactive"
                 )
                 
                 st.subheader("📌 Users Activity Status")
-                st.dataframe(users_df)
+                st.dataframe(filtered_users_df)
                 
                 # ------------------ Artifact Activity Status ------------------
                 active_artifact_ids = set(latest_access1["ArtifactId"])
@@ -228,13 +232,13 @@ if access_token and workspace_id and user_email:
                 with col1:
                     st.markdown("**User Activity Status**")
                     fig, ax = plt.subplots(figsize=(6, 3))
-                    sns.countplot(data=users_df, x="activityStatus", palette={"Active": "green", "Inactive": "red"}, ax=ax)
+                    sns.countplot(data=filtered_users_df, x="activityStatus", palette={"Active": "green", "Inactive": "red"}, ax=ax)
                     ax.set_title("User Activity")
                     st.pyplot(fig)
                 
                 with col2:
                     st.markdown("**Artifact Access Heatmap**")
-                    heatmap_data = activity_df.groupby(["User email", "Artifact Name"]).size().unstack(fill_value=0)
+                    heatmap_data = filtered_activity_df.groupby(["User email", "Artifact Name"]).size().unstack(fill_value=0)
                     fig, ax = plt.subplots(figsize=(6, 3))
                     sns.heatmap(heatmap_data, cmap="YlGnBu", linewidths=0.3, ax=ax, cbar=False)
                     ax.set_title("Access Heatmap")
@@ -246,7 +250,7 @@ if access_token and workspace_id and user_email:
                 
                 with col3:
                     st.markdown("**Top 10 Accessed Reports**")
-                    top_reports = activity_df["Artifact Name"].value_counts().head(10).reset_index()
+                    top_reports = filtered_activity_df["Artifact Name"].value_counts().head(10).reset_index()
                     top_reports.columns = ["Report Name", "Access Count"]
                 
                     fig, ax = plt.subplots(figsize=(6, 3))
@@ -256,8 +260,8 @@ if access_token and workspace_id and user_email:
                 
                 with col4:
                     st.markdown("**Monthly Usage Trend**")
-                    activity_df["YearMonth"] = activity_df["Activity time"].dt.to_period("M").astype(str)
-                    monthly_usage = activity_df.groupby("YearMonth").size().reset_index(name="Access Count")
+                    filtered_activity_df["YearMonth"] = filtered_activity_df["Activity time"].dt.to_period("M").astype(str)
+                    monthly_usage = filtered_activity_df.groupby("YearMonth").size().reset_index(name="Access Count")
                     monthly_usage["YearMonth"] = pd.to_datetime(monthly_usage["YearMonth"])
                     monthly_usage = monthly_usage.sort_values("YearMonth")
                 

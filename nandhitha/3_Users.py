@@ -1,5 +1,9 @@
 import streamlit as st
 from utils import call_powerbi_api, get_filtered_dataframes
+from utils import apply_sidebar_style
+apply_sidebar_style()
+from utils import show_workspace_header
+show_workspace_header()
 
 st.title("👥 Users")
 

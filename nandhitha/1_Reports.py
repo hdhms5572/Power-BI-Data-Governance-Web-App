@@ -3,6 +3,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from utils import call_powerbi_api, get_filtered_dataframes ,show_reports_table# Shared logic
+from utils import apply_sidebar_style
+apply_sidebar_style()
+from utils import show_workspace_header
+show_workspace_header()
+
 
 st.title("📄 Reports")
 

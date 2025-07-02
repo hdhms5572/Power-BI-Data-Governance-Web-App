@@ -1,7 +1,8 @@
 import streamlit as st
 from utils import call_powerbi_api, get_filtered_dataframes
 
-st.title("👥 Users")
+st.markdown("<h1 style='text-align: center;'>👥 Users</h1>", unsafe_allow_html=True)
+st.markdown("<hr>", unsafe_allow_html=True)
 
 # Check for required session state values
 if not (st.session_state.get("access_token") and st.session_state.get("workspace_id") and st.session_state.get("user_email")):
@@ -22,4 +23,3 @@ if users_df.empty:
 
 # Display user data
 st.dataframe(users_df[["displayName", "emailAddress", "groupUserAccessRight", "principalType"]])
-

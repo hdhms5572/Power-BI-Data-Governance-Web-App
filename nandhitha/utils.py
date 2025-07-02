@@ -2,25 +2,69 @@ import requests
 import pandas as pd
 import streamlit as st
 
+def validate_session():
+    if not (st.session_state.get("access_token") and st.session_state.get("workspace_id") and st.session_state.get("user_email")):
+        st.warning("❌ Missing access token, workspace ID, or email. Please provide credentials in the main page.")
+        st.stop()
+# utils.py
+def show_workspace_header():
+    name = st.session_state.get("workspace_name")
+    if name:
+        st.markdown(f"### 📁 Current Workspace: **{name}**")
+    else:
+        st.warning("⚠️ No workspace selected.")
+        st.stop()
+
+# utils.py
+def apply_sidebar_style():
+    st.markdown("""
+    <style>
+    [data-testid="stSidebar"] {
+        background-color: #fdfefe;
+        padding: 1.5rem 1rem;
+        border-right: 1px solid #e1e4e8;
+        font-family: 'Segoe UI', 'Inter', sans-serif;
+    }
+    [data-testid="stSidebar"] ul {
+        padding-left: 0;
+    }
+    [data-testid="stSidebar"] ul li a {
+        font-size: 1.05rem !important;
+        font-weight: 600;
+        color: #1f2937 !important;
+        padding: 0.5rem 0;
+        margin-bottom: 0.4rem;
+        border-radius: 6px;
+        display: block;
+        text-decoration: none;
+    }
+    [data-testid="stSidebar"] ul li a:hover {
+        background-color: #eef2f7;
+        color: #0f172a !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 def call_powerbi_api(url, token):
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         return response.json()
     else:
-        st.error(f"API call failed: {response.status_code} - {response.text}")
+        st.error(f"API call failed for {url}: {response.status_code} - {response.text}")
         return None
+
 def show_reports_table(df):
     st.dataframe(
         df,
+        use_container_width=True,
         column_config={
             "webUrl": st.column_config.LinkColumn("Web URL"),
             "embedUrl": st.column_config.LinkColumn("Embed URL")
-                }
-            )
+        }
+    )
 
 def get_filtered_dataframes(token, workspace_id, user_email):
-    # URLs
     reports_url = f"https://api.powerbi.com/v1.0/myorg/groups/{workspace_id}/reports"
     datasets_url = f"https://api.powerbi.com/v1.0/myorg/groups/{workspace_id}/datasets"
     users_url = f"https://api.powerbi.com/v1.0/myorg/groups/{workspace_id}/users"
@@ -52,11 +96,13 @@ def get_filtered_dataframes(token, workspace_id, user_email):
         how="left"
     )
 
-    reports_df.drop(columns=['id_y','users','subscriptions','embedUrl','isFromPbix','isOwnedByMe','reportFlags'], inplace=True, errors='ignore')
+    reports_df.drop(columns=['id_y','users','subscriptions','embedUrl','datasetWorkspaceId','isFromPbix','isOwnedByMe','reportFlags'], inplace=True, errors='ignore')
     reports_df.rename(columns={"id_x":"id"}, inplace=True)
-    datasets_df.drop(columns=["upstreamDatasets","users",'addRowsAPIEnabled','isEffectiveIdentityRequired','isEffectiveIdentityRolesRequired','isEffectiveIdentityRolesRequired','isOnpremGatewayRequired','targetStorageMode','createReportEmbedURL','qnaEmbedURL','queryScaleOutSettings'], inplace=True, errors='ignore')
-
-
+    datasets_df.drop(columns=[
+        "upstreamDatasets", "users", "addRowsAPIEnabled", "isEffectiveIdentityRequired",
+        "isEffectiveIdentityRolesRequired", "isOnpremGatewayRequired", "targetStorageMode",
+        "createReportEmbedURL", "qnaEmbedURL", "queryScaleOutSettings"
+    ], inplace=True, errors='ignore')
 
     def classify_report(row):
         if row['datasetStatus'] == "Inactive":

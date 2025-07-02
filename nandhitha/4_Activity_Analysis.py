@@ -3,6 +3,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from utils import get_filtered_dataframes
+from utils import apply_sidebar_style
+apply_sidebar_style()
+from utils import show_workspace_header
+show_workspace_header()
 
 st.title("🔍 Activity Log Insights")
 

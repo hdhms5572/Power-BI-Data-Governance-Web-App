@@ -1,0 +1,100 @@
+﻿Activity time,User email,Activity,ArtifactId,Artifact Name
+2025-06-25 10:01:00,c-nk3@dovercorp.com,ViewReport,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-06-19 13:38:00,c-nk3@dovercorp.com,ViewReport,019e45ec-0d92-4e4c-b74f-67f070e210c8,OTD
+2025-06-18 09:33:00,c-nk3@dovercorp.com,ViewDashboard,ca32a612-0d95-437e-aebe-73a7f6a50aa9,Opco Analysis 1.pbix
+2025-04-24 15:39:00,lalfaromontoya@dovercorp.com,ViewReport,244776d4-ed3d-439f-943e-0f050ed2c931,Opco Analysis 2
+2025-04-24 15:38:00,lalfaromontoya@dovercorp.com,CreateDataset,ae81f31e-52fc-4c5b-9bc9-70e861044963,Opco Analysis 2
+2025-04-24 15:38:00,lalfaromontoya@dovercorp.com,CreateReport,244776d4-ed3d-439f-943e-0f050ed2c931,Opco Analysis 2
+2025-04-24 15:36:00,lalfaromontoya@dovercorp.com,EditDataset,6c8902b6-1606-4b36-9575-ddd5fbce982c,Opco Analysis 1
+2025-04-24 15:36:00,lalfaromontoya@dovercorp.com,ViewReport,b4a0f9fc-da9b-41a9-8a93-7a8b7869cbcc,Opco Analysis 1
+2025-04-24 15:31:00,lalfaromontoya@dovercorp.com,CreateDataset,6c8902b6-1606-4b36-9575-ddd5fbce982c,Opco Analysis 1
+2025-04-24 15:31:00,lalfaromontoya@dovercorp.com,CreateReport,b4a0f9fc-da9b-41a9-8a93-7a8b7869cbcc,Opco Analysis 1
+2025-04-24 15:03:00,lalfaromontoya@dovercorp.com,CreateDataset,e723b0e5-8c38-4fc7-a1b7-218455d303cf,CT
+2025-04-24 15:03:00,lalfaromontoya@dovercorp.com,CreateReport,e3278311-51e8-46df-879f-1744e13a800c,CT
+2025-04-24 15:02:00,lalfaromontoya@dovercorp.com,ViewReport,04142402-243c-4907-b2ad-aa840a5c9c61,Supply Chain Pilot Dashboard
+2025-04-23 14:33:00,pswaroop@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-04-17 20:35:00,lalfaromontoya@dovercorp.com,ViewReport,04142402-243c-4907-b2ad-aa840a5c9c61,Supply Chain Pilot Dashboard
+2025-04-11 18:33:00,lalfaromontoya@dovercorp.com,ViewReport,019e45ec-0d92-4e4c-b74f-67f070e210c8,OTD
+2025-04-11 18:22:00,lalfaromontoya@dovercorp.com,ViewReport,019e45ec-0d92-4e4c-b74f-67f070e210c8,OTD
+2025-04-11 18:21:00,lalfaromontoya@dovercorp.com,CreateDataset,fa53c76e-882f-4ebe-89c0-822a388378f0,OTD
+2025-04-11 18:21:00,lalfaromontoya@dovercorp.com,CreateReport,019e45ec-0d92-4e4c-b74f-67f070e210c8,OTD
+2025-04-11 15:56:00,ssunder@dovercorp.com,ViewReport,d9d7a6a1-9c18-4ffb-8be9-85117922179b,CDP Anomaly Detection
+2025-04-11 15:55:00,ssunder@dovercorp.com,ViewReport,d9d7a6a1-9c18-4ffb-8be9-85117922179b,CDP Anomaly Detection
+2025-04-11 14:34:00,lalfaromontoya@dovercorp.com,EditDataset,37da0ff6-d79a-404c-921b-100d554acc99,Supply Chain Pilot Dashboard
+2025-04-09 15:34:00,lalfaromontoya@dovercorp.com,EditDataset,37da0ff6-d79a-404c-921b-100d554acc99,Supply Chain Pilot Dashboard
+2025-04-08 22:07:00,matt.niedermaier@colder.com,ViewReport,04142402-243c-4907-b2ad-aa840a5c9c61,Supply Chain Pilot Dashboard
+2025-04-08 21:55:00,lalfaromontoya@dovercorp.com,ViewReport,04142402-243c-4907-b2ad-aa840a5c9c61,Supply Chain Pilot Dashboard
+2025-04-08 21:36:00,matt.niedermaier@colder.com,ViewReport,04142402-243c-4907-b2ad-aa840a5c9c61,Supply Chain Pilot Dashboard
+2025-04-08 21:15:00,matt.niedermaier@colder.com,ViewReport,04142402-243c-4907-b2ad-aa840a5c9c61,Supply Chain Pilot Dashboard
+2025-04-07 20:32:00,lalfaromontoya@dovercorp.com,ShareReport,04142402-243c-4907-b2ad-aa840a5c9c61,Supply Chain Pilot Dashboard
+2025-04-07 20:30:00,lalfaromontoya@dovercorp.com,ViewReport,04142402-243c-4907-b2ad-aa840a5c9c61,Supply Chain Pilot Dashboard
+2025-04-07 20:01:00,lalfaromontoya@dovercorp.com,CreateDataset,37da0ff6-d79a-404c-921b-100d554acc99,Supply Chain Pilot Dashboard
+2025-04-07 20:01:00,lalfaromontoya@dovercorp.com,CreateReport,04142402-243c-4907-b2ad-aa840a5c9c61,Supply Chain Pilot Dashboard
+2025-04-07 20:01:00,lalfaromontoya@dovercorp.com,ViewReport,04142402-243c-4907-b2ad-aa840a5c9c61,Supply Chain Pilot Dashboard
+2025-03-20 13:40:00,lalfaromontoya@dovercorp.com,ConnectFromExternalApplication,4e60651c-b124-468b-9c41-38e5a424df96,Usage Metrics Report
+2025-03-20 13:35:00,ccoissard@markem-imaje.com,ArtifactAccessRequest,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-03-20 13:32:00,smishra@doverfoodretail.com,ArtifactAccessRequest,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-03-20 13:27:00,dmassoutier@markem-imaje.com,ArtifactAccessRequest,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-03-20 12:59:00,raj.yadav@dovercorp.com,ViewReport,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-03-18 18:07:00,lalfaromontoya@dovercorp.com,ConnectFromExternalApplication,4e60651c-b124-468b-9c41-38e5a424df96,Usage Metrics Report
+2025-03-07 14:37:00,ssunder@dovercorp.com,ViewReport,d9d7a6a1-9c18-4ffb-8be9-85117922179b,CDP Anomaly Detection
+2025-03-05 19:10:00,raj.yadav@dovercorp.com,ViewReport,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-03-05 19:09:00,raj.yadav@dovercorp.com,ViewReport,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-03-05 16:03:00,raj.yadav@dovercorp.com,ViewReport,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-03-05 14:52:00,raj.yadav@dovercorp.com,ViewReport,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-03-05 14:38:00,ssunder@dovercorp.com,ViewReport,d9d7a6a1-9c18-4ffb-8be9-85117922179b,CDP Anomaly Detection
+2025-03-05 14:33:00,lalfaromontoya@dovercorp.com,ViewReport,d9d7a6a1-9c18-4ffb-8be9-85117922179b,CDP Anomaly Detection
+2025-03-04 21:08:00,raj.yadav@dovercorp.com,ViewReport,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-03-04 21:00:00,raj.yadav@dovercorp.com,ViewReport,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-03-02 22:49:00,raj.yadav@dovercorp.com,ViewReport,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-02-19 15:26:00,raj.yadav@dovercorp.com,ViewReport,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-02-11 08:10:00,gmallavaram@dovercorp.com,ViewReport,d9d7a6a1-9c18-4ffb-8be9-85117922179b,CDP Anomaly Detection
+2025-02-11 08:07:00,ssunder@dovercorp.com,ViewReport,d9d7a6a1-9c18-4ffb-8be9-85117922179b,CDP Anomaly Detection
+2025-02-11 04:28:00,gmallavaram@dovercorp.com,ViewReport,d9d7a6a1-9c18-4ffb-8be9-85117922179b,CDP Anomaly Detection
+2025-02-10 18:34:00,lalfaromontoya@dovercorp.com,EditDataset,26924e23-6c7d-4144-a549-7b5c6c20468d,General Dashboard
+2025-02-10 18:34:00,lalfaromontoya@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-02-10 18:33:00,lalfaromontoya@dovercorp.com,EditDataset,26924e23-6c7d-4144-a549-7b5c6c20468d,General Dashboard
+2025-02-10 18:33:00,lalfaromontoya@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-02-10 17:38:00,lalfaromontoya@dovercorp.com,DownloadReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-02-10 17:38:00,lalfaromontoya@dovercorp.com,ShareDataset,26924e23-6c7d-4144-a549-7b5c6c20468d,General Dashboard
+2025-02-10 16:52:00,lalfaromontoya@dovercorp.com,CreateDataset,ea212392-3a79-4ded-aa2b-cd3d4749d7d6,CDP Anomaly Detection
+2025-02-10 16:52:00,lalfaromontoya@dovercorp.com,CreateReport,d9d7a6a1-9c18-4ffb-8be9-85117922179b,CDP Anomaly Detection
+2025-02-10 16:52:00,lalfaromontoya@dovercorp.com,ViewReport,d9d7a6a1-9c18-4ffb-8be9-85117922179b,CDP Anomaly Detection
+2025-02-07 14:28:00,lalfaromontoya@dovercorp.com,DeleteReport,753bef6d-e471-491a-8e77-b8301a160c4d,PIM Dashboard (UAT)
+2025-02-05 14:23:00,lalfaromontoya@dovercorp.com,ViewReport,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-02-04 20:29:00,raj.yadav@dovercorp.com,ViewReport,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-02-03 16:34:00,hpant@dovercorp.com,ViewReport,753bef6d-e471-491a-8e77-b8301a160c4d,PIM Dashboard (UAT)
+2025-02-03 15:10:00,lalfaromontoya@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-02-03 14:37:00,lalfaromontoya@dovercorp.com,ViewReport,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-02-03 14:14:00,lalfaromontoya@dovercorp.com,EditReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-02-03 14:13:00,lalfaromontoya@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-31 17:27:00,lalfaromontoya@dovercorp.com,ViewReport,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-01-29 21:29:00,lalfaromontoya@dovercorp.com,ExportArtifact,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-29 21:29:00,lalfaromontoya@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-29 17:56:00,pswaroop@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-29 17:55:00,lalfaromontoya@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-29 17:54:00,lalfaromontoya@dovercorp.com,EditDataset,26924e23-6c7d-4144-a549-7b5c6c20468d,General Dashboard
+2025-01-29 16:28:00,lalfaromontoya@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-29 16:27:00,lalfaromontoya@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-29 16:26:00,lalfaromontoya@dovercorp.com,EditDataset,26924e23-6c7d-4144-a549-7b5c6c20468d,General Dashboard
+2025-01-29 15:18:00,lalfaromontoya@dovercorp.com,DownloadReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-29 15:18:00,lalfaromontoya@dovercorp.com,EditReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-29 14:29:00,lalfaromontoya@dovercorp.com,AnalyzeInExcel,26924e23-6c7d-4144-a549-7b5c6c20468d,General Dashboard
+2025-01-29 14:29:00,lalfaromontoya@dovercorp.com,ExportReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-29 14:27:00,lalfaromontoya@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-28 10:49:00,ssunder@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-28 06:26:00,ssunder@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-27 17:00:00,lalfaromontoya@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-27 16:12:00,lalfaromontoya@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-27 16:12:00,ssunder@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-27 16:11:00,lalfaromontoya@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-27 16:11:00,ssunder@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-27 15:33:00,lalfaromontoya@dovercorp.com,EditReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-27 15:29:00,lalfaromontoya@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-23 03:01:00,pgupta@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-20 16:20:00,pswaroop@dovercorp.com,ViewReport,f26d4dee-5ab3-43bb-964e-f3f7afeedc8c,SIC Dashboard
+2025-01-15 16:11:00,lalfaromontoya@dovercorp.com,ViewReport,ce15dc77-fcee-473f-a105-fd8803f49a0c,Consolidate
+2025-01-14 14:57:00,pswaroop@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-14 14:54:00,lalfaromontoya@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-14 13:49:00,aharkins@cdsvisual.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard
+2025-01-14 13:29:00,pswaroop@dovercorp.com,ViewReport,18d5b0ee-837b-4f5c-99df-97f494bedcb2,General Dashboard

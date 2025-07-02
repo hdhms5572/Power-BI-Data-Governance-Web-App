@@ -54,8 +54,6 @@ with col2:
         text.set_color('white')
         text.set_fontweight('bold')
     ax.axis("equal")
-    ax.set_title("Report Status Distribution", color='white')
-
     st.pyplot(fig)
 
 st.dataframe(reports_df)

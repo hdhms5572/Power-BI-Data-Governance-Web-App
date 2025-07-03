@@ -2,7 +2,10 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils import call_powerbi_api, get_filtered_dataframes
+from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
+apply_sidebar_style() 
+show_workspace()
+
 
 st.markdown("<h1 style='text-align: center;'>📄 Reports</h1>", unsafe_allow_html=True)
 st.markdown("""<hr>""", unsafe_allow_html=True)
@@ -56,4 +59,64 @@ with col2:
     ax.axis("equal")
     st.pyplot(fig)
 
-st.dataframe(reports_df)
+
+if "view_reports" not in st.session_state:
+    st.session_state.view_reports = False
+if "explore_reports_dataframe" not in st.session_state:
+    st.session_state.explore_reports_dataframe = False
+
+with st.container():
+    col1, col2, col3, col4, col5 = st.columns([1,3,3,4,1])
+    with col2:
+        if st.button("📄 View Reports"):
+            st.session_state.view_reports = True
+            st.session_state.explore_reports_dataframe = False
+    with col4:
+        if st.button("📄 Explore Reports DataFrame"):
+            st.session_state.view_reports = False
+            st.session_state.explore_reports_dataframe = True
+
+if st.session_state.view_reports:
+
+    if "selected_dataset_id" not in st.session_state:
+        st.session_state.selected_dataset_id = None
+
+    st.markdown(" 🔗 Reports")
+    with st.container():
+        col1, col2, col3, col4, col5 = st.columns([5, 3, 2, 3, 2])
+        col1.markdown("<h5 style='margin-bottom: 0.5rem;'>🔖 ID</h5>", unsafe_allow_html=True)
+        col2.markdown("<h5 style='margin-bottom: 0.5rem;'>📛 Name</h5>", unsafe_allow_html=True)
+        col3.markdown("<h5 style='margin-bottom: 0.5rem;'>🥧 Report Status</h5>", unsafe_allow_html=True)
+        col4.markdown("<h5 style='margin-bottom: 0.5rem;'>📊 DataSet</h5>", unsafe_allow_html=True)
+        col5.markdown("<h5 style='margin-bottom: 0.5rem;'>🔍 Explore Report</h5>", unsafe_allow_html=True)
+
+
+    for index, row in reports_df.iterrows():
+        with st.container():
+            col1, col2, col3, col4, col5 = st.columns([5, 3, 2, 3, 2])
+            col1.markdown(f"`{row['id']}`")
+            col2.markdown(f"**{row['name']}**")
+            col3.markdown(f"{row.get('reportstatus', 'Unknown')}")
+
+            if col4.button("View Dataset", key=f"btn_{row['datasetId']}"):
+                st.session_state.selected_dataset_id = (
+                    row['datasetId'] if st.session_state.selected_dataset_id != row['datasetId'] else None
+                )
+            col5.markdown(
+                f"""<a href="{row['webUrl']}" target="_blank"><button style='font-size: 0.9rem;'>🚀 Explore</button></a>""",
+                unsafe_allow_html=True
+            )
+
+
+            if st.session_state.selected_dataset_id == row['datasetId']:
+                selected_dataset = datasets_df[datasets_df["id"] == row["datasetId"]]
+                if not selected_dataset.empty:
+                    st.markdown(f"##### 📌 Dataset for ID: `{row['datasetId']}`")
+                    st.dataframe(selected_dataset, use_container_width=True)
+                else:
+                    st.info("⚠️ No dataset found for this report.")
+
+elif st.session_state.explore_reports_dataframe:
+    st.dataframe(reports_df)
+
+

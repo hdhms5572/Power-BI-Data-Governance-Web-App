@@ -8,7 +8,7 @@ def validate_session():
         st.stop()
 
 # utils.py
-def show_workspace_header():
+def show_workspace():
     name = st.session_state.get("workspace_name")
     if name:
         st.sidebar.markdown(f"### 📁 Current Workspace: **{name}**")

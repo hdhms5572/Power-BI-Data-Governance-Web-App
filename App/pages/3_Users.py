@@ -1,5 +1,9 @@
 import streamlit as st
-from utils import call_powerbi_api, get_filtered_dataframes
+import matplotlib.pyplot as plt
+import seaborn as sns
+from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
+apply_sidebar_style()
+show_workspace()
 
 st.markdown("<h1 style='text-align: center;'>👥 Users</h1>", unsafe_allow_html=True)
 st.markdown("<hr>", unsafe_allow_html=True)
@@ -21,5 +25,108 @@ if users_df.empty:
     st.warning("📭 No user data available or failed to load.")
     st.stop()
 
-# Display user data
-st.dataframe(users_df[["displayName", "emailAddress", "groupUserAccessRight", "principalType"]])
+# Group User Access Rights
+role_counts = users_df["groupUserAccessRight"].value_counts()
+labels = role_counts.index
+sizes = role_counts.values
+
+role_colors = {
+    "Admin": "OrangeRed",
+    "Contributor": "DodgerBlue",
+    "Viewer": "DimGray",
+    "Member": "MediumSeaGreen"
+}
+colors = [role_colors.get(role, "LightGray") for role in labels]
+
+col1, col2 = st.columns([4,5])
+with col1:
+    st.subheader("📊 Group User Access Rights")
+    fig, ax = plt.subplots(figsize=(3.5, 3.5))
+    fig.patch.set_alpha(0.01)
+    ax.patch.set_alpha(0.01)
+    ax.set_facecolor("none")
+
+    wedges, texts, autotexts = ax.pie(
+        sizes,
+        labels=labels,
+        autopct="%1.1f%%",
+        startangle=140,
+        colors=colors,
+        wedgeprops=dict(width=0.3),
+        textprops={'fontsize': 8, 'color': 'white'}
+    )
+    for text in texts + autotexts:
+        text.set_color("white")
+    ax.set_title("Group User Access Rights", fontsize=10, color="white")
+    ax.axis("equal")
+    st.pyplot(fig)
+
+# Workspace Access by Email Domain
+users_df["Domain"] = users_df["emailAddress"].str.split("@").str[-1]
+domain_counts = users_df["Domain"].value_counts().sort_values(ascending=True)
+
+with col2:
+    st.subheader("🌍 Workspace Access by Email Domain")
+    fig, ax = plt.subplots(figsize=(3.3, 2.8))
+    fig.patch.set_alpha(0.01)
+    ax.patch.set_alpha(0.01)
+    ax.set_facecolor("none")
+
+    sns.barplot(
+        x=domain_counts.values,
+        y=domain_counts.index,
+        palette=["SkyBlue"] * len(domain_counts),
+        ax=ax
+    )
+    ax.set_title("Workspace Access by Email Domain", fontsize=12, color="white", weight='bold')
+    ax.set_xlabel("User Count", fontsize=9, color="white")
+    ax.set_ylabel("Email Domain", fontsize=9, color="white")
+    ax.tick_params(axis='x', labelsize=8, colors="white")
+    ax.tick_params(axis='y', labelsize=8, colors="white")
+
+    for label in ax.get_yticklabels() + ax.get_xticklabels():
+        label.set_color("white")
+
+    sns.despine()
+    st.pyplot(fig)
+
+
+
+if "veiw_users" not in st.session_state:
+    st.session_state.veiw_users = False
+if "Explore_users_dataframe" not in st.session_state:
+    st.session_state.Explore_users_dataframe = False
+
+with st.container():
+    col1, col2, col3, col4, col5 = st.columns([1,3,3,4,1])
+    with col2:
+        if st.button("📄 View Users"):
+            st.session_state.veiw_users = True
+            st.session_state.Explore_users_dataframe = False
+    with col4:
+        if st.button("📄 Explore Users DataFrame"):
+            st.session_state.veiw_users = False
+            st.session_state.Explore_users_dataframe = True
+
+
+if st.session_state.veiw_users:
+    # Display user data
+    st.markdown(" 🔗 Users")
+    with st.container():
+        col1, col2, col3, col4, col5 = st.columns([1, 3, 5, 3, 2])
+        col1.markdown("<h5 style='margin-bottom: 0.5rem;'>🔖 ID</h5>", unsafe_allow_html=True)
+        col2.markdown("<h5 style='margin-bottom: 0.5rem;'>📛 Name</h5>", unsafe_allow_html=True)
+        col3.markdown("<h5 style='margin-bottom: 0.5rem;'>👤 EmailAddress</h5>", unsafe_allow_html=True)
+        col4.markdown("<h5 style='margin-bottom: 0.5rem;'>👥 Access Rights</h5>", unsafe_allow_html=True)
+        col5.markdown("<h5 style='margin-bottom: 0.5rem;'>🏷️ Principal Type</h5>", unsafe_allow_html=True)
+
+    for index, row in users_df.iterrows():
+        with st.container():
+            col1, col2, col3, col4, col5 = st.columns([1, 3, 5, 3, 2])
+            col1.markdown(f"**{index+1}**")
+            col2.markdown(f"**{row['displayName']}**")
+            col3.markdown(f"`{row['emailAddress']}`")
+            col4.write(f"**{row['groupUserAccessRight']}**")
+            col5.write(f"**{row['principalType']}**")
+elif st.session_state.Explore_users_dataframe:
+    st.dataframe(users_df)

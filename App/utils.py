@@ -2,6 +2,50 @@ import requests
 import pandas as pd
 import streamlit as st
 
+def validate_session():
+    if not (st.session_state.get("access_token") and st.session_state.get("workspace_id") and st.session_state.get("user_email")):
+        st.warning("❌ Missing access token, workspace ID, or email. Please provide credentials in the main page.")
+        st.stop()
+
+# utils.py
+def show_workspace_header():
+    name = st.session_state.get("workspace_name")
+    if name:
+        st.sidebar.markdown(f"### 📁 Current Workspace: **{name}**")
+    else:
+        st.warning("⚠️ No workspace selected.")
+        st.stop()
+
+# utils.py
+def apply_sidebar_style():
+    st.markdown("""
+    <style>
+        [data-testid="stSidebar"] {
+            background-color: lightblack;
+            padding: 1.5rem 1rem;
+            border-right: 1px solid gray;
+            font-family: 'Segoe UI', 'Inter', sans-serif;
+        }
+        [data-testid="stSidebar"] ul {
+            padding-left: 0;
+        }
+        [data-testid="stSidebar"] ul li a {
+            font-size: 1.05rem !important;
+            font-weight: 600;
+            color: white !important;
+            padding: 0.5rem 0;
+            margin-bottom: 0.4rem;
+            border-radius: 6px;
+            display: block;
+            text-decoration: none;
+        }
+        [data-testid="stSidebar"] ul li a:hover {
+            background-color: lightblack !important;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+    
 def call_powerbi_api(url, token):
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.get(url, headers=headers)

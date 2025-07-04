@@ -147,16 +147,16 @@ if activity_data:
 
             fig, ax = plt.subplots(figsize=(6, 3))
             fig.patch.set_alpha(fig_alpha)
-            ax.patch.set_alpha(fig_alpha)
+            ax.patch.set_alpha(fig_alpha)   
             ax.set_facecolor("none")
 
             ax.plot(weekday_counts.index, weekday_counts.values, marker='o', linestyle='-', color='orange')
-            ax.set_title("Weekday Activity", color="black")
-            ax.set_xlabel("Day", color="black")
-            ax.set_ylabel("Activity Count", color="black")
+            ax.set_title("Weekday Activity", color="gray")
+            ax.set_xlabel("Day", color="gray")
+            ax.set_ylabel("Activity Count", color="gray")
             ax.tick_params(colors='gray')
             for label in ax.get_xticklabels() + ax.get_yticklabels():
-                label.set_color("black")
+                label.set_color("gray")
             st.pyplot(fig)
         with col2:
             st.subheader("Monthly Usage Trend")

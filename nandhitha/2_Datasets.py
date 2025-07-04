@@ -2,14 +2,13 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils import call_powerbi_api, get_filtered_dataframes,show_reports_table
-from utils import apply_sidebar_style
+from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
 apply_sidebar_style()
-from utils import show_workspace_header
-show_workspace_header()
+show_workspace()
 
 
-st.title("📊 Datasets")
+st.markdown("<h1 style='text-align: center;'>📊 Datasets</h1>", unsafe_allow_html=True)
+st.markdown("<hr>", unsafe_allow_html=True)
 
 # Check for required session state values
 if not (st.session_state.get("access_token") and st.session_state.get("workspace_id") and st.session_state.get("user_email")):
@@ -28,17 +27,79 @@ if datasets_df.empty:
     st.warning("📭 No dataset data available or failed to load.")
     st.stop()
 
-show_reports_table(datasets_df)
 col1, col2 = st.columns(2)
 with col1:
     st.subheader("📓 Dataset Status vs Freshness")
     group = datasets_df.groupby(["datasetStatus", "outdated"]).size().unstack(fill_value=0)
-    fig3, ax3 = plt.subplots()
-    group.plot(kind="bar", stacked=True, ax=ax3, colormap="coolwarm")
-    st.pyplot(fig3)
+    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(6, 3))
+    fig.patch.set_alpha(0.01)
+    ax.patch.set_alpha(0.01)   
+    ax.title.set_color('black')
+    ax.xaxis.label.set_color('black')
+    ax.yaxis.label.set_color('black')
+    ax.tick_params(colors='black')
+    for label in ax.get_xticklabels() + ax.get_yticklabels():
+        label.set_color('black')
+    group.plot(kind="bar", stacked=True, ax=ax, colormap="coolwarm")
+    st.pyplot(fig)
 with col2:
     st.subheader("🌡️ Heatmap: Report vs Dataset Status")
-    cross = pd.crosstab(reports_df["reportstatus"], reports_df["datasetStatus"])
-    fig4, ax4 = plt.subplots()
-    sns.heatmap(cross, annot=True, fmt="d", cmap="Blues", ax=ax4)
-    st.pyplot(fig4)
+    cross = pd.crosstab(reports_df["Reportstatus Based on Dataset"], reports_df["datasetStatus"])
+    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(4, 3))
+    fig.patch.set_alpha(0.01)
+    ax.patch.set_alpha(0.01)   
+    ax.title.set_color('black')
+    ax.xaxis.label.set_color('black')
+    ax.yaxis.label.set_color('black')
+    ax.tick_params(colors='black')
+    for label in ax.get_xticklabels() + ax.get_yticklabels():
+        label.set_color('black')
+    sns.heatmap(cross, annot=True, fmt="d", cmap="Blues", ax=ax)
+    st.pyplot(fig)
+
+
+if "veiw_datasets" not in st.session_state:
+    st.session_state.veiw_datasets = False
+if "Explore_datasets_dataframe" not in st.session_state:
+    st.session_state.Explore_datasets_dataframe = False
+
+with st.container():
+    col1, col2, col3, col4, col5 = st.columns([1,3,3,4,1])
+    with col2:
+        if st.button("📄 View Datasets"):
+            st.session_state.veiw_datasets = True
+            st.session_state.Explore_datasets_dataframe = False
+    with col4:
+        if st.button("📄 Explore Datasets DataFrame"):
+            st.session_state.veiw_datasets = False
+            st.session_state.Explore_datasets_dataframe = True
+
+
+if st.session_state.veiw_datasets:
+
+    st.markdown(" 🔗 Datasets")
+    with st.container():
+        col1, col2, col3, col4, col5 = st.columns([3, 3, 3, 3, 2])
+        col1.markdown("<h5 style='margin-bottom: 0.5rem;'>🔖 ID</h5>", unsafe_allow_html=True)
+        col2.markdown("<h5 style='margin-bottom: 0.5rem;'>📛 Name</h5>", unsafe_allow_html=True)
+        col3.markdown("<h5 style='margin-bottom: 0.5rem;'>👤 ConfiguredBy</h5>", unsafe_allow_html=True)
+        col4.markdown("<h5 style='margin-bottom: 0.5rem;'>📅 CreatedDate</h5>", unsafe_allow_html=True)
+        col5.markdown("<h5 style='margin-bottom: 0.5rem;'>🔍 Explore Dataset</h5>", unsafe_allow_html=True)
+
+
+    for index, row in datasets_df.iterrows():
+        with st.container():
+            col1, col2, col3, col4, col5 = st.columns([3, 3, 4, 3, 2])
+            col1.markdown(f"**{row['id']}**")
+            col2.markdown(f"**{row['name']}**")
+            col3.markdown(f"`{row['configuredBy']}`")
+            col4.write(f"**{row['createdDate']}**")
+            col5.markdown(
+            f"""<a href="{row['webUrl']}" target="_blank"><button style='font-size: 0.9rem;'>🚀 Explore</button></a>""",
+            unsafe_allow_html=True
+            )
+
+elif st.session_state.Explore_datasets_dataframe:
+    st.dataframe(datasets_df)

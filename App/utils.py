@@ -1,3 +1,4 @@
+
 import requests
 import pandas as pd
 import streamlit as st
@@ -88,9 +89,14 @@ def get_filtered_dataframes(token, workspace_id, user_email):
         how="left"
     )
 
+    #reports_df.drop(columns=['id_y','users','subscriptions'], inplace=True, errors='ignore')
     reports_df.drop(columns=['id_y','users','subscriptions'], inplace=True, errors='ignore')
     reports_df.rename(columns={"id_x":"id"}, inplace=True)
-    datasets_df.drop(columns=["upstreamDatasets","users"], inplace=True, errors='ignore')
+    datasets_df.drop(columns=["isOnPremGatewayRequired"], inplace=True, errors='ignore')
+    datasets_df.drop(columns=[
+        "upstreamDatasets", "users", "addRowsAPIEnabled", "isEffectiveIdentityRequired",
+        "isEffectiveIdentityRolesRequired", "targetStorageMode",
+        "createReportEmbedURL", "qnaEmbedURL", "queryScaleOutSettings" ], inplace=True, errors='ignore')
 
     def classify_report(row):
         if row['datasetStatus'] == "Inactive":

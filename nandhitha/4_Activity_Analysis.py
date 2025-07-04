@@ -32,7 +32,6 @@ if activity_data:
     activity_df = activity_df.sort_values("Activity time")
     latest_access1 = activity_df.drop_duplicates(subset="Artifact Name", keep="last")
     latest_access1.rename(columns={"Activity time": "Latest Activity"}, inplace=True)
-
     report_ids = set(reports_df["id"])
     dataset_ids = set(datasets_df["id"])
 
@@ -208,7 +207,7 @@ if activity_data:
 
     elif selected_value == "reports":
         st.subheader("📌 Reports Latest Activity")
-        st.dataframe(reports_df)
+        st.dataframe(reports_df[["id", "name","datasetId","datasetStatus","outdated","Reportstatus Based on Dataset"]])
 
     elif selected_value == "datasets":
         st.subheader("📌 Datasets Latest Activity")

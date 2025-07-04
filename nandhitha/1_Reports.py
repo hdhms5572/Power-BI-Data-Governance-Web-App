@@ -116,5 +116,7 @@ with st.container():
                         st.info("⚠️ No dataset found for this report.")
 
     elif st.session_state.explore_reports_dataframe:
-        st.dataframe(reports_df)
+        st.dataframe(reports_df[["id", "name","datasetId","datasetStatus","outdated","Reportstatus Based on Dataset"]])
+
+
 

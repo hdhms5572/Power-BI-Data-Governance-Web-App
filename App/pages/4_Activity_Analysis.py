@@ -25,12 +25,13 @@ reports_df, datasets_df, users_df = get_filtered_dataframes(token, workspace, em
 activity_data = st.file_uploader("Upload csv file...")
 if activity_data:
     activity_df = pd.read_csv(activity_data)
+    activity_df2=activity_df
+
 
     activity_df["Activity time"] = pd.to_datetime(activity_df["Activity time"], errors="coerce")
     activity_df = activity_df.sort_values("Activity time")
     latest_access1 = activity_df.drop_duplicates(subset="Artifact Name", keep="last")
     latest_access1.rename(columns={"Activity time": "Latest Activity"}, inplace=True)
-
     report_ids = set(reports_df["id"])
     dataset_ids = set(datasets_df["id"])
 
@@ -63,35 +64,40 @@ if activity_data:
     datasets_df["Latest Artifact Activity"] = datasets_df.apply(
         lambda row: artifact_activity_map.get(row["id"]) or artifact_activity_map.get(dataset_to_report_dict.get(row["id"])), axis=1)
 
-
+    # Changing color based on theme base
+    theme_base = st.get_option("theme.base")
+    if theme_base == "dark":
+        fig_alpha = 1.0  
+    else:
+        fig_alpha = 0.01
     with st.expander("📊 User Insights"):
         col1, col2 = st.columns([2,1])
         with col1:
             st.subheader("Artifact Access Heatmap")
             heatmap_data = activity_df.groupby(["User email", "Artifact Name"]).size().unstack(fill_value=0)
             fig, ax = plt.subplots(figsize=(12,3))
-            fig.patch.set_alpha(0.01)
-            ax.patch.set_alpha(0.01)   
-            ax.title.set_color('white')
-            ax.xaxis.label.set_color('white')
-            ax.yaxis.label.set_color('white')
-            ax.tick_params(colors='white')
+            fig.patch.set_alpha(fig_alpha)
+            ax.patch.set_alpha(fig_alpha)   
+            ax.title.set_color("gray")
+            ax.xaxis.label.set_color("gray")
+            ax.yaxis.label.set_color("gray")
+            ax.tick_params(colors="gray")
             for label in ax.get_xticklabels() + ax.get_yticklabels():
-                label.set_color('white')
+                label.set_color("gray")
             sns.heatmap(heatmap_data, cmap="YlGnBu", linewidths=0.3, ax=ax, cbar=False)
             ax.set_title("Access Heatmap")
             st.pyplot(fig)
         with col2:
             st.subheader("User Activity Status")
             fig, ax = plt.subplots(figsize=(4, 3))
-            fig.patch.set_alpha(0.01)
-            ax.patch.set_alpha(0.01 )   
-            ax.title.set_color('white')
-            ax.xaxis.label.set_color('white')
-            ax.yaxis.label.set_color('white')
-            ax.tick_params(colors='white')
+            fig.patch.set_alpha(fig_alpha)
+            ax.patch.set_alpha(fig_alpha )   
+            ax.title.set_color("gray")
+            ax.xaxis.label.set_color("gray")
+            ax.yaxis.label.set_color("gray")
+            ax.tick_params(colors="gray")
             for label in ax.get_xticklabels() + ax.get_yticklabels():
-                label.set_color('white')  
+                label.set_color("gray")  
             sns.countplot(data=users_df, x="activityStatus", palette={"Active": "green", "Inactive": "red"}, ax=ax)
             ax.set_title("User Activity")
             st.pyplot(fig)
@@ -103,14 +109,14 @@ if activity_data:
             top_reports = activity_df["Artifact Name"].value_counts().head(10).reset_index()
             top_reports.columns = ["Report Name", "Access Count"]
             fig, ax = plt.subplots(figsize=(6, 4))
-            fig.patch.set_alpha(0.01)
-            ax.patch.set_alpha(0.01)   
-            ax.title.set_color('white')
-            ax.xaxis.label.set_color('white')
-            ax.yaxis.label.set_color('white')
-            ax.tick_params(colors='white')
+            fig.patch.set_alpha(fig_alpha)
+            ax.patch.set_alpha(fig_alpha)   
+            ax.title.set_color("gray")
+            ax.xaxis.label.set_color("gray")
+            ax.yaxis.label.set_color("gray")
+            ax.tick_params(colors="gray")
             for label in ax.get_xticklabels() + ax.get_yticklabels():
-                label.set_color('white') 
+                label.set_color("gray")
             sns.barplot(data=top_reports, x="Access Count", y="Report Name", palette="crest", ax=ax)
             ax.set_title("Top Reports")
             st.pyplot(fig)
@@ -121,14 +127,14 @@ if activity_data:
             monthly_usage["YearMonth"] = pd.to_datetime(monthly_usage["YearMonth"])
             monthly_usage = monthly_usage.sort_values("YearMonth")
             fig, ax = plt.subplots(figsize=(6, 2))
-            fig.patch.set_alpha(0.01)
-            ax.patch.set_alpha(0.01)   
-            ax.title.set_color('white')
-            ax.xaxis.label.set_color('white')
-            ax.yaxis.label.set_color('white')
-            ax.tick_params(colors='white')
+            fig.patch.set_alpha(fig_alpha)
+            ax.patch.set_alpha(fig_alpha)   
+            ax.title.set_color("gray")
+            ax.xaxis.label.set_color("gray")
+            ax.yaxis.label.set_color("gray")
+            ax.tick_params(colors="gray")
             for label in ax.get_xticklabels() + ax.get_yticklabels():
-                label.set_color('white')
+                label.set_color("gray")
             sns.barplot(data=monthly_usage, x="YearMonth", y="Access Count", color="skyblue", ax=ax)
             ax.set_title("Monthly Usage")
             ax.set_xticklabels([d.strftime('%b %Y') for d in monthly_usage["YearMonth"]], rotation=45)
@@ -143,16 +149,16 @@ if activity_data:
                 "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
             ])
             fig, ax = plt.subplots(figsize=(6, 3))
-            fig.patch.set_alpha(0.01)
-            ax.patch.set_alpha(0.01)
+            fig.patch.set_alpha(fig_alpha)
+            ax.patch.set_alpha(fig_alpha)
             ax.set_facecolor("none")
             sns.barplot(x=weekday_counts.index, y=weekday_counts.values, palette="flare", ax=ax)
-            ax.set_title("Weekday Activity", color="white")
-            ax.set_xlabel("Day", color="white")
-            ax.set_ylabel("Activity Count", color="white")
-            ax.tick_params(colors="white")
+            ax.set_title("Weekday Activity", color="black")
+            ax.set_xlabel("Day", color="black")
+            ax.set_ylabel("Activity Count", color="black")
+            ax.tick_params(colors="black")
             for label in ax.get_xticklabels() + ax.get_yticklabels():
-                label.set_color("white")
+                label.set_color("black")
             st.pyplot(fig)
 
         with col2:
@@ -160,16 +166,16 @@ if activity_data:
             activity_df["Hour"] = activity_df["Activity time"].dt.hour
             hour_counts = activity_df["Hour"].value_counts().sort_index()
             fig, ax = plt.subplots(figsize=(6, 3))
-            fig.patch.set_alpha(0.01)
-            ax.patch.set_alpha(0.01)
+            fig.patch.set_alpha(fig_alpha)
+            ax.patch.set_alpha(fig_alpha)
             ax.set_facecolor("none")
             sns.lineplot(x=hour_counts.index, y=hour_counts.values, marker='o', color="teal", ax=ax)
-            ax.set_title("Hourly Access Trend", color="white")
-            ax.set_xlabel("Hour", color="white")
-            ax.set_ylabel("Access Count", color="white")
-            ax.tick_params(colors="white")
+            ax.set_title("Hourly Access Trend", color="black")
+            ax.set_xlabel("Hour", color="black")
+            ax.set_ylabel("Access Count", color="black")
+            ax.tick_params(colors="black")
             for label in ax.get_xticklabels() + ax.get_yticklabels():
-                label.set_color("white")
+                label.set_color("black")
             st.pyplot(fig)
 
 
@@ -193,10 +199,11 @@ if activity_data:
     selected_value = activity_options[selected_key]
     if selected_value == "activity":
         st.subheader("📁 Activity Log Insights")
-        st.dataframe(activity_df)
+        st.dataframe(activity_df2)
 
     elif selected_value == "recent":
         st.subheader("📌 Most Recently Accessed Artifacts")
+        latest_access1 = latest_access1.reset_index(drop=True)
         st.dataframe(latest_access1)
 
     elif selected_value == "users":
@@ -205,7 +212,7 @@ if activity_data:
 
     elif selected_value == "reports":
         st.subheader("📌 Reports Latest Activity")
-        st.dataframe(reports_df)
+        st.dataframe(reports_df[["id", "name","datasetId","datasetStatus","outdated","Reportstatus Based on Dataset"]])
 
     elif selected_value == "datasets":
         st.subheader("📌 Datasets Latest Activity")

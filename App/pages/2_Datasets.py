@@ -27,35 +27,42 @@ if datasets_df.empty:
     st.warning("📭 No dataset data available or failed to load.")
     st.stop()
 
+
+# Changing color based on theme base
+theme_base = st.get_option("theme.base")
+if theme_base == "dark":
+    fig_alpha = 0.5
+else:
+    fig_alpha = 0.01
 col1, col2 = st.columns(2)
 with col1:
     st.subheader("📓 Dataset Status vs Freshness")
     group = datasets_df.groupby(["datasetStatus", "outdated"]).size().unstack(fill_value=0)
     fig, ax = plt.subplots()
     fig, ax = plt.subplots(figsize=(6, 3))
-    fig.patch.set_alpha(0.01)
-    ax.patch.set_alpha(0.01)   
-    ax.title.set_color('white')
-    ax.xaxis.label.set_color('white')
-    ax.yaxis.label.set_color('white')
-    ax.tick_params(colors='white')
+    fig.patch.set_alpha(fig_alpha)
+    ax.patch.set_alpha(fig_alpha)   
+    ax.title.set_color("gray")
+    ax.xaxis.label.set_color("gray")
+    ax.yaxis.label.set_color("gray")
+    ax.tick_params(colors="gray")
     for label in ax.get_xticklabels() + ax.get_yticklabels():
-        label.set_color('white')
+        label.set_color("gray")
     group.plot(kind="bar", stacked=True, ax=ax, colormap="coolwarm")
     st.pyplot(fig)
 with col2:
     st.subheader("🌡️ Heatmap: Report vs Dataset Status")
-    cross = pd.crosstab(reports_df["reportstatus"], reports_df["datasetStatus"])
+    cross = pd.crosstab(reports_df["Reportstatus Based on Dataset"], reports_df["datasetStatus"])
     fig, ax = plt.subplots()
     fig, ax = plt.subplots(figsize=(4, 3))
-    fig.patch.set_alpha(0.01)
-    ax.patch.set_alpha(0.01)   
-    ax.title.set_color('white')
-    ax.xaxis.label.set_color('white')
-    ax.yaxis.label.set_color('white')
-    ax.tick_params(colors='white')
+    fig.patch.set_alpha(fig_alpha)
+    ax.patch.set_alpha(fig_alpha)   
+    ax.title.set_color("gray")
+    ax.xaxis.label.set_color("gray")
+    ax.yaxis.label.set_color("gray")
+    ax.tick_params(colors="gray")
     for label in ax.get_xticklabels() + ax.get_yticklabels():
-        label.set_color('white')
+        label.set_color("gray")
     sns.heatmap(cross, annot=True, fmt="d", cmap="Blues", ax=ax)
     st.pyplot(fig)
 
@@ -103,4 +110,3 @@ if st.session_state.veiw_datasets:
 
 elif st.session_state.Explore_datasets_dataframe:
     st.dataframe(datasets_df)
-

@@ -38,12 +38,19 @@ role_colors = {
 }
 colors = [role_colors.get(role, "LightGray") for role in labels]
 
+
+# Changing color based on theme base
+theme_base = st.get_option("theme.base")
+if theme_base == "dark":
+    fig_alpha = 1.0  
+else:
+    fig_alpha = 0.01
 col1, col2 = st.columns([4,5])
 with col1:
     st.subheader("📊 Group User Access Rights")
     fig, ax = plt.subplots(figsize=(3.5, 3.5))
-    fig.patch.set_alpha(0.01)
-    ax.patch.set_alpha(0.01)
+    fig.patch.set_alpha(fig_alpha)
+    ax.patch.set_alpha(fig_alpha)
     ax.set_facecolor("none")
 
     wedges, texts, autotexts = ax.pie(
@@ -53,11 +60,11 @@ with col1:
         startangle=140,
         colors=colors,
         wedgeprops=dict(width=0.3),
-        textprops={'fontsize': 8, 'color': 'white'}
+        textprops={'fontsize': 8, 'color': 'black'}
     )
     for text in texts + autotexts:
-        text.set_color("white")
-    ax.set_title("Group User Access Rights", fontsize=10, color="white")
+        text.set_color("gray")
+    ax.set_title("Group User Access Rights", fontsize=10, color="gray")
     ax.axis("equal")
     st.pyplot(fig)
 
@@ -68,8 +75,8 @@ domain_counts = users_df["Domain"].value_counts().sort_values(ascending=True)
 with col2:
     st.subheader("🌍 Workspace Access by Email Domain")
     fig, ax = plt.subplots(figsize=(3.3, 2.8))
-    fig.patch.set_alpha(0.01)
-    ax.patch.set_alpha(0.01)
+    fig.patch.set_alpha(fig_alpha)
+    ax.patch.set_alpha(fig_alpha)
     ax.set_facecolor("none")
 
     sns.barplot(
@@ -79,13 +86,13 @@ with col2:
         ax=ax
     )
     ax.set_title("Workspace Access by Email Domain", fontsize=12, color="white", weight='bold')
-    ax.set_xlabel("User Count", fontsize=9, color="white")
-    ax.set_ylabel("Email Domain", fontsize=9, color="white")
-    ax.tick_params(axis='x', labelsize=8, colors="white")
-    ax.tick_params(axis='y', labelsize=8, colors="white")
+    ax.set_xlabel("User Count", fontsize=9, color="gray")
+    ax.set_ylabel("Email Domain", fontsize=9, color="gray")
+    ax.tick_params(axis='x', labelsize=8, colors="gray")
+    ax.tick_params(axis='y', labelsize=8, colors="gray")
 
     for label in ax.get_yticklabels() + ax.get_xticklabels():
-        label.set_color("white")
+        label.set_color("gray")
 
     sns.despine()
     st.pyplot(fig)
@@ -129,4 +136,4 @@ if st.session_state.veiw_users:
             col4.write(f"**{row['groupUserAccessRight']}**")
             col5.write(f"**{row['principalType']}**")
 elif st.session_state.Explore_users_dataframe:
-    st.dataframe(users_df)
+    st.dataframe(users_df[["emailAddress", "groupUserAccessRight","displayName"]])

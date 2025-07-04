@@ -35,14 +35,7 @@ if activity_data:
     report_ids = set(reports_df["id"])
     dataset_ids = set(datasets_df["id"])
 
-    def classify_artifact_type(artifact_id):
-        if artifact_id in report_ids:
-            return "Report"
-        elif artifact_id in dataset_ids:
-            return "Dataset"
-        return "Unknown"
-
-    latest_access1["ArtifactType"] = latest_access1["ArtifactId"].apply(classify_artifact_type)
+    
 
     active_user_emails = activity_df["User email"].dropna().unique()
     users_df["activityStatus"] = users_df["emailAddress"].apply(lambda x: "Active" if x in active_user_emails else "Inactive")
@@ -50,10 +43,10 @@ if activity_data:
     active_artifact_ids = set(latest_access1["ArtifactId"])
     dataset_to_report_dict = dict(zip(reports_df["datasetId"], reports_df["id"]))
 
-    reports_df["activityStatus2"] = reports_df.apply(
+    reports_df["Activity Status"] = reports_df.apply(
         lambda row: "Active" if row["id"] in active_artifact_ids or row["datasetId"] in active_artifact_ids else "Inactive", axis=1)
 
-    datasets_df["activityStatus2"] = datasets_df.apply(
+    datasets_df["Activity Status"] = datasets_df.apply(
         lambda row: "Active" if row["id"] in active_artifact_ids or dataset_to_report_dict.get(row["id"]) in active_artifact_ids else "Inactive", axis=1)
 
     artifact_activity_map = dict(zip(latest_access1["ArtifactId"], latest_access1["Latest Activity"]))
@@ -100,9 +93,9 @@ if activity_data:
     with st.expander("📈 Usage Trends"):
         col3, col4 = st.columns(2)
         with col3:
-            st.subheader("Top 10 Accessed Reports")
+            st.subheader("Top 10 Accessed Artifacts")
             top_reports = activity_df["Artifact Name"].value_counts().head(10).reset_index()
-            top_reports.columns = ["Report Name", "Access Count"]
+            top_reports.columns = ["Artifact Name", "Access Count"]
             fig, ax = plt.subplots(figsize=(6, 4))
             fig.patch.set_alpha(0.01)
             ax.patch.set_alpha(0.01)   
@@ -112,10 +105,54 @@ if activity_data:
             ax.tick_params(colors='black')
             for label in ax.get_xticklabels() + ax.get_yticklabels():
                 label.set_color('black')
-            sns.barplot(data=top_reports, x="Access Count", y="Report Name", palette="crest", ax=ax)
-            ax.set_title("Top Reports")
+            sns.barplot(data=top_reports, x="Access Count", y="Artifact Name", palette="crest", ax=ax)
+            ax.set_title("Top Artifacts")
             st.pyplot(fig)
         with col4:
+            st.subheader("Usage Trends By Opcos")
+
+            unique_users = activity_df.drop_duplicates(subset='User email')
+            unique_users['domain'] = unique_users['User email'].str.split('@').str[1]
+            domain_counts = unique_users['domain'].value_counts()
+
+            fig2, ax2 = plt.subplots(figsize=(10, 6))
+            ax2.bar(domain_counts.index, domain_counts.values, color='skyblue')
+            ax2.set_title(' Users per   Opcos')
+            ax2.set_xlabel('Email Domain')
+            ax2.set_ylabel('Number of  Users')
+            ax2.tick_params(axis='x', rotation=45)
+
+            st.pyplot(fig2)
+        
+
+
+    with st.expander("📅 Weekly and Monthly Access Patterns"):
+        col1,col2= st.columns(2)
+        with col1:
+            st.subheader("📆 Weekday Activity (Line Chart)")
+
+            activity_df["Weekday"] = activity_df["Activity time"].dt.day_name()
+            weekday_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+            weekday_counts = activity_df["Weekday"].value_counts().reindex(weekday_order)
+
+            fig, ax = plt.subplots(figsize=(6, 3))
+            fig.patch.set_alpha(0.01)
+            ax.patch.set_alpha(0.01)
+            ax.set_facecolor("none")
+
+            ax.plot(weekday_counts.index, weekday_counts.values, marker='o', linestyle='-', color='orange')
+            ax.set_title("Weekday Activity", color="black")
+            ax.set_xlabel("Day", color="black")
+            ax.set_ylabel("Activity Count", color="black")
+            ax.tick_params(colors='black')
+            for label in ax.get_xticklabels() + ax.get_yticklabels():
+                label.set_color("black")
+
+            st.pyplot(fig)
+
+        
+        with col2:
+
             st.subheader("Monthly Usage Trend")
             activity_df["YearMonth"] = activity_df["Activity time"].dt.to_period("M").astype(str)
             monthly_usage = activity_df.groupby("YearMonth").size().reset_index(name="Access Count")
@@ -134,44 +171,9 @@ if activity_data:
             ax.set_title("Monthly Usage")
             ax.set_xticklabels([d.strftime('%b %Y') for d in monthly_usage["YearMonth"]], rotation=45)
             st.pyplot(fig)
+        
 
-    with st.expander("📅 Weekly and Hourly Access Patterns"):
-        col1, col2 = st.columns(2)
-        with col1:
-            st.subheader("Weekday Activity")
-            activity_df["Weekday"] = activity_df["Activity time"].dt.day_name()
-            weekday_counts = activity_df["Weekday"].value_counts().reindex([
-                "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
-            ])
-            fig, ax = plt.subplots(figsize=(6, 3))
-            fig.patch.set_alpha(0.01)
-            ax.patch.set_alpha(0.01)
-            ax.set_facecolor("none")
-            sns.barplot(x=weekday_counts.index, y=weekday_counts.values, palette="flare", ax=ax)
-            ax.set_title("Weekday Activity", color="black")
-            ax.set_xlabel("Day", color="black")
-            ax.set_ylabel("Activity Count", color="black")
-            ax.tick_params(colors="black")
-            for label in ax.get_xticklabels() + ax.get_yticklabels():
-                label.set_color("black")
-            st.pyplot(fig)
-
-        with col2:
-            st.subheader("Hourly Access Trend")
-            activity_df["Hour"] = activity_df["Activity time"].dt.hour
-            hour_counts = activity_df["Hour"].value_counts().sort_index()
-            fig, ax = plt.subplots(figsize=(6, 3))
-            fig.patch.set_alpha(0.01)
-            ax.patch.set_alpha(0.01)
-            ax.set_facecolor("none")
-            sns.lineplot(x=hour_counts.index, y=hour_counts.values, marker='o', color="teal", ax=ax)
-            ax.set_title("Hourly Access Trend", color="black")
-            ax.set_xlabel("Hour", color="black")
-            ax.set_ylabel("Access Count", color="black")
-            ax.tick_params(colors="black")
-            for label in ax.get_xticklabels() + ax.get_yticklabels():
-                label.set_color("black")
-            st.pyplot(fig)
+            
 
 
     st.markdown("""<hr style="margin-top:3rem; margin-bottom:2rem;">""", unsafe_allow_html=True)
@@ -207,7 +209,7 @@ if activity_data:
 
     elif selected_value == "reports":
         st.subheader("📌 Reports Latest Activity")
-        st.dataframe(reports_df[["id", "name","datasetId","datasetStatus","outdated","Reportstatus Based on Dataset"]])
+        st.dataframe(reports_df[["id", "name","datasetId","datasetStatus","outdated","Reportstatus Based on Dataset","Activity Status","Latest Artifact Activity"]])
 
     elif selected_value == "datasets":
         st.subheader("📌 Datasets Latest Activity")

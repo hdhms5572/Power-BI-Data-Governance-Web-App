@@ -27,34 +27,40 @@ if reports_df.empty:
     st.warning("📭 No report data available or failed to load.")
     st.stop()
 
+# Changing color based on theme base
+theme_base = st.get_option("theme.base")
+if theme_base == "dark":
+    fig_alpha = 1.0  
+else:
+    fig_alpha = 0.01
 col1, col2 = st.columns(2)
 with col1:
     st.subheader("📊 Report Status Count")
     fig, ax = plt.subplots()
     fig, ax = plt.subplots(figsize=(6, 3))
-    fig.patch.set_alpha(0.01)
-    ax.patch.set_alpha(0.01)   
-    ax.title.set_color('white')
-    ax.xaxis.label.set_color('white')
-    ax.yaxis.label.set_color('white')
-    ax.tick_params(colors='white')
+    fig.patch.set_alpha(fig_alpha)
+    ax.patch.set_alpha(fig_alpha)   
+    ax.title.set_color("gray")
+    ax.xaxis.label.set_color("gray")
+    ax.yaxis.label.set_color("gray")
+    ax.tick_params(colors="gray")
     for label in ax.get_xticklabels() + ax.get_yticklabels():
-        label.set_color('white')
-    sns.countplot(data=reports_df, x="reportstatus", palette={"Active": "green", "Inactive": "red", "Active (Outdated)": "orange"}, ax=ax)
+        label.set_color("gray")
+    sns.countplot(data=reports_df, x="Reportstatus Based on Dataset", palette={"Active": "green", "Inactive": "red", "Active (Outdated)": "orange"}, ax=ax)
     st.pyplot(fig)
 with col2:
     st.subheader("🥧 Report Status Share")
-    counts = reports_df["reportstatus"].value_counts()
+    counts = reports_df["Reportstatus Based on Dataset"].value_counts()
     fig, ax = plt.subplots(figsize=(6, 3))
-    fig.patch.set_alpha(0.01)
-    ax.patch.set_alpha(0.01)
-    ax.title.set_color('white')
-    ax.xaxis.label.set_color('white')
-    ax.yaxis.label.set_color('white') 
-    ax.tick_params(colors='white')
+    fig.patch.set_alpha(fig_alpha)
+    ax.patch.set_alpha(fig_alpha)
+    ax.title.set_color("gray")
+    ax.xaxis.label.set_color("gray")
+    ax.yaxis.label.set_color("gray") 
+    ax.tick_params(colors="gray")
     wedges, texts, autotexts = ax.pie(counts, labels=counts.index, autopct="%1.1f%%", colors=["green", "red", "orange"], startangle=150,)
     for text in texts:
-        text.set_color('white')
+        text.set_color("gray")
         text.set_fontweight('bold')
     ax.axis("equal")
     st.pyplot(fig)
@@ -76,47 +82,46 @@ with st.container():
             st.session_state.view_reports = False
             st.session_state.explore_reports_dataframe = True
 
-if st.session_state.view_reports:
+    if st.session_state.view_reports:
+        
+        if "selected_dataset_id" not in st.session_state:
+            st.session_state.selected_dataset_id = None
 
-    if "selected_dataset_id" not in st.session_state:
-        st.session_state.selected_dataset_id = None
-
-    st.markdown(" 🔗 Reports")
-    with st.container():
-        col1, col2, col3, col4, col5 = st.columns([5, 3, 2, 3, 2])
-        col1.markdown("<h5 style='margin-bottom: 0.5rem;'>🔖 ID</h5>", unsafe_allow_html=True)
-        col2.markdown("<h5 style='margin-bottom: 0.5rem;'>📛 Name</h5>", unsafe_allow_html=True)
-        col3.markdown("<h5 style='margin-bottom: 0.5rem;'>🥧 Report Status</h5>", unsafe_allow_html=True)
-        col4.markdown("<h5 style='margin-bottom: 0.5rem;'>📊 DataSet</h5>", unsafe_allow_html=True)
-        col5.markdown("<h5 style='margin-bottom: 0.5rem;'>🔍 Explore Report</h5>", unsafe_allow_html=True)
-
-
-    for index, row in reports_df.iterrows():
+        st.markdown(" 🔗 Reports")
         with st.container():
             col1, col2, col3, col4, col5 = st.columns([5, 3, 2, 3, 2])
-            col1.markdown(f"`{row['id']}`")
-            col2.markdown(f"**{row['name']}**")
-            col3.markdown(f"{row.get('reportstatus', 'Unknown')}")
+            col1.markdown("<h5 style='margin-bottom: 0.5rem;'>🔖 ID</h5>", unsafe_allow_html=True)
+            col2.markdown("<h5 style='margin-bottom: 0.5rem;'>📛 Name</h5>", unsafe_allow_html=True)
+            col3.markdown("<h5 style='margin-bottom: 0.5rem;'>🥧 Report Status</h5>", unsafe_allow_html=True)
+            col4.markdown("<h5 style='margin-bottom: 0.5rem;'>📊 DataSet</h5>", unsafe_allow_html=True)
+            col5.markdown("<h5 style='margin-bottom: 0.5rem;'>🔍 Explore Report</h5>", unsafe_allow_html=True)
 
-            if col4.button("View Dataset", key=f"btn_{row['datasetId']}"):
-                st.session_state.selected_dataset_id = (
-                    row['datasetId'] if st.session_state.selected_dataset_id != row['datasetId'] else None
+
+        for index, row in reports_df.iterrows():
+            with st.container():
+                col1, col2, col3, col4, col5 = st.columns([5, 3, 2, 3, 2])
+                col1.markdown(f"`{row['id']}`")
+                col2.markdown(f"**{row['name']}**")
+                col3.markdown(f"{row.get('Reportstatus Based on Dataset', 'Unknown')}")
+
+                if col4.button("View Dataset", key=f"btn_{row['datasetId']}"):
+                    st.session_state.selected_dataset_id = (
+                        row['datasetId'] if st.session_state.selected_dataset_id != row['datasetId'] else None
+                    )
+                col5.markdown(
+                    f"""<a href="{row['webUrl']}" target="_blank"><button style='font-size: 0.9rem;'>🚀 Explore</button></a>""",
+                    unsafe_allow_html=True
                 )
-            col5.markdown(
-                f"""<a href="{row['webUrl']}" target="_blank"><button style='font-size: 0.9rem;'>🚀 Explore</button></a>""",
-                unsafe_allow_html=True
-            )
+                if st.session_state.selected_dataset_id == row['datasetId']:
+                    selected_dataset = datasets_df[datasets_df["id"] == row["datasetId"]]
+                    if not selected_dataset.empty:
+                        st.markdown(f"##### 📌 Dataset for ID: `{row['datasetId']}`")
+                        
+                        st.dataframe(selected_dataset, use_container_width=True)
+                    else:
+                        st.info("⚠️ No dataset found for this report.")
 
-
-            if st.session_state.selected_dataset_id == row['datasetId']:
-                selected_dataset = datasets_df[datasets_df["id"] == row["datasetId"]]
-                if not selected_dataset.empty:
-                    st.markdown(f"##### 📌 Dataset for ID: `{row['datasetId']}`")
-                    st.dataframe(selected_dataset, use_container_width=True)
-                else:
-                    st.info("⚠️ No dataset found for this report.")
-
-elif st.session_state.explore_reports_dataframe:
-    st.dataframe(reports_df)
+    elif st.session_state.explore_reports_dataframe:
+        st.dataframe(reports_df[["id", "name","datasetId","datasetStatus","outdated","Reportstatus Based on Dataset"]])
 
 

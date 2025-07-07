@@ -66,6 +66,27 @@ with col2:
     st.pyplot(fig)
 
 
+st.subheader("🔗 Reports per Dataset")
+dataset_counts = reports_df['datasetId'].value_counts().reset_index()
+dataset_counts.columns = ['datasetId', 'report_count']
+top_datasets = dataset_counts.head(10)
+
+fig, ax = plt.subplots(figsize=(7, 4))
+fig.patch.set_alpha(fig_alpha)
+ax.patch.set_alpha(fig_alpha)
+ax.set_title("Top Datasets by Report Count", color='gray')
+ax.set_xlabel("Report Count", color='gray')
+ax.set_ylabel("Dataset ID", color='gray')
+ax.tick_params(colors="gray")
+for label in ax.get_xticklabels() + ax.get_yticklabels():
+    label.set_color("gray")
+
+sns.barplot(data=top_datasets, x='report_count', y='datasetId', palette='mako', ax=ax)
+st.pyplot(fig)
+
+
+
+
 if "view_reports" not in st.session_state:
     st.session_state.view_reports = False
 if "explore_reports_dataframe" not in st.session_state:

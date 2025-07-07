@@ -51,9 +51,38 @@ with col1:
     group.plot(kind="bar", stacked=True, ax=ax, colormap="coolwarm")
     st.pyplot(fig)
 with col2:
+    st.subheader("📅 Dataset Creation Timeline")
+    datasets_df["createdDate"] = pd.to_datetime(datasets_df["createdDate"])
+    created_by_month = datasets_df["createdDate"].dt.to_period("M").value_counts().sort_index()
+    fig, ax = plt.subplots(figsize=(6, 3))
+    fig.patch.set_alpha(fig_alpha)
+    ax.patch.set_alpha(fig_alpha)
+    ax.set_title("Datasets Created Per Month", color="gray")
+    ax.set_ylabel("Count", color="gray")
+    ax.set_xlabel("Month", color="gray")
+    created_by_month.plot(kind="line", marker="o", color="steelblue", ax=ax)
+    ax.tick_params(colors="gray")
+    for label in ax.get_xticklabels() + ax.get_yticklabels():
+        label.set_color("gray")
+    st.pyplot(fig)
+
+col1, col2 = st.columns(2)
+with col1:
+    st.subheader("📈 Refreshable vs Non-Refreshable Datasets")
+    group = datasets_df["isRefreshable"].value_counts().rename(index={True: "Refreshable", False: "Static"})
+    fig, ax = plt.subplots(figsize=(7, 3))
+    fig.patch.set_alpha(fig_alpha)
+    ax.patch.set_alpha(fig_alpha)
+    ax.set_title("Dataset Refresh Capability", color="gray")
+    ax.set_ylabel("Number of Datasets", color="gray")
+    ax.tick_params(colors="gray")
+    group.plot(kind="bar", color=["green", "red"], ax=ax)
+    for label in ax.get_xticklabels() + ax.get_yticklabels():
+        label.set_color("gray")
+    st.pyplot(fig)
+with col2:
     st.subheader("🌡️ Heatmap: Report vs Dataset Status")
     cross = pd.crosstab(reports_df["Reportstatus Based on Dataset"], reports_df["datasetStatus"])
-    fig, ax = plt.subplots()
     fig, ax = plt.subplots(figsize=(4, 3))
     fig.patch.set_alpha(fig_alpha)
     ax.patch.set_alpha(fig_alpha)   
@@ -65,6 +94,8 @@ with col2:
         label.set_color("gray")
     sns.heatmap(cross, annot=True, fmt="d", cmap="Blues", ax=ax)
     st.pyplot(fig)
+
+
 
 
 if "veiw_datasets" not in st.session_state:

@@ -35,18 +35,15 @@ if activity_data:
     report_ids = set(reports_df["id"])
     dataset_ids = set(datasets_df["id"])
     cutoff_date = pd.Timestamp.now() - pd.DateOffset(months=3)
-    recent_artifacts = latest_access1[latest_access1["Latest Activity"] >= cutoff_date]
-    recent_artifact_ids = set(recent_artifacts["ArtifactId"])
-    # Filter activity_df for only those artifact IDs
     recent_user_activity = activity_df[
-        (activity_df["ArtifactId"].isin(recent_artifact_ids)) &
-        (activity_df["Activity time"] >= cutoff_date)
+        activity_df["Activity time"] >= cutoff_date
     ]
 
     active_users = recent_user_activity["User email"].dropna().unique()
     users_df["activityStatus"] = users_df["emailAddress"].apply(
         lambda x: "Active" if x in active_users else "Inactive"
     )
+
 
 
 

@@ -68,48 +68,25 @@ with col1:
     ax.axis("equal")
     st.pyplot(fig)
 with col2:
-    st.subheader("🏷️ Top Display Names by Group Role (Top 10)")
-    top_display = (
-        users_df.groupby(["displayName", "groupUserAccessRight"])
-        .size()
-        .reset_index(name="count")
-        .sort_values("count", ascending=False)
-        .head(10)
-    )
-    fig, ax = plt.subplots(figsize=(3, 3))
+    # Workspace Access by Email Domain
+    users_df["Domain"] = users_df["emailAddress"].str.split("@").str[-1]
+    domain_counts = users_df["Domain"].value_counts().sort_values(ascending=True)
+
+    st.subheader("🌍 Workspace Access by Email Domain")
+    users_df["Domain"] = users_df["emailAddress"].str.split("@").str[-1]
+    domain_counts = users_df["Domain"].value_counts().sort_values(ascending=True)
+    fig, ax = plt.subplots(figsize=(4.2, 3))
     fig.patch.set_alpha(fig_alpha)
     ax.patch.set_alpha(fig_alpha)
-    ax.set_title("Top Access Display Names", color="gray")
-    ax.set_xlabel("Access Count", color="gray")
-    ax.set_ylabel("Display Name", color="gray")
+    ax.set_title("Workspace Access by Email Domain", color="gray")
+    ax.set_xlabel("User Count", color="gray")
+    ax.set_ylabel("Email Domain", color="gray")
     ax.tick_params(colors="gray")
-    sns.barplot(data=top_display, y="displayName", x="count", hue="groupUserAccessRight", palette="Set2", ax=ax)
-    ax.legend(title="Access Right", fontsize=7, title_fontsize=8)
+    sns.barplot(x=domain_counts.values, y=domain_counts.index, palette=["SkyBlue"] * len(domain_counts), ax=ax)
     for label in ax.get_yticklabels() + ax.get_xticklabels():
         label.set_color("gray")
     sns.despine()
     st.pyplot(fig)
-
-
-# Workspace Access by Email Domain
-users_df["Domain"] = users_df["emailAddress"].str.split("@").str[-1]
-domain_counts = users_df["Domain"].value_counts().sort_values(ascending=True)
-
-st.subheader("🌍 Workspace Access by Email Domain")
-users_df["Domain"] = users_df["emailAddress"].str.split("@").str[-1]
-domain_counts = users_df["Domain"].value_counts().sort_values(ascending=True)
-fig, ax = plt.subplots(figsize=(10, 3))
-fig.patch.set_alpha(fig_alpha)
-ax.patch.set_alpha(fig_alpha)
-ax.set_title("Workspace Access by Email Domain", color="gray")
-ax.set_xlabel("User Count", color="gray")
-ax.set_ylabel("Email Domain", color="gray")
-ax.tick_params(colors="gray")
-sns.barplot(x=domain_counts.values, y=domain_counts.index, palette=["SkyBlue"] * len(domain_counts), ax=ax)
-for label in ax.get_yticklabels() + ax.get_xticklabels():
-    label.set_color("gray")
-sns.despine()
-st.pyplot(fig)
 
 
 

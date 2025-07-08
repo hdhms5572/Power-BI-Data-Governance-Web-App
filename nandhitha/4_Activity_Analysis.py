@@ -217,7 +217,9 @@ selected_value = activity_options[selected_key]
 # ─── Table Output ───
 if selected_value == "activity":
     st.subheader("📁 Activity Log Insights")
-    st.dataframe(activity_df, use_container_width=True)
+    st.dataframe(activity_df[["Activity time", "User email","Activity","ArtifactId","Artifact Name"]])
+
+
 
 elif selected_value == "recent":
     st.subheader("📌 Most Recently Accessed Artifacts")

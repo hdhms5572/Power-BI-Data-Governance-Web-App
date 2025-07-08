@@ -1,0 +1,46 @@
+ streamlit run App/streamlit_app.py
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\10094791\AppData\Local\Programs\Python\Python313\Scripts\streamlit.exe\__main__.py", line 4, in <module>
+    from streamlit.web.cli import main
+  File "C:\Users\10094791\AppData\Local\Programs\Python\Python313\Lib\site-packages\streamlit\__init__.py", line 78, in <module>
+    from streamlit.delta_generator import DeltaGenerator as _DeltaGenerator
+  File "C:\Users\10094791\AppData\Local\Programs\Python\Python313\Lib\site-packages\streamlit\delta_generator.py", line 35, in <module>
+    from streamlit import (
+    ...<7 lines>...
+    )
+  File "C:\Users\10094791\AppData\Local\Programs\Python\Python313\Lib\site-packages\streamlit\cursor.py", line 20, in <module>
+    from streamlit.runtime.scriptrunner_utils.script_run_context import get_script_run_ctx
+  File "C:\Users\10094791\AppData\Local\Programs\Python\Python313\Lib\site-packages\streamlit\runtime\__init__.py", line 17, in <module>
+    from streamlit.runtime.runtime import Runtime, RuntimeConfig, RuntimeState
+  File "C:\Users\10094791\AppData\Local\Programs\Python\Python313\Lib\site-packages\streamlit\runtime\runtime.py", line 27, in <module>
+    from streamlit.runtime.app_session import AppSession
+  File "C:\Users\10094791\AppData\Local\Programs\Python\Python313\Lib\site-packages\streamlit\runtime\app_session.py", line
+ 41, in <module>
+    from streamlit.runtime import caching
+  File "C:\Users\10094791\AppData\Local\Programs\Python\Python313\Lib\site-packages\streamlit\runtime\caching\__init__.py", line 19, in <module>
+    from streamlit.runtime.caching.cache_data_api import (
+    ...<3 lines>...
+    )
+  File "C:\Users\10094791\AppData\Local\Programs\Python\Python313\Lib\site-packages\streamlit\runtime\caching\cache_data_api.py", line 41, in <module>
+    from streamlit.runtime.caching.cache_utils import (
+    ...<3 lines>...
+    )
+  File "C:\Users\10094791\AppData\Local\Programs\Python\Python313\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 31, in <module>
+    from streamlit.elements.spinner import spinner
+  File "C:\Users\10094791\AppData\Local\Programs\Python\Python313\Lib\site-packages\streamlit\elements\spinner.py", line 27, in <module>
+    from streamlit.runtime.scriptrunner import add_script_run_ctx
+  File "C:\Users\10094791\AppData\Local\Programs\Python\Python313\Lib\site-packages\streamlit\runtime\scriptrunner\__init__.py", line 15, in <module>
+    from streamlit.runtime.scriptrunner.script_runner import ScriptRunner, ScriptRunnerEvent
+  File "C:\Users\10094791\AppData\Local\Programs\Python\Python313\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 57, in <module>
+    from streamlit.runtime.state import (
+    ...<3 lines>...
+    )
+  File "C:\Users\10094791\AppData\Local\Programs\Python\Python313\Lib\site-packages\streamlit\runtime\state\__init__.py", line 16, in <module>
+    from streamlit.runtime.state.query_params_proxy import QueryParamsProxy
+  File "C:\Users\10094791\AppData\Local\Programs\Python\Python313\Lib\site-packages\streamlit\runtime\state\query_params_proxy.py", line 21, in <module>
+    from streamlit.runtime.state.session_state_proxy import get_session_state
+  File "C:\Users\10094791\AppData\Local\Programs\Python\Python313\Lib\site-packages\streamlit\runtime\state\session_state_proxy.py", line 3, in <module>
+    from utils import apply_sidebar_style
+ModuleNotFoundError: No module named 'utils'

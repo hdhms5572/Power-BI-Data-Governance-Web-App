@@ -187,7 +187,8 @@ if activity_data:
         "📌 Recently Accessed Artifacts": "recent",
         "🧍‍♂️ Users Activity Status": "users",
         "📈 Reports Latest Activity": "reports",
-        "🗃️ Datasets Latest Activity": "datasets"
+        "🗃️ Datasets Latest Activity": "datasets",
+        "📭 Unused Artifacts": "artifacts"
     }
 
     selected_key = st.selectbox(
@@ -217,5 +218,18 @@ if activity_data:
     elif selected_value == "datasets":
         st.subheader("📌 Datasets Latest Activity")
         st.dataframe(datasets_df)
+
+    elif selected_value == "artifacts":
+        report_names = reports_df["name"]
+        dataset_names = datasets_df["name"]
+        all_artifact_names = pd.concat([report_names, dataset_names], ignore_index=True).dropna().unique()
+        used_artifact_names = activity_df["Artifact Name"].dropna().unique()
+        artifact_status_df = pd.DataFrame(all_artifact_names, columns=["Artifact Name"])
+        artifact_status_df["Usage Status"] = artifact_status_df["Artifact Name"].apply(
+            lambda x: "Used" if x in used_artifact_names else "Unused"
+        )
+        unused_artifacts_df = artifact_status_df[artifact_status_df["Usage Status"] == "Unused"]
+        st.subheader("📭 Unused Artifacts")
+        st.dataframe(unused_artifacts_df, use_container_width=True)
         
     st.markdown("""<hr style="margin-top:1rem; margin-bottom:1rem;">""", unsafe_allow_html=True)

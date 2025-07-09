@@ -140,7 +140,7 @@ if activity_data:
     with st.expander("📅 Weekly and Monthly Access Patterns"):
         col1,col2= st.columns(2)
         with col1:
-            st.subheader("📆 Weekday Activity (Line Chart)")
+            st.subheader("📆 Weekday Activity")
 
             activity_df["Weekday"] = activity_df["Activity time"].dt.day_name()
             weekday_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]

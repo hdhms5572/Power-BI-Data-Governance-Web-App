@@ -125,7 +125,9 @@ with st.container():
                 col2.markdown(f"**{row['name']}**")
                 col3.markdown(f"{row.get('Reportstatus Based on Dataset', 'Unknown')}")
 
-                if col4.button("View Dataset", key=f"btn_{row['datasetId']}"):
+                dataset_name = datasets_df.loc[datasets_df['id'] == row['datasetId'], 'name'].values
+                dataset_button_label = dataset_name[0] if len(dataset_name) > 0 else "Unnamed Dataset"
+                if col4.button(dataset_button_label, key=f"btn_{row['datasetId']}"):
                     st.session_state.selected_dataset_id = (
                         row['datasetId'] if st.session_state.selected_dataset_id != row['datasetId'] else None
                     )
@@ -144,5 +146,3 @@ with st.container():
 
     elif st.session_state.explore_reports_dataframe:
         st.dataframe(reports_df[["id", "name","datasetId","datasetStatus","outdated","Reportstatus Based on Dataset"]])
-
-

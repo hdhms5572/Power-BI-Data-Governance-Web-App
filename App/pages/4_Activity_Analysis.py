@@ -22,7 +22,8 @@ email = st.session_state.user_email
 
 reports_df, datasets_df, users_df = get_filtered_dataframes(token, workspace, email)
 
-activity_data = st.file_uploader("Upload csv file...")
+activity_data = "sample_analysis/data.csv"
+# activity_data = st.file_uploader("Upload CSV file...")
 if activity_data:
     activity_df = pd.read_csv(activity_data)
     activity_df2=activity_df
@@ -65,11 +66,11 @@ if activity_data:
     else:
         fig_alpha = 0.01
     with st.expander("📊 User Insights"):
-        col1, col2 = st.columns([2,1])
+        col1, col2 = st.columns([4,2])
         with col1:
             st.subheader("Artifact Access Heatmap")
             heatmap_data = activity_df.groupby(["User email", "Artifact Name"]).size().unstack(fill_value=0)
-            fig, ax = plt.subplots(figsize=(12,3))
+            fig, ax = plt.subplots(figsize=(5,3))
             fig.patch.set_alpha(fig_alpha)
             ax.patch.set_alpha(fig_alpha)   
             ax.title.set_color('gray')
@@ -83,7 +84,7 @@ if activity_data:
             st.pyplot(fig)
         with col2:
             st.subheader("User Activity Status")
-            fig, ax = plt.subplots(figsize=(4, 3))
+            fig, ax = plt.subplots(figsize=(3, 5))
             fig.patch.set_alpha(fig_alpha)
             ax.patch.set_alpha(fig_alpha )   
             ax.title.set_color('gray')

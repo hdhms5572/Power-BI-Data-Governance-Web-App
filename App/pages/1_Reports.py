@@ -101,16 +101,23 @@ with col2:
 st.subheader("Top Datasets by Report Count")
 dataset_counts = reports_df['datasetId'].value_counts().reset_index()
 dataset_counts.columns = ['datasetId', 'report_count']
-top_datasets = dataset_counts.head(10)
-
+top_datasets = pd.merge(
+    dataset_counts.head(10),
+    datasets_df[['id', 'name']],
+    left_on='datasetId',
+    right_on='id',
+    how='left'
+)
+top_datasets.rename(columns={'name': 'datasetName'}, inplace=True)
 fig, ax = plt.subplots(figsize=(7, 3))
 fig.patch.set_alpha(fig_alpha)
 style_plot(ax)
-sns.barplot(data=top_datasets, x='report_count', y='datasetId', palette='mako', ax=ax)
+sns.barplot(data=top_datasets, x='report_count', y='datasetName', palette='mako', ax=ax)
 ax.set_title("Top Datasets", color="gray")
 ax.set_xlabel("Report Count", color="gray")
-ax.set_ylabel("Dataset ID", color="gray")
+ax.set_ylabel("Dataset Name", color="gray")
 st.pyplot(fig)
+
 
 # Toggle Options
 if "view_reports" not in st.session_state:

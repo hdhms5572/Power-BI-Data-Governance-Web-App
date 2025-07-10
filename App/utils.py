@@ -1,3 +1,4 @@
+
 import requests
 import pandas as pd
 import streamlit as st
@@ -7,14 +8,16 @@ def validate_session():
         st.warning("❌ Missing access token, workspace ID, or email. Please provide credentials in the main page.")
         st.stop()
 
-# utils.py
 def show_workspace():
-    name = st.session_state.get("workspace_name")
-    if name:
-        st.sidebar.markdown(f"### 📁 Current Workspace: **{name}**")
+    names = st.session_state.get("workspace_names")
+    if names:
+        st.sidebar.markdown("### 📁 Selected Workspaces:")
+        for name in names:
+            st.sidebar.markdown(f"- **{name}**")
     else:
         st.warning("⚠️ No workspace selected.")
         st.stop()
+
 
 # utils.py
 def apply_sidebar_style():

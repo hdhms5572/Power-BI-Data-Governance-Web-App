@@ -2,18 +2,19 @@ import streamlit as st
 import requests
 from utils import apply_sidebar_style
 
+# Sidebar Styling
 apply_sidebar_style()
 
-# Header
+# Page Settings
+st.set_page_config(page_title="Power BI Governance Dashboard", layout="wide", page_icon="📊")
 st.title("📊 Power BI Governance Dashboard")
 
-st.set_page_config(page_title="Power BI Governance Dashboard", layout="wide", page_icon="📊")
-
-# Helper Functions 
+# Session Reset Function
 def reset_session():
-    for key in ["access_token", "user_email", "workspace_id", "workspace_name", "logged_in", "workspace_options"]:
+    for key in ["access_token", "user_email", "workspace_ids", "workspace_names", "logged_in", "workspace_options"]:
         st.session_state.pop(key, None)
 
+# API Calls
 def get_all_workspaces(access_token):
     url = "https://api.powerbi.com/v1.0/myorg/groups"
     headers = {"Authorization": f"Bearer {access_token}"}
@@ -26,7 +27,7 @@ def get_users_in_workspace(workspace_id, access_token):
     response = requests.get(url, headers=headers)
     return [u.get("emailAddress", "") for u in response.json().get("value", [])] if response.status_code == 200 else []
 
-# Login 
+# Login Form
 if not st.session_state.get("logged_in"):
     st.subheader("🔐 Authentication Required")
     with st.form("login_form"):
@@ -49,45 +50,38 @@ if not st.session_state.get("logged_in"):
                     st.session_state.user_email = user_email
                     st.session_state.workspace_options = matched
                     st.session_state.logged_in = True
-                    # set default workspace
-                    first_key = next(iter(matched))
-                    st.session_state.workspace_name = first_key
-                    st.session_state.workspace_id = matched[first_key]
                     st.rerun()
                 else:
                     st.error("No workspaces found for this email.")
 else:
-    # Sidebar (Logout Only)
+    # Logout Button
     with st.sidebar:
         if st.button("🚪 Logout"):
             reset_session()
             st.rerun()
 
-    # Main Page: Workspace Selection 
+    # Login Info
     st.subheader(f"✅ Logged in as {st.session_state.user_email}")
-
     workspace_options = st.session_state.get("workspace_options", {})
 
-    # User must explicitly select
-    selected_name = st.selectbox("Choose Workspace", ["-- Select a Workspace --"] + list(workspace_options.keys()))
+    # Multi-select Workspace
+    selected_names = st.multiselect(
+        "Choose Workspaces",
+        options=list(workspace_options.keys()),
+        default=st.session_state.get("workspace_names", [])
+    )
 
-    if selected_name == "-- Select a Workspace --":
-        st.warning("⚠️ Please select a workspace to proceed.")
-        st.session_state.workspace_id = None
-        st.session_state.workspace_name = None
+    if selected_names:
+        st.session_state.workspace_names = selected_names
+        st.session_state.workspace_ids = [workspace_options[name] for name in selected_names]
+        st.success(f"Workspaces selected: {', '.join(selected_names)}")
+        st.markdown("Use the sidebar to navigate to **Reports**, **Datasets**, **Users**, or **Activity Analysis** for the selected workspaces.")
     else:
-        if selected_name != st.session_state.get("workspace_name"):
-            st.session_state.workspace_name = selected_name
-            st.session_state.workspace_id = workspace_options[selected_name]
-            st.rerun()
+        st.warning("⚠️ Please select at least one workspace to proceed.")
+        st.session_state.workspace_names = []
+        st.session_state.workspace_ids = []
 
-    if st.session_state.get("workspace_id"):
-        st.success(f"Workspace selected: **{st.session_state.workspace_name}**")
-        st.markdown("Use the sidebar to navigate to **Reports**, **Datasets**, **Users**, or **Activity Analysis**.")
-
-
-
-# Button improvements
+# Button Hover Styling
 st.markdown("""
 <style>
 .stFormSubmitButton>button:hover {
@@ -97,7 +91,6 @@ st.markdown("""
 .stButton>button:hover {
     background-color: darkred;
     color: white;
-            
 }
 </style>
 """, unsafe_allow_html=True)

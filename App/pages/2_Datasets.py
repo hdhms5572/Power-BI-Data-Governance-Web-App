@@ -2,54 +2,65 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib
 from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
+
 apply_sidebar_style()
 show_workspace()
-
 
 st.markdown("<h1 style='text-align: center;'>📊 Datasets</h1>", unsafe_allow_html=True)
 st.markdown("<hr>", unsafe_allow_html=True)
 
-# Check for required session state values
-if not (st.session_state.get("access_token") and st.session_state.get("workspace_id") and st.session_state.get("user_email")):
-    st.warning("❌ Missing access token, workspace ID, or email. Please provide credentials in the main page.")
+# Validate session state
+if not (st.session_state.get("access_token") and st.session_state.get("workspace_ids") and st.session_state.get("user_email")):
+    st.warning("❌ Missing credentials or workspace selection.")
     st.stop()
 
-# Retrieve from session state
 token = st.session_state.access_token
-workspace = st.session_state.workspace_id
+workspace_ids = st.session_state.workspace_ids
 email = st.session_state.user_email
+workspace_map = {v: k for k, v in st.session_state.workspace_options.items()}
 
-# Fetch data
-reports_df, datasets_df, users_df = get_filtered_dataframes(token, workspace, email)
+# Aggregate data
+reports_df_list, datasets_df_list, users_df_list = [], [], []
+for ws_id in workspace_ids:
+    reports, datasets, users = get_filtered_dataframes(token, ws_id, email)
+    workspace_name = workspace_map.get(ws_id, "Unknown")
+    reports["workspace_id"] = ws_id
+    datasets["workspace_id"] = ws_id
+    users["workspace_id"] = ws_id
+    reports["workspace_name"] = workspace_name
+    datasets["workspace_name"] = workspace_name
+    users["workspace_name"] = workspace_name
+    reports_df_list.append(reports)
+    datasets_df_list.append(datasets)
+    users_df_list.append(users)
+
+reports_df = pd.concat(reports_df_list, ignore_index=True)
+datasets_df = pd.concat(datasets_df_list, ignore_index=True)
+users_df = pd.concat(users_df_list, ignore_index=True)
 
 if datasets_df.empty:
-    st.warning("📭 No dataset data available or failed to load.")
+    st.warning("📭 No dataset data available.")
     st.stop()
 
+# Theme-based transparency
+fig_alpha = 0.5 if st.get_option("theme.base") == "dark" else 0.01
 
-# Changing color based on theme base
-theme_base = st.get_option("theme.base")
-if theme_base == "dark":
-    fig_alpha = 0.5
-else:
-    fig_alpha = 0.01
 col1, col2 = st.columns(2)
 with col1:
     st.subheader("📓 Dataset Status vs Freshness")
     group = datasets_df.groupby(["datasetStatus", "outdated"]).size().unstack(fill_value=0)
-    fig, ax = plt.subplots()
     fig, ax = plt.subplots(figsize=(6, 3))
     fig.patch.set_alpha(fig_alpha)
-    ax.patch.set_alpha(fig_alpha)   
+    ax.patch.set_alpha(fig_alpha)
     ax.title.set_color("gray")
-    ax.xaxis.label.set_color("gray")
-    ax.yaxis.label.set_color("gray")
     ax.tick_params(colors="gray")
     for label in ax.get_xticklabels() + ax.get_yticklabels():
         label.set_color("gray")
     group.plot(kind="bar", stacked=True, ax=ax, colormap="coolwarm")
     st.pyplot(fig)
+
 with col2:
     st.subheader("📅 Dataset Creation Timeline")
     datasets_df["createdDate"] = pd.to_datetime(datasets_df["createdDate"])
@@ -57,9 +68,7 @@ with col2:
     fig, ax = plt.subplots(figsize=(6, 3))
     fig.patch.set_alpha(fig_alpha)
     ax.patch.set_alpha(fig_alpha)
-    ax.set_title("Datasets Created Per Month", color="gray")
-    ax.set_ylabel("Count", color="gray")
-    ax.set_xlabel("Month", color="gray")
+    ax.set_title("Created Per Month", color="gray")
     created_by_month.plot(kind="line", marker="o", color="steelblue", ax=ax)
     ax.tick_params(colors="gray")
     for label in ax.get_xticklabels() + ax.get_yticklabels():
@@ -73,31 +82,26 @@ with col1:
     fig, ax = plt.subplots(figsize=(7, 3))
     fig.patch.set_alpha(fig_alpha)
     ax.patch.set_alpha(fig_alpha)
-    ax.set_title("Dataset Refresh Capability", color="gray")
-    ax.set_ylabel("Number of Datasets", color="gray")
-    ax.tick_params(colors="gray")
+    ax.set_title("Refresh Capability", color="gray")
     group.plot(kind="bar", color=["green", "red"], ax=ax)
+    ax.tick_params(colors="gray")
     for label in ax.get_xticklabels() + ax.get_yticklabels():
         label.set_color("gray")
     st.pyplot(fig)
+
 with col2:
     st.subheader("🌡️ Heatmap: Report vs Dataset Status")
     cross = pd.crosstab(reports_df["Reportstatus Based on Dataset"], reports_df["datasetStatus"])
     fig, ax = plt.subplots(figsize=(4, 3))
     fig.patch.set_alpha(fig_alpha)
-    ax.patch.set_alpha(fig_alpha)   
-    ax.title.set_color("gray")
-    ax.xaxis.label.set_color("gray")
-    ax.yaxis.label.set_color("gray")
+    ax.patch.set_alpha(fig_alpha)
+    sns.heatmap(cross, annot=True, fmt="d", cmap="Blues", ax=ax)
     ax.tick_params(colors="gray")
     for label in ax.get_xticklabels() + ax.get_yticklabels():
         label.set_color("gray")
-    sns.heatmap(cross, annot=True, fmt="d", cmap="Blues", ax=ax)
     st.pyplot(fig)
 
-
-
-
+# View or Explore Buttons
 if "veiw_datasets" not in st.session_state:
     st.session_state.veiw_datasets = False
 if "Explore_datasets_dataframe" not in st.session_state:
@@ -114,29 +118,28 @@ with st.container():
             st.session_state.veiw_datasets = False
             st.session_state.Explore_datasets_dataframe = True
 
-
 if st.session_state.veiw_datasets:
-
-    st.markdown(" 🔗 Datasets")
+    st.markdown(" 🔗 Datasets Overview")
     with st.container():
-        col1, col2, col3, col4, col5 = st.columns([3, 3, 3, 3, 2])
-        col1.markdown("<h5 style='margin-bottom: 0.5rem;'>🔖 ID</h5>", unsafe_allow_html=True)
-        col2.markdown("<h5 style='margin-bottom: 0.5rem;'>📛 Name</h5>", unsafe_allow_html=True)
-        col3.markdown("<h5 style='margin-bottom: 0.5rem;'>👤 ConfiguredBy</h5>", unsafe_allow_html=True)
-        col4.markdown("<h5 style='margin-bottom: 0.5rem;'>📅 CreatedDate</h5>", unsafe_allow_html=True)
-        col5.markdown("<h5 style='margin-bottom: 0.5rem;'>🔍 Explore Dataset</h5>", unsafe_allow_html=True)
-
+        col1, col2, col3, col4, col5, col6 = st.columns([3, 3, 2, 2, 2, 2])
+        col1.markdown("🔖 ID")
+        col2.markdown("📛 Name")
+        col3.markdown("👤 By")
+        col4.markdown("📅 Created")
+        col5.markdown("🏢 Workspace")
+        col6.markdown("🔍 Link")
 
     for index, row in datasets_df.iterrows():
         with st.container():
-            col1, col2, col3, col4, col5 = st.columns([3, 3, 4, 3, 2])
+            col1, col2, col3, col4, col5, col6 = st.columns([3, 3, 2, 2, 2, 2])
             col1.markdown(f"**{row['id']}**")
             col2.markdown(f"**{row['name']}**")
             col3.markdown(f"`{row['configuredBy']}`")
             col4.write(f"**{row['createdDate']}**")
-            col5.markdown(
-            f"""<a href="{row['webUrl']}" target="_blank"><button style='font-size: 0.9rem;'>🚀 Explore</button></a>""",
-            unsafe_allow_html=True
+            col5.markdown(f"`{row['workspace_name']}`")
+            col6.markdown(
+                f"""<a href="{row['webUrl']}" target="_blank"><button style='font-size: 0.8rem;'>🚀 Explore</button></a>""",
+                unsafe_allow_html=True
             )
 
 elif st.session_state.Explore_datasets_dataframe:

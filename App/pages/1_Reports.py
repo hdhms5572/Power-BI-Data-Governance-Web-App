@@ -160,7 +160,7 @@ if st.session_state.view_reports:
             col4.markdown(f"{row['workspace_name']}")
 
             dataset_name = datasets_df.loc[datasets_df['id'] == row['datasetId'], 'name'].values
-            dataset_label = dataset_name[0] if len(dataset_name) > 0 else "Unnamed Dataset"
+            dataset_label = dataset_name[0] if len(dataset_name) > 0 else "No Dataset"
             if col5.button(dataset_label, key=f"btn_{row['id']}"):
                 st.session_state.selected_dataset_id = (
                     row['datasetId'] if st.session_state.selected_dataset_id != row['datasetId'] else None

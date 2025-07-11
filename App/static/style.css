@@ -5,22 +5,22 @@ html, body {
 }
 
 .grid-card {
-    background-color: #f9f9f9;
+    background-color: #9be794;
     padding: 1rem;
     border-radius: 12px;
     text-align: center;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 5px rgba(126, 101, 101, 0.1);
 }
 
 .grid-title {
     font-size: 1rem;
-    color: #666;
+    color: #143806;
 }
 
 .grid-value {
     font-size: 1.8rem;
     font-weight: bold;
-    color: #222;
+    color: #041807;
 }
 
 .report-header {

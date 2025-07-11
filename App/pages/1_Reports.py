@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib
 import seaborn as sns
 from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
 
@@ -74,49 +75,81 @@ with col4:
 st.markdown("---")
 
 # --- Visualizations ---
-colA, colB = st.columns([2, 1])
-with colA:
-    st.subheader("📌 Status by Workspace")
-    fig, ax = plt.subplots(figsize=(10, 4))
-    sns.countplot(data=reports_df,
-                  x="Reportstatus Based on Dataset",
-                  hue="workspace_name",
-                  palette="Set2",
-                  ax=ax)
-    ax.set_xlabel("")
-    ax.set_ylabel("Count")
+# Theme Styling
+theme_base = st.get_option("theme.base")
+fig_alpha = 1.0 if theme_base == "dark" else 0.01
+
+def style_plot(ax):
+    ax.patch.set_alpha(fig_alpha)
+    ax.title.set_color("gray")
+    ax.xaxis.label.set_color("gray")
+    ax.yaxis.label.set_color("gray")
+    ax.tick_params(colors="gray")
+    for label in ax.get_xticklabels() + ax.get_yticklabels():
+        label.set_color("gray")
+
+col1, col2 = st.columns(2)
+with col1:
+    st.subheader("Report Status Distribution by Workspace")
+    workspace_names = reports_df["workspace_name"].unique()
+    workspace_palette = dict(zip(
+        workspace_names,
+        matplotlib.colormaps["tab10"].colors[:len(workspace_names)]
+    ))
+
+    fig, ax = plt.subplots(figsize=(8, 4))
+    fig.patch.set_alpha(fig_alpha)
+    style_plot(ax)
+
+    sns.countplot(
+        data=reports_df,
+        x="Reportstatus Based on Dataset",
+        hue="workspace_name",
+        palette=workspace_palette,
+        ax=ax
+    )
     st.pyplot(fig)
 
-with colB:
-    st.subheader("📌Status Share")
-    fig2, ax2 = plt.subplots(figsize=(4, 4))
-    status_counts = status_series.value_counts()
-    ax2.pie(status_counts,
-            labels=status_counts.index,
-            autopct="%1.1f%%",
-            startangle=150,
-            colors=sns.color_palette("Set2"))
-    ax2.axis("equal")
-    st.pyplot(fig2)
+with col2:
+    st.subheader("Overall Report Status Share")
+    status_counts = reports_df["Reportstatus Based on Dataset"].value_counts()
+    fig, ax = plt.subplots(figsize=(6, 3))
+    fig.patch.set_alpha(fig_alpha)
+    style_plot(ax)
 
-st.subheader("📦 Top Datasets by Report Count")
+    wedges, texts, autotexts = ax.pie(
+        status_counts,
+        labels=status_counts.index,
+        autopct="%1.1f%%",
+        colors=["green", "red", "orange"],
+        startangle=150
+    )
+    for text in texts:
+        text.set_color("gray")
+        text.set_fontweight("bold")
+    ax.axis("equal")
+    st.pyplot(fig)
+
+# Top Datasets by Report Count
+st.subheader("Top Datasets by Report Count")
 dataset_counts = reports_df['datasetId'].value_counts().reset_index()
 dataset_counts.columns = ['datasetId', 'report_count']
-top_datasets = pd.merge(dataset_counts.head(8),
-                        datasets_df[['id', 'name']],
-                        left_on='datasetId',
-                        right_on='id',
-                        how='left')
+top_datasets = pd.merge(
+    dataset_counts.head(10),
+    datasets_df[['id', 'name']],
+    left_on='datasetId',
+    right_on='id',
+    how='left'
+)
 top_datasets.rename(columns={'name': 'datasetName'}, inplace=True)
-fig3, ax3 = plt.subplots(figsize=(8, 3))
-sns.barplot(data=top_datasets,
-            y='datasetName',
-            x='report_count',
-            palette='coolwarm',
-            ax=ax3)
-ax3.set_xlabel("# Reports")
-ax3.set_ylabel("")
-st.pyplot(fig3)
+fig, ax = plt.subplots(figsize=(7, 3))
+fig.patch.set_alpha(fig_alpha)
+style_plot(ax)
+sns.barplot(data=top_datasets, x='report_count', y='datasetName', palette='mako', ax=ax)
+ax.set_title("Top Datasets", color="gray")
+ax.set_xlabel("Report Count", color="gray")
+ax.set_ylabel("Dataset Name", color="gray")
+st.pyplot(fig)
 
 # View Toggles 
 colA, colB = st.columns([1, 1])

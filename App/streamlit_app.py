@@ -1,11 +1,20 @@
 import streamlit as st
 import requests
 from utils import apply_sidebar_style
+from PIL import Image
 
 # Sidebar Styling
 apply_sidebar_style()
 
-# Page Settings
+# Load and resize image
+image = Image.open("./images/dover_log.jpg")
+new_width = image.width 
+new_height = int(image.height * 0.5)  
+resized_image = image.resize((new_width, new_height))
+
+# Display resized image
+st.image(resized_image, use_container_width=True)
+
 st.set_page_config(page_title="Power BI Governance Dashboard", layout="wide", page_icon="📊")
 st.title("📊 Power BI Governance Dashboard")
 

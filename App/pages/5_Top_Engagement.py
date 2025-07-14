@@ -1,5 +1,3 @@
-# pages/5_Top_Engagement.py
-
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -47,8 +45,8 @@ reports_df = pd.concat(reports_df_list, ignore_index=True)
 datasets_df = pd.concat(datasets_df_list, ignore_index=True)
 users_df = pd.concat(users_df_list, ignore_index=True)
 
-#  Activity File
-activity_path = r"C:\Users\10094790\Downloads\data (3).csv"# Adjust if different
+# Adjust if different
+activity_path = r"sample_analysis/data.csv"
 activity_df = pd.read_csv(activity_path)
 activity_df["Activity time"] = pd.to_datetime(activity_df["Activity time"], errors="coerce")
 activity_df = activity_df.sort_values("Activity time")

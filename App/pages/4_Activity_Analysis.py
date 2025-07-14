@@ -476,7 +476,7 @@ reports_df = pd.concat(reports_df_list, ignore_index=True)
 datasets_df = pd.concat(datasets_df_list, ignore_index=True)
 users_df = pd.concat(users_df_list, ignore_index=True)
 
-activity_data = r"C:\Users\10094790\Downloads\data (3).csv"  
+activity_data = r"sample_analysis\data.csv"  
 activity_df = pd.read_csv(activity_data)
 activity_df["Activity time"] = pd.to_datetime(activity_df["Activity time"], errors="coerce")
 activity_df = activity_df.sort_values("Activity time")
@@ -605,8 +605,8 @@ with st.expander("📅 Weekly and Monthly Access Patterns"):
         st.pyplot(fig)
             
 
-st.markdown("""<hr style="margin-top:3rem; margin-bottom:2rem;">""", unsafe_allow_html=True)
 
+st.markdown("""<hr style="margin-top:3rem; margin-bottom:2rem;">""", unsafe_allow_html=True)
 
 activity_options = {
     "-- Select an insight --": None,
@@ -616,7 +616,6 @@ activity_options = {
     "📈 Reports Latest Activity": "reports",
     "🗃️ Datasets Latest Activity": "datasets",
     "📭 Unused Artifacts": "artifacts",
-    "🗂️ Artifact Action Breakdown": "action"
 }
 
 selected_key = st.selectbox(
@@ -663,64 +662,57 @@ elif selected_value == "artifacts":
     unused_artifacts_df = artifact_status_df[artifact_status_df["Usage Status"] == "Unused"]
     st.subheader("📭 Unused Artifacts")
     st.dataframe(unused_artifacts_df, use_container_width=True)
-elif selected_value == "action":
-    st.subheader("🗂️ Artifact Action Breakdown")
-
-    with st.expander("🔍 Filter & Explore Actions", expanded=True):
-        # Collect filter inputs
-        search_term = st.text_input("🔎 Search by artifact name, user email, or activity type", key="search_term")
-        col1, col2 = st.columns(2)
-        with col1:
-            start_date = st.date_input("📅 Start Date", value=None, key="start_date")
-        with col2:
-            end_date = st.date_input("📅 End Date", value=None, key="end_date")
-
-        # Button to trigger filtering
-        if st.button("✅ Apply Filters"):
-            st.session_state.run_filter = True
-
-        # Filter logic executed only when the button is clicked
-        if st.session_state.get("run_filter", False):
-            filtered_df = activity_df.copy()
-
-            # Apply date filters if provided
-            if st.session_state.start_date:
-                filtered_df = filtered_df[filtered_df["Activity time"] >= pd.to_datetime(st.session_state.start_date)]
-            if st.session_state.end_date:
-                filtered_df = filtered_df[filtered_df["Activity time"] <= pd.to_datetime(st.session_state.end_date)]
-
-            # Apply keyword search
-            if st.session_state.search_term:
-                filtered_df = filtered_df[
-                    filtered_df["Artifact Name"].str.contains(st.session_state.search_term, case=False, na=False) |
-                    filtered_df["User email"].str.contains(st.session_state.search_term, case=False, na=False) |
-                    filtered_df["Activity"].str.contains(st.session_state.search_term, case=False, na=False)
-                ]
-
-            # Sort by latest activity time
-            filtered_df = filtered_df.sort_values("Activity time", ascending=False).reset_index(drop=True)
-
-            # Display grouped actions
-            if "Activity" in filtered_df.columns:
-                grouped_actions = filtered_df.groupby("Activity")
-                for action, group in grouped_actions:
-                    with st.expander(f"🧩 {action} ({len(group)} activities)", expanded=False):
-                        st.dataframe(group[["User email", "Artifact Name", "ArtifactId", "Activity time"]])
-                        csv = group.to_csv(index=False).encode("utf-8")
-                        st.download_button(
-                            label="📥 Download CSV",
-                            data=csv,
-                            file_name=f"{action}_activity_log.csv",
-                            mime="text/csv"
-                        )
-            else:
-                st.info("⚠️ 'Activity' column is missing from the dataset.")
-
-            # Reset flag so it won't run again until explicitly triggered
-            st.session_state.run_filter = False
-     
-
 
 st.markdown("""<hr style="margin-top:1rem; margin-bottom:1rem;">""", unsafe_allow_html=True)
 
 
+st.subheader("🗂️ Artifact Action Breakdown")
+with st.expander("Filter & Explore Actions", expanded=True):
+    # Collect filter inputs
+    search_term = st.text_input("🔍 Search by artifact name, user email, or activity type", key="search_term")
+    col1, col2 = st.columns(2)
+    with col1:
+        start_date = st.date_input("📅 Start Date", value=None, key="start_date")
+    with col2:
+        end_date = st.date_input("📅 End Date", value=None, key="end_date")
+
+    if st.button("🔍 Search"):
+        st.session_state.run_filter = True
+
+    if st.session_state.get("run_filter", False):
+        filtered_df = activity_df.copy()
+        
+        if st.session_state.start_date:
+            filtered_df = filtered_df[filtered_df["Activity time"] >= pd.to_datetime(st.session_state.start_date)]
+        if st.session_state.end_date:
+            filtered_df = filtered_df[filtered_df["Activity time"] <= pd.to_datetime(st.session_state.end_date)]
+
+        # Apply keyword search
+        if st.session_state.search_term:
+            filtered_df = filtered_df[
+                filtered_df["Artifact Name"].str.contains(st.session_state.search_term, case=False, na=False) |
+                filtered_df["User email"].str.contains(st.session_state.search_term, case=False, na=False) |
+                filtered_df["Activity"].str.contains(st.session_state.search_term, case=False, na=False)
+            ]
+
+        # Sort by latest activity time
+        filtered_df = filtered_df.sort_values("Activity time", ascending=False).reset_index(drop=True)
+
+        if "Activity" in filtered_df.columns:
+            grouped_actions = filtered_df.groupby("Activity")
+            for action, group in grouped_actions:
+                with st.expander(f"🧩 {action} ({len(group)} activities)", expanded=False):
+                    st.dataframe(group[["User email", "Artifact Name", "ArtifactId", "Activity time"]])
+                    csv = group.to_csv(index=False).encode("utf-8")
+                    st.download_button(
+                        label="📥 Download CSV",
+                        data=csv,
+                        file_name=f"{action}_activity_log.csv",
+                        mime="text/csv"
+                    )
+        else:
+            st.info("⚠️ 'Activity' column is missing from the dataset.")
+
+        # Reset flag so it won't run again until explicitly triggered
+        st.session_state.run_filter = False
+     

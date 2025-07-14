@@ -17,7 +17,7 @@ inject_external_style()
 
 st.markdown("<h2 style='text-align: center;'>📊 Reports</h2><hr>", unsafe_allow_html=True)
 
-# --- Session Validation ---
+# Session Validation
 if not (st.session_state.get("access_token") and
         st.session_state.get("workspace_ids") and
         st.session_state.get("user_email")):
@@ -29,7 +29,7 @@ workspace_ids = st.session_state.workspace_ids
 email = st.session_state.user_email
 workspace_map = {v: k for k, v in st.session_state.workspace_options.items()}
 
-# --- Data Loading ---
+# Data Loading
 reports_df_list, datasets_df_list, users_df_list = [], [], []
 for ws_id in workspace_ids:
     reports, datasets, users = get_filtered_dataframes(token, ws_id, email)
@@ -74,7 +74,7 @@ with col4:
 
 st.markdown("---")
 
-# --- Visualizations ---
+# Visualizations
 # Theme Styling
 theme_base = st.get_option("theme.base")
 fig_alpha = 1.0 if theme_base == "dark" else 0.01
@@ -247,11 +247,10 @@ elif st.session_state.view_reports:
                         st.markdown(f"Dataset Info for `{row['datasetId']}`")
                         st.dataframe(selected_dataset, use_container_width=True)
 
-# --- Explore Reports Table View ---
+# Explore Reports Table View
 elif st.session_state.explore_reports_dataframe:
     st.markdown("## 📊 Full Reports Table Grouped by Workspace")
     for ws_name, group in reports_df.groupby("workspace_name"):
-        st.markdown(f"### 📍 Workspace: `{ws_name}` ({len(group)} reports)")
 
         renamed_df = group.rename(columns={
             "id": "Report ID",
@@ -261,6 +260,18 @@ elif st.session_state.explore_reports_dataframe:
             "Reportstatus Based on Dataset": "Status"
         })[["Report ID", "Report Name", "Dataset ID", "Report URL", "Status"]]
 
+        col1, col2 = st.columns([5,1])
+        with col1:
+            st.markdown(f"### 📍 Workspace: `{ws_name}` ({len(group)} reports)")
+        with col2:
+            csv = renamed_df.to_csv(index=False).encode("utf-8")
+            st.download_button(
+                label="📥 Download CSV",
+                data=csv,
+                file_name=f"{ws_name}_activity_log.csv",
+                mime="text/csv"
+            )
+
         st.dataframe(renamed_df, use_container_width=True)
 
         for _, row in group.iterrows():
@@ -269,3 +280,5 @@ elif st.session_state.explore_reports_dataframe:
                 if not selected_dataset.empty:
                     st.markdown(f"Dataset Info for `{row['datasetId']}`")
                     st.dataframe(selected_dataset, use_container_width=True)
+
+        

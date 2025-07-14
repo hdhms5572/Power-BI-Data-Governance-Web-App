@@ -134,6 +134,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import matplotlib
+import plotly.express as px
 from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
 
 apply_sidebar_style()
@@ -222,6 +223,26 @@ with col2:
     for label in ax.get_xticklabels() + ax.get_yticklabels():
         label.set_color("gray")
     st.pyplot(fig)
+
+st.subheader("🌐 Email Domain Distribution by Workspace")
+
+users_df["Domain"] = users_df["emailAddress"].str.split("@").str[-1]
+
+treemap_df = (
+    users_df.groupby(["workspace_name", "Domain"])
+    .size()
+    .reset_index(name="User Count")
+)
+
+fig = px.treemap(
+    treemap_df,
+    path=["workspace_name", "Domain"],
+    values="User Count",
+    color="User Count",
+    color_continuous_scale="Blues"
+)
+st.plotly_chart(fig, use_container_width=True)
+
 
 # Buttons for displaying user table or dataframe
 if "veiw_users" not in st.session_state:

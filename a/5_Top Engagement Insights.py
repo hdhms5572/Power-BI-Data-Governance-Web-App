@@ -1,5 +1,3 @@
-# pages/6_Top_Engagement.py
-
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -13,11 +11,22 @@ def inject_external_style():
 
 # Setup
 st.set_page_config(page_title="Top Engagement Insights", layout="wide", page_icon="🏆")
+
 apply_sidebar_style()
 show_workspace()
 inject_external_style()
 
+
 st.markdown("<h2 style='text-align: center;'>🏆 Top Engagement Insights</h2><hr>", unsafe_allow_html=True)
+st.markdown("""
+<div style='text-align: center; font-size: 1.05rem; color: #333; background-color: #f5f9ff; 
+            padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
+📈 This dashboard provides insights into the most actively used <strong>reports</strong>, <strong>datasets</strong>, and <strong>users</strong> across your selected workspaces.
+Analyze engagement trends, identify your top content and contributors, and monitor recent activity within the last 3 months.
+Use this view to understand usage behavior, improve resource visibility, and guide governance decisions.
+</div>
+""", unsafe_allow_html=True)
+
 
 # --- Session Check ---
 if not (st.session_state.get("access_token") and
@@ -31,7 +40,7 @@ workspace_ids = st.session_state.workspace_ids
 email = st.session_state.user_email
 workspace_map = {v: k for k, v in st.session_state.workspace_options.items()}
 
-# --- Load data ---
+# Load data 
 reports_df_list, datasets_df_list, users_df_list = [], [], []
 for ws_id in workspace_ids:
     reports, datasets, users = get_filtered_dataframes(token, ws_id, email)
@@ -47,8 +56,8 @@ reports_df = pd.concat(reports_df_list, ignore_index=True)
 datasets_df = pd.concat(datasets_df_list, ignore_index=True)
 users_df = pd.concat(users_df_list, ignore_index=True)
 
-# --- Activity File ---
-activity_path = r"C:\Users\nnand\Downloads\data (2).csv" # Adjust if different
+# Adjust if different
+activity_path = r"C:\Users\nnand\Downloads\data (2).csv"
 activity_df = pd.read_csv(activity_path)
 activity_df["Activity time"] = pd.to_datetime(activity_df["Activity time"], errors="coerce")
 activity_df = activity_df.sort_values("Activity time")

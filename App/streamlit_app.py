@@ -65,11 +65,16 @@ else:
     st.subheader(f"✅ Logged in as {st.session_state.user_email}")
     workspace_options = st.session_state.get("workspace_options", {})
 
-    # Multi-select Workspace
+    # Select Workspace
+    select_all = st.checkbox("Select All Workspaces")
+
+    workspace_names = list(workspace_options.keys())
+    default_selection = workspace_names if select_all else st.session_state.get("workspace_names", [])
+
     selected_names = st.multiselect(
         "Choose Workspaces",
-        options=list(workspace_options.keys()),
-        default=st.session_state.get("workspace_names", [])
+        options=workspace_names,
+        default=default_selection
     )
 
     if selected_names:

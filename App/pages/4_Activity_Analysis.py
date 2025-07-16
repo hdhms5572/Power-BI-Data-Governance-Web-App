@@ -8,7 +8,13 @@ apply_sidebar_style()
 show_workspace()
 
 st.markdown("<h1 style='text-align: center;'>🔍 Activity Log Insights</h1>", unsafe_allow_html=True)
-st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown("""
+<div style='text-align: center; font-size: 1.05rem; color: #333; background-color: #f5f9ff;
+            padding: 14px 24px; border-left: 6px solid #009688; border-radius: 8px; margin-bottom: 20px;'>
+📊 This dashboard provides a centralized view of all user interactions with reports and datasets.
+Explore usage trends, identify top artifacts and users, analyze activity patterns, and detect unused resources to improve data governance.
+</div>
+""", unsafe_allow_html=True)
 
 # Validate session state
 if not (st.session_state.get("access_token") and st.session_state.get("workspace_ids") and st.session_state.get("user_email")):
@@ -36,7 +42,7 @@ reports_df = pd.concat(reports_df_list, ignore_index=True)
 datasets_df = pd.concat(datasets_df_list, ignore_index=True)
 users_df = pd.concat(users_df_list, ignore_index=True)
 
-activity_data = r"sample_analysis\data.csv"  
+activity_data = r"C:\Users\10094790\Downloads\data (3).csv"
 activity_df = pd.read_csv(activity_data)
 activity_df["Activity time"] = pd.to_datetime(activity_df["Activity time"], errors="coerce")
 activity_df = activity_df.sort_values("Activity time")
@@ -187,30 +193,36 @@ selected_key = st.selectbox(
 selected_value = activity_options[selected_key]
 if selected_value == "activity":
     st.subheader("📁 Activity Log Insights")
+    st.info("View all raw activity logs including who accessed what and when.")
     activity_df.reset_index(drop=True, inplace=True)
 
     st.dataframe(activity_df[["Activity time","User email", "Activity", "ArtifactId", "Artifact Name"]])
 
 
-
 elif selected_value == "recent":
     st.subheader("📌 Most Recently Accessed Artifacts")
+    st.info("Displays the most recently accessed reports or datasets. Helps in identifying active artifacts.")
     latest_access1 = latest_access.reset_index(drop=True)
     st.dataframe(latest_access1)
 
 elif selected_value == "users":
     st.subheader("📌 Users Activity Status")
+    st.info("Shows each user's latest access time and whether they are marked active or inactive.")
     st.dataframe(users_df[["emailAddress", "groupUserAccessRight", "displayName", "workspace_name","activityStatus","Latest Activity Time"]])
 
 elif selected_value == "reports":
     st.subheader("📌 Reports Latest Activity")
-    st.dataframe(reports_df[["id", "name","datasetId","datasetStatus","outdated","Reportstatus Based on Dataset","Activity Status","Latest Artifact Activity"]])
+    st.info("Details of reports along with their last usage and activity status.")
+    st.dataframe(reports_df[["name","datasetStatus","outdated","Reportstatus Based on Dataset","Activity Status","Latest Artifact Activity"]])
 
 elif selected_value == "datasets":
     st.subheader("📌 Datasets Latest Activity")
-    st.dataframe(datasets_df)
+    st.info("Displays dataset-level activity insights, freshness status, and usage history.")
+    st.dataframe(datasets_df[[ "name","configuredBy","isRefreshable","createdDate","outdated","datasetStatus"]])
 
 elif selected_value == "artifacts":
+    st.info("Lists reports and datasets that haven't been accessed at all recently. Useful for cleanup.")
+
     report_names = reports_df["name"]
     dataset_names = datasets_df["name"]
     all_artifact_names = pd.concat([report_names, dataset_names], ignore_index=True).dropna().unique()
@@ -227,6 +239,15 @@ st.markdown("""<hr style="margin-top:1rem; margin-bottom:1rem;">""", unsafe_allo
 
 
 st.subheader("🗂️ Artifact Action Breakdown")
+st.markdown("""
+<div style='text-align: center; font-size: 0.95rem; color: #333; background-color: #f9f9f9; padding: 12px 20px; 
+            border-left: 5px solid #009688; border-radius: 6px; margin-bottom: 12px;'>
+🗂️ Use this section to explore detailed actions taken on artifacts such as reports and datasets.
+You can filter user activities by date range, artifact name, email, or specific actions like view, edit, or share.
+Each activity is grouped and downloadable for further audit or analysis.
+</div>
+""", unsafe_allow_html=True)
+
 with st.expander("Filter & Explore Actions", expanded=True):
     # Collect filter inputs
     search_term = st.text_input("🔍 Search by artifact name, user email, or activity type", key="search_term")

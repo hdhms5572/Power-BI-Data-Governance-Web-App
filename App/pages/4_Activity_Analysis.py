@@ -4,16 +4,21 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
 
+def inject_external_style():
+    with open("static/style.css") as f:
+        css = f.read()
+        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+
 apply_sidebar_style()
 show_workspace()
+inject_external_style()
 
 st.markdown("<h1 style='text-align: center;'>🔍 Activity Log Insights</h1>", unsafe_allow_html=True)
 st.markdown("""
-<div style='text-align: center; font-size: 1.05rem; color: #333; background-color: #f5f9ff;
-            padding: 14px 24px; border-left: 6px solid #009688; border-radius: 8px; margin-bottom: 20px;'>
-📊 This dashboard provides a centralized view of all user interactions with reports and datasets.
+<div style='text-align: center; font-size: 1.05rem; color: #777; background-color: #12192E; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
+This dashboard provides a centralized view of all user interactions with reports and datasets.
 Explore usage trends, identify top artifacts and users, analyze activity patterns, and detect unused resources to improve data governance.
-</div>
+</div><hr>
 """, unsafe_allow_html=True)
 
 # Validate session state
@@ -42,7 +47,7 @@ reports_df = pd.concat(reports_df_list, ignore_index=True)
 datasets_df = pd.concat(datasets_df_list, ignore_index=True)
 users_df = pd.concat(users_df_list, ignore_index=True)
 
-activity_data = r"C:\Users\10094790\Downloads\data (3).csv"
+activity_data = r"./sample_analysis/data.csv"
 activity_df = pd.read_csv(activity_data)
 activity_df["Activity time"] = pd.to_datetime(activity_df["Activity time"], errors="coerce")
 activity_df = activity_df.sort_values("Activity time")
@@ -240,9 +245,8 @@ st.markdown("""<hr style="margin-top:1rem; margin-bottom:1rem;">""", unsafe_allo
 
 st.subheader("🗂️ Artifact Action Breakdown")
 st.markdown("""
-<div style='text-align: center; font-size: 0.95rem; color: #333; background-color: #f9f9f9; padding: 12px 20px; 
-            border-left: 5px solid #009688; border-radius: 6px; margin-bottom: 12px;'>
-🗂️ Use this section to explore detailed actions taken on artifacts such as reports and datasets.
+<div style='text-align: center; font-size: 1.05rem; color: #777; background-color: #12192E; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
+Use this section to explore detailed actions taken on artifacts such as reports and datasets.
 You can filter user activities by date range, artifact name, email, or specific actions like view, edit, or share.
 Each activity is grouped and downloadable for further audit or analysis.
 </div>

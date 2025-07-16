@@ -2,20 +2,25 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-import matplotlib
 import plotly.express as px
 from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
 
+def inject_external_style():
+    with open("static/style.css") as f:
+        css = f.read()
+        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+
 apply_sidebar_style()
 show_workspace()
+inject_external_style()
 
 st.markdown("<h1 style='text-align: center;'>👥 Users</h1>", unsafe_allow_html=True)
 # Dashboard Description
 st.markdown("""
-<div style='text-align: center; font-size: 1.05rem; color: #333; background-color: #f5f9ff; padding: 12px 24px; border-left: 5px solid #1a73e8; border-radius: 6px; margin-bottom: 20px;'>
-👥 This dashboard offers a detailed overview of user access across selected Power BI workspaces.
+<div style='text-align: center; font-size: 1.05rem; color: #777; background-color: #12192E; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
+This dashboard offers a detailed overview of user access across selected Power BI workspaces.
 You can explore user roles, identify access patterns based on email domains, and analyze distribution of administrative privileges.
-</div>
+</div><hr>
 """, unsafe_allow_html=True)
 
 # Validate required session state

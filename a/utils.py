@@ -1,6 +1,37 @@
+
 import requests
 import pandas as pd
 import streamlit as st
+import base64
+import streamlit as st
+
+
+def theme_selector():
+    col1, _ = st.columns([0.1, 0.9])  # Narrow left column
+    with col1:
+        is_dark = st.toggle("🌙 Dark Mode", value=False)
+    return "Dark Mode" if is_dark else "Light Mode"
+def set_theme(mode):
+    if mode == "Dark Mode":
+        st.markdown(
+            """
+            <style>
+                body, .stApp { background-color: #454545; color: #ffffff; }
+                h1, h2, h3, h4, h5, h6, p, div { color: #ffffff !important; }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+    else:
+        st.markdown(
+            """
+            <style>
+                body, .stApp { background-color: #ffffff; color: #000000; }
+                h1, h2, h3, h4, h5, h6, p, div { color: #000000 !important; }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
 
 def validate_session():
     if not (st.session_state.get("access_token") and st.session_state.get("workspace_id") and st.session_state.get("user_email")):
@@ -18,19 +49,32 @@ def show_workspace():
         st.stop()
 
 
+
+def get_base64_image(image_path):
+    with open(image_path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
 # utils.py
 def apply_sidebar_style():
     st.markdown("""
     <style>
         [data-testid="stSidebar"] {
-            background-color: lightblack;
+            background-color: #2c3e50; /* Dark slate blue */
             padding: 1.5rem 1rem;
             border-right: 1px solid gray;
             font-family: 'Segoe UI', 'Inter', sans-serif;
+            color: white;
         }
+
+        /* Force text inside sidebar to white */
+        [data-testid="stSidebar"] * {
+            color: white !important;
+        }
+
         [data-testid="stSidebar"] ul {
             padding-left: 0;
         }
+
         [data-testid="stSidebar"] ul li a {
             font-size: 1.05rem !important;
             font-weight: 600;
@@ -41,13 +85,36 @@ def apply_sidebar_style():
             display: block;
             text-decoration: none;
         }
+
         [data-testid="stSidebar"] ul li a:hover {
-            background-color: lightblack !important;
+            background-color: #3c4c60 !important;
         }
     </style>
     """, unsafe_allow_html=True)
 
-    
+def render_user_profile():
+    if "user_email" in st.session_state:
+        # You can use a default image or fetch from an API
+        profile_img_path = "static/userlogo.png"  # Use any placeholder
+        with open(profile_img_path, "rb") as f:
+            img_base64 = base64.b64encode(f.read()).decode()
+
+        st.markdown(f"""
+        <div style='
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0,0,0,0.05);
+            padding: 6px 12px;
+            border-radius: 12px;
+        '>
+            <img src='data:image/png;base64,{img_base64}' width='36' height='36' style='border-radius:50%; cursor:pointer;' title='{st.session_state.user_email}'>
+        </div>
+        """, unsafe_allow_html=True)   
 def call_powerbi_api(url, token):
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.get(url, headers=headers)

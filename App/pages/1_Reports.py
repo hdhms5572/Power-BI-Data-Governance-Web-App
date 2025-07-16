@@ -16,14 +16,14 @@ show_workspace()
 inject_external_style()
 
 
-st.markdown("<h2 style='text-align: center;'>📊 Reports</h2><hr>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>📊 Reports</h1>", unsafe_allow_html=True)
 
 # Professional Dashboard Description
 st.markdown("""
-<div style='text-align: center; font-size: 1.05rem; color: #333; background-color: #f5f9ff; padding: 12px 24px; border-left: 5px solid #1a73e8; border-radius: 6px; margin-bottom: 20px;'>
-🔍 This dashboard provides a comprehensive view of Power BI reports across  selected workspaces. 
+<div style='text-align: center; font-size: 1.05rem; color: #777; background-color: #12192E; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
+This dashboard provides a comprehensive view of Power BI reports across  selected workspaces. 
 Analyze report statuses, explore associated datasets, and generate insights through intuitive charts and tables.
-</div>
+</div><hr>
 """, unsafe_allow_html=True)
 
 # Session Validation
@@ -139,50 +139,25 @@ with col2:
     ax.axis("equal")
     st.pyplot(fig)
 
-st.subheader("📊 Top Datasets by Report Count")
-
-# Step 1: Aggregate report counts
+# Top Datasets by Report Count
+st.subheader("Top Datasets by Report Count")
 dataset_counts = reports_df['datasetId'].value_counts().reset_index()
 dataset_counts.columns = ['datasetId', 'report_count']
-
-# Step 2: Merge with dataset names
 top_datasets = pd.merge(
     dataset_counts.head(10),
     datasets_df[['id', 'name']],
     left_on='datasetId',
     right_on='id',
     how='left'
-).rename(columns={'name': 'datasetName'})
-
-# Step 3: Sort datasets for visual clarity
-top_datasets = top_datasets.sort_values(by='report_count', ascending=True)
-
-# Step 4: Create the plot
-fig, ax = plt.subplots(figsize=(10, 6))
-sns.barplot(
-    data=top_datasets,
-    y='datasetName',
-    x='report_count',
-    palette='crest',
-    ax=ax
 )
-
-# Step 5: Refine aesthetics
-ax.set_title("Top Datasets", fontsize=15, color="#2C3E50", weight='bold')
-ax.set_xlabel("Report Count", fontsize=12, color="#34495E")
-ax.set_ylabel("")
-ax.tick_params(axis='x', labelsize=10)
-ax.tick_params(axis='y', labelsize=11)
-ax.grid(True, axis='x', linestyle='--', linewidth=0.6, alpha=0.5)
-
-# Remove chart borders
-for spine in ['top', 'right', 'left']:
-    ax.spines[spine].set_visible(False)
-
-# Set font globally
-plt.rcParams['font.family'] = 'DejaVu Sans'
-
-# Display the chart in Streamlit
+top_datasets.rename(columns={'name': 'datasetName'}, inplace=True)
+fig, ax = plt.subplots(figsize=(7, 3))
+fig.patch.set_alpha(fig_alpha)
+style_plot(ax)
+sns.barplot(data=top_datasets, x='report_count', y='datasetName', palette='mako', ax=ax)
+ax.set_title("Top Datasets", color="gray")
+ax.set_xlabel("Report Count", color="gray")
+ax.set_ylabel("Dataset Name", color="gray")
 st.pyplot(fig)
 
 

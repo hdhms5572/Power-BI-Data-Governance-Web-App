@@ -1,3 +1,34 @@
+.stApp {
+    background-color: #01081F;
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+h1, h2, h3 {
+    text-align: center;
+    margin-bottom: 0.5em;
+}
+
+.stSidebar {
+    background-color: #02021a;
+}
+
+.css-1d391kg {
+    background-color: #0F111A;
+    padding: 20px;
+}
+
+.stFormSubmitButton > button:hover {
+    background-color: #3F51B5;
+    color: white;
+}
+
+.stButton > button:hover {
+    background-color: #aa3434;
+    color: white;
+}
+
+
 html, body {
     font-family: 'Segoe UI', sans-serif;
     font-size: 15px;
@@ -48,3 +79,5 @@ div[data-testid="stDataFrame"] thead {
     background-color: #efefef;
     font-weight: bold;
 }
+
+

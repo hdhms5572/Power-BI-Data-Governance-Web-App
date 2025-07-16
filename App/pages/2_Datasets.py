@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
+
 def inject_external_style():
     with open("static/style.css") as f:
         css = f.read()
@@ -12,14 +13,15 @@ def inject_external_style():
 apply_sidebar_style()
 show_workspace()
 inject_external_style()
-st.markdown("<h2 style='text-align: center;'>DATASETS</h2><hr>", unsafe_allow_html=True)
+
+st.markdown("<h1 style='text-align: center;'>📊 Datasets</h1>", unsafe_allow_html=True)
 st.markdown("""
-<div style='text-align: center; font-size: 1.05rem; color: #333; background-color: #f5f9ff;
-     padding: 12px 24px; border-left: 5px solid #1a73e8; border-radius: 6px; margin-bottom: 20px;'>
-📂 This dashboard provides an in-depth overview of Power BI datasets available in  selected workspaces. 
+<div style='text-align: center; font-size: 1.05rem; color: #777; background-color: #12192E; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
+This dashboard provides an in-depth overview of Power BI datasets available in  selected workspaces. 
 Track dataset freshness, refreshability, creation trends, and dataset-to-report relationships using visual summaries and interactive tables.
-</div>
+</div><hr>
 """, unsafe_allow_html=True)
+
 # Validate session
 if not (st.session_state.get("access_token") and st.session_state.get("workspace_ids") and st.session_state.get("user_email")):
     st.warning("❌ Missing credentials or workspace selection.")

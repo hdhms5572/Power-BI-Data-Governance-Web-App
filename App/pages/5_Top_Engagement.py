@@ -11,24 +11,20 @@ def inject_external_style():
 
 # Setup
 st.set_page_config(page_title="Top Engagement Insights", layout="wide", page_icon="🏆")
-
 apply_sidebar_style()
 show_workspace()
 inject_external_style()
 
-
-st.markdown("<h2 style='text-align: center;'>🏆 Top Engagement Insights</h2><hr>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>🏆 Top Engagement Insights</h1>", unsafe_allow_html=True)
 st.markdown("""
-<div style='text-align: center; font-size: 1.05rem; color: #333; background-color: #f5f9ff; 
-            padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
-📈 This dashboard provides insights into the most actively used <strong>reports</strong>, <strong>datasets</strong>, and <strong>users</strong> across your selected workspaces.
+<div style='text-align: center; font-size: 1.05rem; color: #777; background-color: #12192E; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
+This dashboard provides insights into the most actively used <strong>reports</strong>, <strong>datasets</strong>, and <strong>users</strong> across your selected workspaces.
 Analyze engagement trends, identify your top content and contributors, and monitor recent activity within the last 3 months.
 Use this view to understand usage behavior, improve resource visibility, and guide governance decisions.
-</div>
+</div><hr>
 """, unsafe_allow_html=True)
 
-
-# --- Session Check ---
+# Session Check
 if not (st.session_state.get("access_token") and
         st.session_state.get("workspace_ids") and
         st.session_state.get("user_email")):
@@ -56,8 +52,7 @@ reports_df = pd.concat(reports_df_list, ignore_index=True)
 datasets_df = pd.concat(datasets_df_list, ignore_index=True)
 users_df = pd.concat(users_df_list, ignore_index=True)
 
-# Adjust if different
-activity_path = r"C:\Users\10094790\Downloads\data (3).csv"
+activity_path = r"sample_analysis/data.csv"
 activity_df = pd.read_csv(activity_path)
 activity_df["Activity time"] = pd.to_datetime(activity_df["Activity time"], errors="coerce")
 activity_df = activity_df.sort_values("Activity time")
@@ -77,8 +72,18 @@ recent_active_users = recent_user_activity["User email"].dropna().unique()
 
 users_df["activityStatus"] = users_df["emailAddress"].apply(lambda x: "Active" if x in recent_active_users else "Inactive")
 
-# --- Visualizations ---
-fig_alpha = 1.0 if st.get_option("theme.base") == "dark" else 0.01
+# Visualizations
+theme_base = st.get_option("theme.base")
+fig_alpha = 1.0 if theme_base == "dark" else 0.01
+
+def style_plot(ax):
+    ax.patch.set_alpha(fig_alpha)
+    ax.title.set_color("gray")
+    ax.xaxis.label.set_color("gray")
+    ax.yaxis.label.set_color("gray")
+    ax.tick_params(colors="gray")
+    for label in ax.get_xticklabels() + ax.get_yticklabels():
+        label.set_color("gray")
 
 col1, col2 = st.columns(2)
 
@@ -95,6 +100,8 @@ with col1:
     ax1.patch.set_alpha(fig_alpha)
     sns.barplot(data=report_usage, x="Usage Count", y="name", palette="viridis", ax=ax1)
     ax1.set_title("Top Reports", color="gray")
+    ax1.xaxis.label.set_color("gray")
+    ax1.yaxis.label.set_color("gray")
     ax1.tick_params(colors='gray')
     for label in ax1.get_xticklabels() + ax1.get_yticklabels():
         label.set_color("gray")
@@ -114,6 +121,8 @@ with col2:
     sns.barplot(data=dataset_usage, x="Usage Count", y="name", palette="crest", ax=ax2)
     ax2.set_title("Top Datasets", color="gray")
     ax2.tick_params(colors='gray')
+    ax2.xaxis.label.set_color("gray")
+    ax2.yaxis.label.set_color("gray")
     for label in ax2.get_xticklabels() + ax2.get_yticklabels():
         label.set_color("gray")
     st.pyplot(fig2)
@@ -134,6 +143,8 @@ with col3:
     sns.barplot(data=user_activity, x="Activity Count", y="displayName", palette="Blues_d", ax=ax3)
     ax3.set_title("Top Users", color="gray")
     ax3.tick_params(colors='gray')
+    ax3.xaxis.label.set_color("gray")
+    ax3.yaxis.label.set_color("gray")
     for label in ax3.get_xticklabels() + ax3.get_yticklabels():
         label.set_color("gray")
     st.pyplot(fig3)
@@ -152,6 +163,8 @@ with col4:
     ax4.patch.set_alpha(fig_alpha)
     sns.barplot(data=recent_users, x="Activity Count", y="displayName", palette="Purples", ax=ax4)
     ax4.set_title("Top Users (3 Months)", color="gray")
+    ax4.xaxis.label.set_color("gray")
+    ax4.yaxis.label.set_color("gray")
     ax4.tick_params(colors='gray')
     for label in ax4.get_xticklabels() + ax4.get_yticklabels():
         label.set_color("gray")

@@ -15,7 +15,16 @@ apply_sidebar_style()
 show_workspace()
 inject_external_style()
 
+
 st.markdown("<h2 style='text-align: center;'>📊 Reports</h2><hr>", unsafe_allow_html=True)
+
+# Professional Dashboard Description
+st.markdown("""
+<div style='text-align: center; font-size: 1.05rem; color: #333; background-color: #f5f9ff; padding: 12px 24px; border-left: 5px solid #1a73e8; border-radius: 6px; margin-bottom: 20px;'>
+🔍 This dashboard provides a comprehensive view of Power BI reports across  selected workspaces. 
+Analyze report statuses, explore associated datasets, and generate insights through intuitive charts and tables.
+</div>
+""", unsafe_allow_html=True)
 
 # Session Validation
 if not (st.session_state.get("access_token") and
@@ -130,26 +139,52 @@ with col2:
     ax.axis("equal")
     st.pyplot(fig)
 
-# Top Datasets by Report Count
-st.subheader("Top Datasets by Report Count")
+st.subheader("📊 Top Datasets by Report Count")
+
+# Step 1: Aggregate report counts
 dataset_counts = reports_df['datasetId'].value_counts().reset_index()
 dataset_counts.columns = ['datasetId', 'report_count']
+
+# Step 2: Merge with dataset names
 top_datasets = pd.merge(
     dataset_counts.head(10),
     datasets_df[['id', 'name']],
     left_on='datasetId',
     right_on='id',
     how='left'
+).rename(columns={'name': 'datasetName'})
+
+# Step 3: Sort datasets for visual clarity
+top_datasets = top_datasets.sort_values(by='report_count', ascending=True)
+
+# Step 4: Create the plot
+fig, ax = plt.subplots(figsize=(10, 6))
+sns.barplot(
+    data=top_datasets,
+    y='datasetName',
+    x='report_count',
+    palette='crest',
+    ax=ax
 )
-top_datasets.rename(columns={'name': 'datasetName'}, inplace=True)
-fig, ax = plt.subplots(figsize=(7, 3))
-fig.patch.set_alpha(fig_alpha)
-style_plot(ax)
-sns.barplot(data=top_datasets, x='report_count', y='datasetName', palette='mako', ax=ax)
-ax.set_title("Top Datasets", color="gray")
-ax.set_xlabel("Report Count", color="gray")
-ax.set_ylabel("Dataset Name", color="gray")
+
+# Step 5: Refine aesthetics
+ax.set_title("Top Datasets", fontsize=15, color="#2C3E50", weight='bold')
+ax.set_xlabel("Report Count", fontsize=12, color="#34495E")
+ax.set_ylabel("")
+ax.tick_params(axis='x', labelsize=10)
+ax.tick_params(axis='y', labelsize=11)
+ax.grid(True, axis='x', linestyle='--', linewidth=0.6, alpha=0.5)
+
+# Remove chart borders
+for spine in ['top', 'right', 'left']:
+    ax.spines[spine].set_visible(False)
+
+# Set font globally
+plt.rcParams['font.family'] = 'DejaVu Sans'
+
+# Display the chart in Streamlit
 st.pyplot(fig)
+
 
 # View Toggles 
 colA, colB = st.columns([1, 1])
@@ -177,31 +212,29 @@ if st.session_state.filter_status:
     st.dataframe(workspace_counts, use_container_width=True)
 
     # Header row for report details
-    header1, header2, header3, header4, header5, header6 = st.columns([4, 3, 2, 2, 3, 2])
-    header1.markdown("**Report ID**")
-    header2.markdown("**Report Name**")
-    header3.markdown("**Status**")
-    header4.markdown("**Workspace**")
-    header5.markdown("**Dataset**")
-    header6.markdown("**Link**")
+    header1, header2, header3, header4, header5 = st.columns([4, 3, 2, 2, 3])
+    header1.markdown("**Report Name**")
+    header2.markdown("**Status**")
+    header3.markdown("**Workspace**")
+    header4.markdown("**Dataset**")
+    header5.markdown("**Link**")
 
     # Report detail rows
     for _, row in filtered_df.iterrows():
         with st.container():
-            col1, col2, col3, col4, col5, col6 = st.columns([4, 3, 2, 2, 3, 2])
-            col1.markdown(f"`{row['id']}`")
-            col2.markdown(f"**{row['name']}**")
-            col3.markdown(row['Reportstatus Based on Dataset'])
-            col4.markdown(row['workspace_name'])
+            col1, col2, col3, col4, col5 = st.columns([4, 3, 2, 2, 3])
+            col1.markdown(f"**{row['name']}**")
+            col2.markdown(row['Reportstatus Based on Dataset'])
+            col3.markdown(row['workspace_name'])
 
             # Dataset label button
             dataset_name = datasets_df.loc[datasets_df['id'] == row['datasetId'], 'name'].values
             dataset_label = dataset_name[0] if len(dataset_name) > 0 else "No Dataset"
-            if col5.button(dataset_label, key=f"btn_{row['id']}"):
+            if col4.button(dataset_label, key=f"btn_{row['id']}"):
                 st.session_state.selected_dataset_id = row['datasetId']
 
             # Report link
-            col6.markdown(f"""<a href="{row['webUrl']}" target="_blank">
+            col5.markdown(f"""<a href="{row['webUrl']}" target="_blank">
                               <button style='font-size: 0.8rem;'>Explore</button></a>""",
                           unsafe_allow_html=True)
 
@@ -218,26 +251,25 @@ elif st.session_state.view_reports:
     for ws_name, group in reports_df.groupby("workspace_name"):
         st.markdown(f"### 📍 Workspace: `{ws_name}` ({len(group)} reports)")
 
-        header1, header2, header3, header4, header5 = st.columns([4, 3, 3, 4, 2])
-        header1.markdown("**Report ID**")
-        header2.markdown("**Report Name**")
-        header3.markdown("**Status**")
-        header4.markdown("**Dataset**")
-        header5.markdown("**Link**")
+        header1, header2, header3, header4= st.columns([4, 3, 3, 4])
+        header1.markdown("**Report Name**")
+        header2.markdown("**Status**")
+        header3.markdown("**Dataset**")
+        header4.markdown("**Link**")
 
         for _, row in group.iterrows():
             with st.container():
-                col1, col2, col3, col4, col5 = st.columns([4, 3, 3, 4, 2])
-                col1.markdown(f"`{row['id']}`")
-                col2.markdown(f"**{row['name']}**")
-                col3.markdown(row['Reportstatus Based on Dataset'])
+                col1, col2, col3, col4 = st.columns([4, 3, 3, 4])
+
+                col1.markdown(f"**{row['name']}**")
+                col2.markdown(row['Reportstatus Based on Dataset'])
 
                 dataset_name = datasets_df.loc[datasets_df['id'] == row['datasetId'], 'name'].values
                 dataset_label = dataset_name[0] if len(dataset_name) > 0 else "No Dataset"
-                if col4.button(dataset_label, key=f"btn_ws_{row['id']}"):
+                if col3.button(dataset_label, key=f"btn_ws_{row['id']}"):
                     st.session_state.selected_dataset_id = row['datasetId']
 
-                col5.markdown(f"""<a href="{row['webUrl']}" target="_blank">
+                col4.markdown(f"""<a href="{row['webUrl']}" target="_blank">
                     <button style='font-size: 0.8rem;'>Explore</button></a>""",
                     unsafe_allow_html=True)
 
@@ -253,16 +285,14 @@ elif st.session_state.explore_reports_dataframe:
     for ws_name, group in reports_df.groupby("workspace_name"):
 
         renamed_df = group.rename(columns={
-            "id": "Report ID",
             "name": "Report Name",
-            "datasetId": "Dataset ID",
             "webUrl": "Report URL",
             "Reportstatus Based on Dataset": "Status"
-        })[["Report ID", "Report Name", "Dataset ID", "Report URL", "Status"]]
+        })[["Report Name", "Report URL", "Status"]].reset_index(drop=True)
 
         col1, col2 = st.columns([5,1])
         with col1:
-            st.markdown(f"### 📍 Workspace: `{ws_name}` ({len(group)} reports)")
+            st.markdown(f"Workspace: `{ws_name}` ({len(group)} reports)")
         with col2:
             csv = renamed_df.to_csv(index=False).encode("utf-8")
             st.download_button(
@@ -274,11 +304,6 @@ elif st.session_state.explore_reports_dataframe:
 
         st.dataframe(renamed_df, use_container_width=True)
 
-        for _, row in group.iterrows():
-            if st.session_state.selected_dataset_id == row["datasetId"]:
-                selected_dataset = datasets_df[datasets_df["id"] == row["datasetId"]]
-                if not selected_dataset.empty:
-                    st.markdown(f"Dataset Info for `{row['datasetId']}`")
-                    st.dataframe(selected_dataset, use_container_width=True)
+
 
         

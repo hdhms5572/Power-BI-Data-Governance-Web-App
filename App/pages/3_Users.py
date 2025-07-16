@@ -10,7 +10,13 @@ apply_sidebar_style()
 show_workspace()
 
 st.markdown("<h1 style='text-align: center;'>👥 Users</h1>", unsafe_allow_html=True)
-st.markdown("<hr>", unsafe_allow_html=True)
+# Dashboard Description
+st.markdown("""
+<div style='text-align: center; font-size: 1.05rem; color: #333; background-color: #f5f9ff; padding: 12px 24px; border-left: 5px solid #1a73e8; border-radius: 6px; margin-bottom: 20px;'>
+👥 This dashboard offers a detailed overview of user access across selected Power BI workspaces.
+You can explore user roles, identify access patterns based on email domains, and analyze distribution of administrative privileges.
+</div>
+""", unsafe_allow_html=True)
 
 # Validate required session state
 if not (st.session_state.get("access_token") and st.session_state.get("workspace_ids") and st.session_state.get("user_email")):
@@ -39,7 +45,7 @@ if users_df.empty:
 # Theme-aware plot styling
 fig_alpha = 1.0 if st.get_option("theme.base") == "dark" else 0.01
 # 🔢 Display number of users per workspace
-st.markdown("## 🧮 Number of Users per Workspace")
+st.markdown("##  Number of Users per Workspace")
 workspace_user_counts = users_df["workspace_name"].value_counts().reset_index()
 workspace_user_counts.columns = ["Workspace", "Number of Users"]
 st.dataframe(workspace_user_counts, use_container_width=True)
@@ -151,11 +157,14 @@ if st.session_state.veiw_users:
                 col5.markdown(f"**{row['principalType']}**")
                 col6.markdown(f"`{row['workspace_name']}`")
 
-elif st.session_state.Explore_users_dataframe:
-    st.markdown("## 📊 Full Datasets Table by Workspace")
+if st.session_state.Explore_users_dataframe:
+    st.markdown("## 📊 Full Users Table by Workspace")
     for ws_name, group in users_df.groupby("workspace_name"):
+        
+        # Reset index for clean table
+        group = group.reset_index(drop=True)
 
-        col1, col2 = st.columns([5,1])
+        col1, col2 = st.columns([5, 1])
         with col1:
             st.markdown(f"### 🏢 Workspace: `{ws_name}`")
         with col2:
@@ -163,7 +172,7 @@ elif st.session_state.Explore_users_dataframe:
             st.download_button(
                 label="📥 Download CSV",
                 data=csv,
-                file_name=f"{ws_name}_activity_log.csv",
+                file_name=f"{ws_name}_user_activity.csv",
                 mime="text/csv"
             )
 

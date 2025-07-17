@@ -88,7 +88,7 @@ with col1:
 with col2:
     st.subheader("🌍 Workspace Access by Email Domain")
     users_df["Domain"] = users_df["emailAddress"].str.split("@").str[-1]
-    domain_counts = users_df["Domain"].value_counts().sort_values(ascending=True)
+    domain_counts = users_df["Domain"].value_counts().sort_values(ascending=False)
 
     fig, ax = plt.subplots(figsize=(4.2, 3))
     ax.set_title("Access by Email Domain")

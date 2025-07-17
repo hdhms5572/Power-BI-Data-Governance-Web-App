@@ -80,4 +80,32 @@ div[data-testid="stDataFrame"] thead {
     font-weight: bold;
 }
 
+.classic-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.classic-row {
+    display: flex;
+    border-bottom: 1px solid #aaa;
+    margin: 1px 0px 30px 0px;
+}
+
+.classic-row div {
+    border-right: 1px solid #aaa;
+    padding: 6px;
+    font-size: 0.85rem;
+}
+
+.classic-row div:last-child {
+    border-right: none;
+}
+
+.classic-row.header {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    border-bottom: 2px solid #555;
+}
+
+
 

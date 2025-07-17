@@ -135,7 +135,9 @@ if st.session_state.veiw_users:
     for ws_name, group in users_df.groupby("workspace_name"):
         group = group.reset_index(drop=True)  
         st.markdown(f"### 📍 Workspace: `{ws_name}` ({len(group)} users)")
-        header1, header2, header3, header4, header5, header6 = st.columns([1, 3, 5, 3, 2, 2])
+        st.markdown('<div class="classic-table">', unsafe_allow_html=True)
+        st.markdown('<div class="classic-row header">', unsafe_allow_html=True)
+        header1, header2, header3, header4, header5, header6 = st.columns([1, 3, 4, 3, 2,3])
         header1.markdown("🔖 ID")
         header2.markdown("📛 Name")
         header3.markdown("👤 Email")
@@ -144,14 +146,14 @@ if st.session_state.veiw_users:
         header6.markdown("🏢 Workspace")
 
         for idx, row in group.iterrows():
-            with st.container():
-                col1, col2, col3, col4, col5, col6 = st.columns([1, 3, 5, 3, 2, 2])
-                col1.markdown(f"**{idx + 1}**")
-                col2.markdown(f"**{row['displayName']}**")
-                col3.markdown(f"`{row['emailAddress']}`")
-                col4.markdown(f"**{row['groupUserAccessRight']}**")
-                col5.markdown(f"**{row['principalType']}**")
-                col6.markdown(f"`{row['workspace_name']}`")
+            st.markdown('<div class="classic-row">', unsafe_allow_html=True)
+            col1, col2, col3, col4, col5, col6 = st.columns([1, 3, 4, 3, 2,3])
+            col1.markdown(f"**{idx + 1}**")
+            col2.markdown(f"**{row['displayName']}**")
+            col3.markdown(f"`{row['emailAddress']}`")
+            col4.markdown(f"**{row['groupUserAccessRight']}**")
+            col5.markdown(f"**{row['principalType']}**")
+            col6.markdown(f"`{row['workspace_name']}`")
 
 if st.session_state.Explore_users_dataframe:
     st.markdown("## 📊 Full Users Table by Workspace")

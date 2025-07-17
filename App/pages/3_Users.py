@@ -14,10 +14,14 @@ apply_sidebar_style()
 show_workspace()
 inject_external_style()
 
+col1, col2, col3 = st.columns(3)
+with col2:
+    st.image("./images/dover_log.png")
+
 st.markdown("<h1 style='text-align: center;'>👥 Users</h1>", unsafe_allow_html=True)
 # Dashboard Description
 st.markdown("""
-<div style='text-align: center; font-size: 1.05rem; color: #777; background-color: #12192E; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
+<div style='text-align: center; font-size: 1.05rem; background-color: #E7DBF3; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
 This dashboard offers a detailed overview of user access across selected Power BI workspaces.
 You can explore user roles, identify access patterns based on email domains, and analyze distribution of administrative privileges.
 </div><hr>
@@ -47,9 +51,7 @@ if users_df.empty:
     st.warning("📭 No user data found across selected workspaces.")
     st.stop()
 
-# Theme-aware plot styling
-fig_alpha = 1.0 if st.get_option("theme.base") == "dark" else 0.01
-# 🔢 Display number of users per workspace
+# Display number of users per workspace
 st.markdown("##  Number of Users per Workspace")
 workspace_user_counts = users_df["workspace_name"].value_counts().reset_index()
 workspace_user_counts.columns = ["Workspace", "Number of Users"]
@@ -70,8 +72,6 @@ with col1:
     colors = [role_colors.get(role, "LightGray") for role in labels]
 
     fig, ax = plt.subplots(figsize=(4, 3.5))
-    fig.patch.set_alpha(fig_alpha)
-    ax.patch.set_alpha(fig_alpha)
     wedges, texts, autotexts = ax.pie(
         sizes,
         labels=labels,
@@ -81,9 +81,7 @@ with col1:
         wedgeprops=dict(width=0.3),
         textprops={'fontsize': 8}
     )
-    for text in texts + autotexts:
-        text.set_color("gray")
-    ax.set_title("Group Access Rights", fontsize=10, color="gray")
+    ax.set_title("Group Access Rights", fontsize=10)
     ax.axis("equal")
     st.pyplot(fig)
 
@@ -93,15 +91,8 @@ with col2:
     domain_counts = users_df["Domain"].value_counts().sort_values(ascending=True)
 
     fig, ax = plt.subplots(figsize=(4.2, 3))
-    fig.patch.set_alpha(fig_alpha)
-    ax.patch.set_alpha(fig_alpha)
-    ax.set_title("Access by Email Domain", color="gray")
+    ax.set_title("Access by Email Domain")
     sns.barplot(x=domain_counts.values, y=domain_counts.index, palette=["SkyBlue"] * len(domain_counts), ax=ax)
-    ax.set_xlabel("User Count", color="gray")
-    ax.set_ylabel("Email Domain", color="gray")
-    ax.tick_params(colors="gray")
-    for label in ax.get_xticklabels() + ax.get_yticklabels():
-        label.set_color("gray")
     st.pyplot(fig)
 
 st.subheader("🌐 Email Domain Distribution by Workspace")

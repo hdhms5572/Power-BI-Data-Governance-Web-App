@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
+from utils import  render_profile_header
 def inject_external_style():
     with open("static/style.css") as f:
         css = f.read()
@@ -10,9 +11,22 @@ def inject_external_style():
 
 # Initial UI setup
 apply_sidebar_style()
+render_profile_header()
+
 show_workspace()
 inject_external_style()
-st.markdown("<h2 style='text-align: center;'>📦 Datasets</h2><hr>", unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns(3)
+with col2:
+    st.image("./images/dover_log.png")
+
+st.markdown("<h1 style='text-align: center;'>📊 Datasets</h1>", unsafe_allow_html=True)
+st.markdown("""
+<div style='text-align: center; font-size: 1.05rem; background-color: #E7DBF3; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
+This dashboard provides an in-depth overview of Power BI datasets available in  selected workspaces. 
+Track dataset freshness, refreshability, creation trends, and dataset-to-report relationships using visual summaries and interactive tables.
+</div><hr>
+""", unsafe_allow_html=True)
 
 # Validate session
 if not (st.session_state.get("access_token") and st.session_state.get("workspace_ids") and st.session_state.get("user_email")):
@@ -48,7 +62,6 @@ st.session_state.setdefault("dataset_filter_status", None)
 st.session_state.setdefault("view_datasets", False)
 st.session_state.setdefault("explore_datasets_dataframe", False)
 
-# KPI Filters
 col1, col2, col3, col4 = st.columns(4)
 with col1:
     if st.button("🧮 Total Datasets"):
@@ -121,97 +134,112 @@ with colB:
         st.session_state.explore_datasets_dataframe = True
         st.session_state.dataset_filter_status = None
 
+# Columns to display
+display_cols = ["name", "configuredBy", "isRefreshable", "createdDate", "outdated", "datasetStatus"]
+
 # Filtered View
 if st.session_state.dataset_filter_status:
     st.markdown(f"## 📦 Filtered Datasets: `{st.session_state.dataset_filter_status}`")
+    
+    # Apply dataset status filter
     if st.session_state.dataset_filter_status == "Outdated":
         filtered_df = datasets_df[datasets_df["outdated"] == True]
     else:
         filtered_df = datasets_df[datasets_df["datasetStatus"] == st.session_state.dataset_filter_status]
 
+    # Count by workspace
     ws_counts = filtered_df["workspace_name"].value_counts().reset_index()
     ws_counts.columns = ["Workspace", "Count"]
     st.markdown("### 🧮 Count by Workspace")
     st.dataframe(ws_counts, use_container_width=True)
 
+    # Display filtered datasets per workspace
     for ws_name, group in filtered_df.groupby("workspace_name"):
         st.markdown(f"### 🏢 Workspace: `{ws_name}` ({len(group)} datasets)")
+        group = group[display_cols + ["webUrl"]]  # Keep webUrl for Explore button
 
-        header1, header2, header3, header4, header5, header6, header7, header8 = st.columns([3, 3, 2, 2, 2, 2, 2, 2])
-        header1.markdown("ID")
-        header2.markdown("Name")
-        header3.markdown("By")
-        header4.markdown("CreatedDate")
-        header5.markdown("🧮 Status")
-        header6.markdown("⚙️ Refreshable")
-        header7.markdown("🔍 Link")
+        st.markdown('<div class="classic-table">', unsafe_allow_html=True)
+        st.markdown('<div class="classic-row header">', unsafe_allow_html=True)
+        header1, header2, header3, header4, header5, header6 = st.columns([3, 4, 2, 2, 2, 2])
+        header1.markdown("**Name**")
+        header2.markdown("**By**")
+        header3.markdown("**Created Date**")
+        header4.markdown("**Status**")
+        header5.markdown("**Refreshable**")
+        header6.markdown("**🔍 Link**")
 
         for _, row in group.iterrows():
-            with st.container():
-                col1, col2, col3, col4, col5, col6, col7= st.columns([3, 3, 2, 2, 2, 2, 2 ])
-                col1.markdown(f"`{row['id']}`")
-                col2.markdown(f"**{row['name']}**")
-                col3.markdown(row["configuredBy"])
-                col4.markdown(row["createdDate"])
-                col5.markdown(row["datasetStatus"])
-                col6.markdown("✅ Yes" if row["isRefreshable"] else "No")
-                col7.markdown(f"""<a href="{row['webUrl']}" target="_blank">
-                    <button style='font-size: 0.8rem;'>🚀 Explore</button></a>""", unsafe_allow_html=True)
+            st.markdown('<div class="classic-row">', unsafe_allow_html=True)
+            col1, col2, col3, col4, col5, col6 = st.columns([3, 4, 2, 2, 2, 2])
+            col1.markdown(f"**{row['name']}**")
+            col2.markdown(row["configuredBy"])
+            col3.markdown(str(row["createdDate"]))
+            col4.markdown(row["datasetStatus"])
+            col5.markdown("✅ Yes" if row["isRefreshable"] else "❌ No")
+            col6.markdown(f"""<a href="{row['webUrl']}" target="_blank">
+                <button style='font-size: 0.8rem;'>🚀 Explore</button></a>""", unsafe_allow_html=True)
 
 # View Datasets (Grouped)
 elif st.session_state.view_datasets:
     st.markdown("## 🗂️ Datasets Overview by Workspace")
 
     for ws_name, group in datasets_df.groupby("workspace_name"):
+        group = group[display_cols + ["webUrl"]]  # Removed "id"
+
         st.markdown(f"### 🏢 Workspace: `{ws_name}` ({len(group)} datasets)")
 
-        # Header row
-        header1, header2, header3, header4, header5, header6, header7, header8 = st.columns([2.5, 3, 2, 2.5, 2.5, 1.5, 1.5, 2])
-        header1.markdown(" **ID**")
-        header2.markdown(" **Name**")
-        header3.markdown(" **Configured By**")
-        header4.markdown("**Created Date**")
-        header5.markdown("**Status**")
-        header6.markdown("**Refreshable**")
-        header7.markdown("**Outdated**")
-        header8.markdown(" **Actions**")
+        header1, header2, header3, header4, header5, header6 = st.columns([3, 3, 2.5, 2.5, 1.5, 2])
+        header1.markdown("**Name**")
+        header2.markdown("**Configured By**")
+        header3.markdown("**Created Date**")
+        header4.markdown("**Status**")
+        header5.markdown("**Refreshable**")
+        header6.markdown("**Actions**")
 
         for _, row in group.iterrows():
             with st.container():
-                col1, col2, col3, col4, col5, col6, col7, col8 = st.columns([2.5, 3, 2, 2.5, 2.5, 1.5, 1.5, 2])
-                col1.markdown(f"`{row['id']}`")
-                col2.markdown(f"**{row['name']}**")
+                col1, col2, col3, col4, col5, col6 = st.columns([3, 3, 2.5, 2.5, 1.5, 2])
+                col1.markdown(f"**{row['name']}**")
 
-                # Email with mailto link
                 configured_by = row.get("configuredBy", "")
                 if "@" in configured_by:
                     email_link = f"[{configured_by}](mailto:{configured_by})"
-                    col3.markdown(email_link)
+                    col2.markdown(email_link)
                 else:
-                    col3.markdown(configured_by)
+                    col2.markdown(configured_by)
 
-                col4.markdown(str(row["createdDate"]))
-                col5.markdown(row["datasetStatus"])
-                col6.markdown("✅" if row["isRefreshable"] else "❌")
-                col7.markdown("✅" if row["outdated"] else "❌")
-                col8.markdown(f"""<a href="{row['webUrl']}" target="_blank">
+                col3.markdown(str(row["createdDate"]))
+                col4.markdown(row["datasetStatus"])
+                col5.markdown("✅" if row["isRefreshable"] else "❌")
+                col6.markdown(f"""<a href="{row['webUrl']}" target="_blank">
                     <button style='font-size:0.75rem;'>🚀 Explore</button></a>""", unsafe_allow_html=True)
+
 
 # Explore DataFrame View
 elif st.session_state.explore_datasets_dataframe:
     st.markdown("## 📊 Full Datasets Table by Workspace")
-    for ws_name, group in datasets_df.groupby("workspace_name"):
-        st.markdown(f"### 🏢 Workspace: `{ws_name}`")
 
-        renamed_df = group.rename(columns={
-            "id": "ID",
-            "name": "Name",
-            "configuredBy": "By",
-            "createdDate": "Created",
-            "datasetStatus": "Status",
-            "outdated": "Outdated",
-            "isRefreshable": "Refreshable",
-            "webUrl": "Link"
-        })[["ID", "Name", "By", "Created", "Status", "Outdated", "Refreshable", "Link"]]
+    for ws_name, group in datasets_df.groupby("workspace_name"):
+        renamed_df = ( group[display_cols].rename(columns={
+        "name": "Name",
+        "configuredBy": "Configured By",
+        "isRefreshable": "Refreshable",
+        "createdDate": "Created Date",
+        "outdated": "Outdated",
+        "datasetStatus": "Status"
+    })[["Name", "Configured By", "Refreshable", "Created Date", "Outdated", "Status"]]
+    .reset_index(drop=True))
+
+        col1, col2 = st.columns([5, 1])
+        with col1:
+            st.markdown(f"### 🏢 Workspace: `{ws_name}`")
+        with col2:
+            csv = renamed_df.to_csv(index=False).encode("utf-8")
+            st.download_button(
+                label="📥 Download CSV",
+                data=csv,
+                file_name=f"{ws_name}_datasets.csv",
+                mime="text/csv"
+            )
 
         st.dataframe(renamed_df, use_container_width=True)

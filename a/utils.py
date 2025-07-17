@@ -145,33 +145,42 @@ def get_filtered_dataframes(token, workspace_id, user_email):
     datasets_df["createdDate"] = pd.to_datetime(datasets_df["createdDate"], errors="coerce").dt.tz_localize(None)
     cutoff = pd.Timestamp.now() - pd.DateOffset(months=12)
     datasets_df["outdated"] = datasets_df["createdDate"] < cutoff
-    datasets_df["datasetStatus"] = datasets_df["isRefreshable"].apply(lambda x: "Active" if x else "Inactive")
+   # Classify datasets based on refreshability
+    datasets_df["Dataset Freshness Status"] = datasets_df.apply(
+    lambda row: "Up to Date" if row["isRefreshable"] and not row["outdated"]
+    else ("Needs Attention" if row["isRefreshable"] and row["outdated"]
+    else "Expired"), axis=1
+)
 
+    # Merge dataset freshness status into reports
     reports_df = reports_df.merge(
-        datasets_df[['id', 'datasetStatus', 'outdated']],
+        datasets_df[['id', 'Dataset Freshness Status']],
         left_on="datasetId",
         right_on="id",
         how="left"
     )
 
-    #reports_df.drop(columns=['id_y','users','subscriptions'], inplace=True, errors='ignore')
-    reports_df.drop(columns=['id_y','users','subscriptions'], inplace=True, errors='ignore')
-    reports_df.rename(columns={"id_x":"id"}, inplace=True)
-    datasets_df.drop(columns=["isOnPremGatewayRequired"], inplace=True, errors='ignore')
-    datasets_df.drop(columns=[
-        "upstreamDatasets", "users", "addRowsAPIEnabled", "isEffectiveIdentityRequired",
-        "isEffectiveIdentityRolesRequired", "targetStorageMode",
-        "createReportEmbedURL", "qnaEmbedURL", "queryScaleOutSettings" ], inplace=True, errors='ignore')
+    # Clean and rename columns
+    reports_df.drop(columns=['id_y', 'users', 'subscriptions'], inplace=True, errors='ignore')
+    reports_df.rename(columns={"id_x": "id"}, inplace=True)
 
+    # Drop unnecessary columns from datasets
+    datasets_df.drop(columns=[
+        "isOnPremGatewayRequired", "upstreamDatasets", "users", "addRowsAPIEnabled",
+        "isEffectiveIdentityRequired", "isEffectiveIdentityRolesRequired", "targetStorageMode",
+        "createReportEmbedURL", "qnaEmbedURL", "queryScaleOutSettings"
+    ], inplace=True, errors='ignore')
+
+    # Classify reports based on dataset freshness
     def classify_report(row):
-        if row['datasetStatus'] == "Inactive":
-            return "Inactive"
-        elif row['datasetStatus'] == "Active" and row["outdated"]:
-            return 'Active (Outdated)'
-        elif row['datasetStatus'] == "Active":
-            return 'Active'
-        return 'Unknown'
+        status = row.get("Dataset Freshness Status")
+        if status == "Expired":
+            return "Expired"
+        elif status == "Needs Attention":
+            return "Needs Attention"
+        elif status == "Up to Date":
+            return "Up to Date"
+        return "Unknown"
 
     reports_df["Reportstatus Based on Dataset"] = reports_df.apply(classify_report, axis=1)
-
     return reports_df, datasets_df, users_df

@@ -13,9 +13,13 @@ apply_sidebar_style()
 show_workspace()
 inject_external_style()
 
+col1, col2, col3 = st.columns(3)
+with col2:
+    st.image("./images/dover_log.png")
+
 st.markdown("<h1 style='text-align: center;'>🔍 Activity Log Insights</h1>", unsafe_allow_html=True)
 st.markdown("""
-<div style='text-align: center; font-size: 1.05rem; color: #777; background-color: #12192E; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
+<div style='text-align: center; font-size: 1.05rem; background-color: #E7DBF3; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
 This dashboard provides a centralized view of all user interactions with reports and datasets.
 Explore usage trends, identify top artifacts and users, analyze activity patterns, and detect unused resources to improve data governance.
 </div><hr>
@@ -83,31 +87,20 @@ datasets_df["Activity Status"] = datasets_df.apply(
 datasets_df["Latest Artifact Activity"] = datasets_df.apply(
     lambda row: artifact_activity_map.get(row["id"]) or artifact_activity_map.get(dataset_to_report.get(row["id"])), axis=1)
 
-fig_alpha = 1.0 if st.get_option("theme.base") == "dark" else 0.01
 with st.expander("📊 User Insights"):
     col1, col2 = st.columns([4, 2])
     with col1:
         st.subheader("Artifact Access Heatmap")
         heatmap_data = activity_df.groupby(["User email", "Artifact Name"]).size().unstack(fill_value=0)
         fig, ax = plt.subplots(figsize=(5, 3))
-        fig.patch.set_alpha(fig_alpha)
-        ax.patch.set_alpha(fig_alpha)
         sns.heatmap(heatmap_data, cmap="YlGnBu", linewidths=0.3, ax=ax, cbar=False)
-        ax.set_title("Access Heatmap", color="gray")
-        ax.tick_params(colors='gray')
-        for label in ax.get_xticklabels() + ax.get_yticklabels():
-            label.set_color('gray')
+        ax.set_title("Access Heatmap")
         st.pyplot(fig)
     with col2:
         st.subheader("User Activity Status")
         fig, ax = plt.subplots(figsize=(3, 5))
-        fig.patch.set_alpha(fig_alpha)
-        ax.patch.set_alpha(fig_alpha)
         sns.countplot(data=users_df, x="activityStatus", palette={"Active": "green", "Inactive": "red"}, ax=ax)
-        ax.set_title("User Activity", color="gray")
-        ax.tick_params(colors='gray')
-        for label in ax.get_xticklabels() + ax.get_yticklabels():
-            label.set_color("gray")
+        ax.set_title("User Activity")
         st.pyplot(fig)
 
 # Usage Trends
@@ -118,13 +111,8 @@ with st.expander("📈 Usage Trends"):
         top_reports = activity_df["Artifact Name"].value_counts().head(10).reset_index()
         top_reports.columns = ["Artifact Name", "Access Count"]
         fig, ax = plt.subplots(figsize=(6, 4))
-        fig.patch.set_alpha(fig_alpha)
-        ax.patch.set_alpha(fig_alpha)
         sns.barplot(data=top_reports, x="Access Count", y="Artifact Name", palette="crest", ax=ax)
-        ax.set_title("Top Artifacts", color="gray")
-        ax.tick_params(colors='gray')
-        for label in ax.get_xticklabels() + ax.get_yticklabels():
-            label.set_color('gray')
+        ax.set_title("Top Artifacts")
         st.pyplot(fig)
     with col4:
         st.subheader("Usage Trends By Opcos")
@@ -132,13 +120,11 @@ with st.expander("📈 Usage Trends"):
         unique_users["domain"] = unique_users["User email"].str.split('@').str[-1]
         domain_counts = unique_users["domain"].value_counts()
         fig, ax = plt.subplots(figsize=(7, 2))
-        fig.patch.set_alpha(fig_alpha)
-        ax.patch.set_alpha(fig_alpha)
         ax.bar(domain_counts.index, domain_counts.values, color='skyblue')
-        ax.set_title("Users per Opcos", color="gray")
-        ax.set_xlabel("Email Domain", color="gray")
-        ax.set_ylabel("Number of Users", color="gray")
-        ax.tick_params(axis='x', rotation=45, colors='gray')
+        ax.set_title("Users per Opcos")
+        ax.set_xlabel("Email Domain")
+        ax.set_ylabel("Number of Users")
+        ax.tick_params(axis='x', rotation=45)
         st.pyplot(fig)
 
 # Weekly & Monthly Access Patterns
@@ -150,13 +136,8 @@ with st.expander("📅 Weekly and Monthly Access Patterns"):
         weekday_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         weekday_counts = activity_df["Weekday"].value_counts().reindex(weekday_order)
         fig, ax = plt.subplots(figsize=(6, 3))
-        fig.patch.set_alpha(fig_alpha)
-        ax.patch.set_alpha(fig_alpha)
         ax.plot(weekday_counts.index, weekday_counts.values, marker='o', linestyle='-', color='orange')
-        ax.set_title("Weekday Activity", color="gray")
-        ax.tick_params(colors='gray')
-        for label in ax.get_xticklabels() + ax.get_yticklabels():
-            label.set_color("gray")
+        ax.set_title("Weekday Activity")
         st.pyplot(fig)
     with col6:
         st.subheader("📆 Monthly Usage Trend")
@@ -165,17 +146,11 @@ with st.expander("📅 Weekly and Monthly Access Patterns"):
         monthly_usage["YearMonth"] = pd.to_datetime(monthly_usage["YearMonth"])
         monthly_usage = monthly_usage.sort_values("YearMonth")
         fig, ax = plt.subplots(figsize=(6, 2))
-        fig.patch.set_alpha(fig_alpha)
-        ax.patch.set_alpha(fig_alpha)
         sns.barplot(data=monthly_usage, x="YearMonth", y="Access Count", color="skyblue", ax=ax)
-        ax.set_title("Monthly Usage", color="gray")
+        ax.set_title("Monthly Usage")
         ax.set_xticklabels([d.strftime('%b %Y') for d in monthly_usage["YearMonth"]], rotation=45)
-        ax.tick_params(colors='gray')
-        for label in ax.get_xticklabels() + ax.get_yticklabels():
-            label.set_color("gray")
         st.pyplot(fig)
             
-
 
 st.markdown("""<hr style="margin-top:3rem; margin-bottom:2rem;">""", unsafe_allow_html=True)
 
@@ -245,7 +220,7 @@ st.markdown("""<hr style="margin-top:1rem; margin-bottom:1rem;">""", unsafe_allo
 
 st.subheader("🗂️ Artifact Action Breakdown")
 st.markdown("""
-<div style='text-align: center; font-size: 1.05rem; color: #777; background-color: #12192E; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
+<div style='text-align: center; font-size: 1.05rem; background-color: #E7DBF3; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
 Use this section to explore detailed actions taken on artifacts such as reports and datasets.
 You can filter user activities by date range, artifact name, email, or specific actions like view, edit, or share.
 Each activity is grouped and downloadable for further audit or analysis.

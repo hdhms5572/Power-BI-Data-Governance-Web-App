@@ -78,14 +78,14 @@ active_artifacts = set(latest_access["ArtifactId"])
 artifact_activity_map = dict(zip(latest_access["ArtifactId"], latest_access["Latest Activity"]))
 
 reports_df["Activity Status"] = reports_df.apply(
-    lambda row: "Active" if row["id"] in active_artifacts or row["datasetId"] in active_artifacts else "Inactive", axis=1)
+    lambda row: "Active" if row["id"] in active_artifacts else "Inactive", axis=1)
 reports_df["Latest Artifact Activity"] = reports_df.apply(
-    lambda row: artifact_activity_map.get(row["id"]) or artifact_activity_map.get(row["datasetId"]), axis=1)
+    lambda row: artifact_activity_map.get(row["id"]), axis=1)
 
 datasets_df["Activity Status"] = datasets_df.apply(
-    lambda row: "Active" if row["id"] in active_artifacts or dataset_to_report.get(row["id"]) in active_artifacts else "Inactive", axis=1)
+    lambda row: "Active" if row["id"] in active_artifacts else "Inactive", axis=1)
 datasets_df["Latest Artifact Activity"] = datasets_df.apply(
-    lambda row: artifact_activity_map.get(row["id"]) or artifact_activity_map.get(dataset_to_report.get(row["id"])), axis=1)
+    lambda row: artifact_activity_map.get(row["id"]), axis=1)
 
 with st.expander("📊 User Insights"):
     col1, col2 = st.columns([4, 2])
@@ -176,14 +176,14 @@ if selected_value == "activity":
     st.info("View all raw activity logs including who accessed what and when.")
     activity_df.reset_index(drop=True, inplace=True)
 
-    st.dataframe(activity_df[["Activity time","User email", "Activity", "ArtifactId", "Artifact Name"]])
+    st.dataframe(activity_df[["Activity time","User email", "Activity", "Artifact Name"]])
 
 
 elif selected_value == "recent":
     st.subheader("📌 Most Recently Accessed Artifacts")
     st.info("Displays the most recently accessed reports or datasets. Helps in identifying active artifacts.")
     latest_access1 = latest_access.reset_index(drop=True)
-    st.dataframe(latest_access1)
+    st.dataframe(latest_access1[["Activity time","User email", "Activity", "Artifact Name"]])
 
 elif selected_value == "users":
     st.subheader("📌 Users Activity Status")

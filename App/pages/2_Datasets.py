@@ -156,7 +156,8 @@ if st.session_state.dataset_filter_status:
         st.markdown(f"### 🏢 Workspace: `{ws_name}` ({len(group)} datasets)")
         group = group[display_cols + ["webUrl"]]  # Keep webUrl for Explore button
 
-        # Header row (ID removed)
+        st.markdown('<div class="classic-table">', unsafe_allow_html=True)
+        st.markdown('<div class="classic-row header">', unsafe_allow_html=True)
         header1, header2, header3, header4, header5, header6 = st.columns([3, 4, 2, 2, 2, 2])
         header1.markdown("**Name**")
         header2.markdown("**By**")
@@ -166,15 +167,15 @@ if st.session_state.dataset_filter_status:
         header6.markdown("**🔍 Link**")
 
         for _, row in group.iterrows():
-            with st.container():
-                col1, col2, col3, col4, col5, col6 = st.columns([3, 4, 2, 2, 2, 2])
-                col1.markdown(f"**{row['name']}**")
-                col2.markdown(row["configuredBy"])
-                col3.markdown(str(row["createdDate"]))
-                col4.markdown(row["datasetStatus"])
-                col5.markdown("✅ Yes" if row["isRefreshable"] else "❌ No")
-                col6.markdown(f"""<a href="{row['webUrl']}" target="_blank">
-                    <button style='font-size: 0.8rem;'>🚀 Explore</button></a>""", unsafe_allow_html=True)
+            st.markdown('<div class="classic-row">', unsafe_allow_html=True)
+            col1, col2, col3, col4, col5, col6 = st.columns([3, 4, 2, 2, 2, 2])
+            col1.markdown(f"**{row['name']}**")
+            col2.markdown(row["configuredBy"])
+            col3.markdown(str(row["createdDate"]))
+            col4.markdown(row["datasetStatus"])
+            col5.markdown("✅ Yes" if row["isRefreshable"] else "❌ No")
+            col6.markdown(f"""<a href="{row['webUrl']}" target="_blank">
+                <button style='font-size: 0.8rem;'>🚀 Explore</button></a>""", unsafe_allow_html=True)
 
 # View Datasets (Grouped)
 elif st.session_state.view_datasets:

@@ -15,9 +15,13 @@ apply_sidebar_style()
 show_workspace()
 inject_external_style()
 
+col1, col2, col3 = st.columns(3)
+with col2:
+    st.image("./images/dover_log.png")
+
 st.markdown("<h1 style='text-align: center;'>🏆 Top Engagement Insights</h1>", unsafe_allow_html=True)
 st.markdown("""
-<div style='text-align: center; font-size: 1.05rem; color: #777; background-color: #12192E; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
+<div style='text-align: center; font-size: 1.05rem; background-color: #E7DBF3; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
 This dashboard provides insights into the most actively used <strong>reports</strong>, <strong>datasets</strong>, and <strong>users</strong> across your selected workspaces.
 Analyze engagement trends, identify your top content and contributors, and monitor recent activity within the last 3 months.
 Use this view to understand usage behavior, improve resource visibility, and guide governance decisions.
@@ -73,18 +77,6 @@ recent_active_users = recent_user_activity["User email"].dropna().unique()
 users_df["activityStatus"] = users_df["emailAddress"].apply(lambda x: "Active" if x in recent_active_users else "Inactive")
 
 # Visualizations
-theme_base = st.get_option("theme.base")
-fig_alpha = 1.0 if theme_base == "dark" else 0.01
-
-def style_plot(ax):
-    ax.patch.set_alpha(fig_alpha)
-    ax.title.set_color("gray")
-    ax.xaxis.label.set_color("gray")
-    ax.yaxis.label.set_color("gray")
-    ax.tick_params(colors="gray")
-    for label in ax.get_xticklabels() + ax.get_yticklabels():
-        label.set_color("gray")
-
 col1, col2 = st.columns(2)
 
 # Top 5 Reports
@@ -96,15 +88,8 @@ with col1:
     report_usage = report_usage.merge(reports_df[["id", "name"]], left_on="Report ID", right_on="id", how="left")
 
     fig1, ax1 = plt.subplots(figsize=(4, 3))
-    fig1.patch.set_alpha(fig_alpha)
-    ax1.patch.set_alpha(fig_alpha)
     sns.barplot(data=report_usage, x="Usage Count", y="name", palette="viridis", ax=ax1)
-    ax1.set_title("Top Reports", color="gray")
-    ax1.xaxis.label.set_color("gray")
-    ax1.yaxis.label.set_color("gray")
-    ax1.tick_params(colors='gray')
-    for label in ax1.get_xticklabels() + ax1.get_yticklabels():
-        label.set_color("gray")
+    ax1.set_title("Top Reports")
     st.pyplot(fig1)
 
 # Top 5 Datasets
@@ -116,15 +101,8 @@ with col2:
     dataset_usage = dataset_usage.merge(datasets_df[["id", "name"]], left_on="Dataset ID", right_on="id", how="left")
 
     fig2, ax2 = plt.subplots(figsize=(4, 3))
-    fig2.patch.set_alpha(fig_alpha)
-    ax2.patch.set_alpha(fig_alpha)
     sns.barplot(data=dataset_usage, x="Usage Count", y="name", palette="crest", ax=ax2)
-    ax2.set_title("Top Datasets", color="gray")
-    ax2.tick_params(colors='gray')
-    ax2.xaxis.label.set_color("gray")
-    ax2.yaxis.label.set_color("gray")
-    for label in ax2.get_xticklabels() + ax2.get_yticklabels():
-        label.set_color("gray")
+    ax2.set_title("Top Datasets")
     st.pyplot(fig2)
 
 # Top 5 Users
@@ -138,15 +116,8 @@ with col3:
                                         left_on="User Email", right_on="emailAddress", how="left")
 
     fig3, ax3 = plt.subplots(figsize=(4, 3))
-    fig3.patch.set_alpha(fig_alpha)
-    ax3.patch.set_alpha(fig_alpha)
     sns.barplot(data=user_activity, x="Activity Count", y="displayName", palette="Blues_d", ax=ax3)
-    ax3.set_title("Top Users", color="gray")
-    ax3.tick_params(colors='gray')
-    ax3.xaxis.label.set_color("gray")
-    ax3.yaxis.label.set_color("gray")
-    for label in ax3.get_xticklabels() + ax3.get_yticklabels():
-        label.set_color("gray")
+    ax3.set_title("Top Users")
     st.pyplot(fig3)
 
 # Recent Activity (Last 3 Months)
@@ -159,13 +130,6 @@ with col4:
                                       left_on="User Email", right_on="emailAddress", how="left")
 
     fig4, ax4 = plt.subplots(figsize=(4, 3))
-    fig4.patch.set_alpha(fig_alpha)
-    ax4.patch.set_alpha(fig_alpha)
     sns.barplot(data=recent_users, x="Activity Count", y="displayName", palette="Purples", ax=ax4)
-    ax4.set_title("Top Users (3 Months)", color="gray")
-    ax4.xaxis.label.set_color("gray")
-    ax4.yaxis.label.set_color("gray")
-    ax4.tick_params(colors='gray')
-    for label in ax4.get_xticklabels() + ax4.get_yticklabels():
-        label.set_color("gray")
+    ax4.set_title("Top Users (3 Months)")
     st.pyplot(fig4)

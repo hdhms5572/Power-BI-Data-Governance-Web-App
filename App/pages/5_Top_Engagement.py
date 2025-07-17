@@ -79,6 +79,9 @@ users_df["activityStatus"] = users_df["emailAddress"].apply(lambda x: "Active" i
 # Visualizations
 col1, col2 = st.columns(2)
 
+# Color choice — consistent across all charts
+standard_color = ["#87CEEB"] * 5  # Sky blue
+
 # Top 5 Reports
 with col1:
     st.markdown("#### 📊 Top Reports")
@@ -88,7 +91,7 @@ with col1:
     report_usage = report_usage.merge(reports_df[["id", "name"]], left_on="Report ID", right_on="id", how="left")
 
     fig1, ax1 = plt.subplots(figsize=(4, 3))
-    sns.barplot(data=report_usage, x="Usage Count", y="name", palette="viridis", ax=ax1)
+    sns.barplot(data=report_usage, x="Usage Count", y="name", palette=standard_color, ax=ax1)
     ax1.set_title("Top Reports")
     st.pyplot(fig1)
 
@@ -101,7 +104,7 @@ with col2:
     dataset_usage = dataset_usage.merge(datasets_df[["id", "name"]], left_on="Dataset ID", right_on="id", how="left")
 
     fig2, ax2 = plt.subplots(figsize=(4, 3))
-    sns.barplot(data=dataset_usage, x="Usage Count", y="name", palette="crest", ax=ax2)
+    sns.barplot(data=dataset_usage, x="Usage Count", y="name", palette=standard_color, ax=ax2)
     ax2.set_title("Top Datasets")
     st.pyplot(fig2)
 
@@ -116,7 +119,7 @@ with col3:
                                         left_on="User Email", right_on="emailAddress", how="left")
 
     fig3, ax3 = plt.subplots(figsize=(4, 3))
-    sns.barplot(data=user_activity, x="Activity Count", y="displayName", palette="Blues_d", ax=ax3)
+    sns.barplot(data=user_activity, x="Activity Count", y="displayName", palette=standard_color, ax=ax3)
     ax3.set_title("Top Users")
     st.pyplot(fig3)
 
@@ -130,6 +133,6 @@ with col4:
                                       left_on="User Email", right_on="emailAddress", how="left")
 
     fig4, ax4 = plt.subplots(figsize=(4, 3))
-    sns.barplot(data=recent_users, x="Activity Count", y="displayName", palette="Purples", ax=ax4)
+    sns.barplot(data=recent_users, x="Activity Count", y="displayName", palette=standard_color, ax=ax4)
     ax4.set_title("Top Users (3 Months)")
     st.pyplot(fig4)

@@ -176,39 +176,46 @@ if st.session_state.filter_status:
     st.markdown("### 🗂️ Status Count by Workspace")
     st.dataframe(workspace_counts, use_container_width=True)
 
-    # Header row for report details
-    header1, header2, header3, header4, header5 = st.columns([4, 3, 2, 2, 3])
+
+    # Header row
+    st.markdown('<div class="classic-table">', unsafe_allow_html=True)
+    st.markdown('<div class="classic-row header">', unsafe_allow_html=True)
+    header1, header2, header3, header4, header5 = st.columns([4, 2, 3, 3, 2])
     header1.markdown("**Report Name**")
     header2.markdown("**Status**")
     header3.markdown("**Workspace**")
     header4.markdown("**Dataset**")
     header5.markdown("**Link**")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    # Report detail rows
+    # Report rows
     for _, row in filtered_df.iterrows():
-        with st.container():
-            col1, col2, col3, col4, col5 = st.columns([4, 3, 2, 2, 3])
-            col1.markdown(f"**{row['name']}**")
-            col2.markdown(row['Reportstatus Based on Dataset'])
-            col3.markdown(row['workspace_name'])
+        st.markdown('<div class="classic-row">', unsafe_allow_html=True)
 
-            # Dataset label button
-            dataset_name = datasets_df.loc[datasets_df['id'] == row['datasetId'], 'name'].values
-            dataset_label = dataset_name[0] if len(dataset_name) > 0 else "No Dataset"
-            if col4.button(dataset_label, key=f"btn_{row['id']}"):
-                st.session_state.selected_dataset_id = row['datasetId']
+        col1, col2, col3, col4, col5 = st.columns([4, 2, 3, 3, 2])
+        col1.markdown(row['name'])
+        col2.markdown(row['Reportstatus Based on Dataset'])
+        col3.markdown(row['workspace_name'])
 
-            # Report link
-            col5.markdown(f"""<a href="{row['webUrl']}" target="_blank">
-                              <button style='font-size: 0.8rem;'>Explore</button></a>""",
-                          unsafe_allow_html=True)
+        dataset_name = datasets_df.loc[datasets_df['id'] == row['datasetId'], 'name'].values
+        dataset_label = dataset_name[0] if len(dataset_name) > 0 else "No Dataset"
+        if col4.button(dataset_label, key=f"btn_{row['id']}"):
+            st.session_state.selected_dataset_id = row['datasetId']
 
-            # Display dataset info if selected
-            if st.session_state.selected_dataset_id == row['datasetId']:
-                selected_dataset = datasets_df[datasets_df["id"] == row["datasetId"]]
-                if not selected_dataset.empty:
-                    st.markdown(f"### 📦 Dataset Info for `{row['datasetId']}`")
-                    st.dataframe(selected_dataset, use_container_width=True)
+        col5.markdown(f"""<a href="{row['webUrl']}" target="_blank">
+                        <button style='font-size: 0.8rem;'>🚀 Explore</button></a>""",
+                    unsafe_allow_html=True)
+
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        if st.session_state.selected_dataset_id == row['datasetId']:
+            selected_dataset = datasets_df[datasets_df["id"] == row["datasetId"]]
+            if not selected_dataset.empty:
+                st.markdown(f"### 📦 Dataset Info for `{row['datasetId']}`")
+                st.dataframe(selected_dataset, use_container_width=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
 
 
 elif st.session_state.view_reports:
@@ -216,6 +223,8 @@ elif st.session_state.view_reports:
     for ws_name, group in reports_df.groupby("workspace_name"):
         st.markdown(f"### 📍 Workspace: `{ws_name}` ({len(group)} reports)")
 
+        st.markdown('<div class="classic-table">', unsafe_allow_html=True)
+        st.markdown('<div class="classic-row header">', unsafe_allow_html=True)
         header1, header2, header3, header4 = st.columns([4, 3, 3, 2])
         header1.markdown("**Report Name**")
         header2.markdown("**Status**")  
@@ -223,26 +232,26 @@ elif st.session_state.view_reports:
         header4.markdown("**Link**")
 
         for _, row in group.iterrows():
-            with st.container():
-                col1, col2, col3, col4 = st.columns([4, 3, 3, 2])
+            st.markdown('<div class="classic-row">', unsafe_allow_html=True)
+            col1, col2, col3, col4 = st.columns([4, 3, 3, 2])
 
-                col1.markdown(f"**{row['name']}**")
-                col2.markdown(row['Reportstatus Based on Dataset'])
+            col1.markdown(f"**{row['name']}**")
+            col2.markdown(row['Reportstatus Based on Dataset'])
 
-                dataset_name = datasets_df.loc[datasets_df['id'] == row['datasetId'], 'name'].values
-                dataset_label = dataset_name[0] if len(dataset_name) > 0 else "No Dataset"
-                if col3.button(dataset_label, key=f"btn_ws_{row['id']}"):
-                    st.session_state.selected_dataset_id = row['datasetId']
+            dataset_name = datasets_df.loc[datasets_df['id'] == row['datasetId'], 'name'].values
+            dataset_label = dataset_name[0] if len(dataset_name) > 0 else "No Dataset"
+            if col3.button(dataset_label, key=f"btn_ws_{row['id']}"):
+                st.session_state.selected_dataset_id = row['datasetId']
 
-                col4.markdown(f"""<a href="{row['webUrl']}" target="_blank">
-                    <button style='font-size: 0.8rem;'>🚀 Explore</button></a>""",
-                    unsafe_allow_html=True)
+            col4.markdown(f"""<a href="{row['webUrl']}" target="_blank">
+                <button style='font-size: 0.8rem;'>🚀 Explore</button></a>""",
+                unsafe_allow_html=True)
 
-                if st.session_state.selected_dataset_id == row['datasetId']:
-                    selected_dataset = datasets_df[datasets_df["id"] == row["datasetId"]]
-                    if not selected_dataset.empty:
-                        st.markdown(f"Dataset Info for `{row['datasetId']}`")
-                        st.dataframe(selected_dataset, use_container_width=True)
+            if st.session_state.selected_dataset_id == row['datasetId']:
+                selected_dataset = datasets_df[datasets_df["id"] == row["datasetId"]]
+                if not selected_dataset.empty:
+                    st.markdown(f"Dataset Info for `{row['datasetId']}`")
+                    st.dataframe(selected_dataset, use_container_width=True)
 
 # Explore Reports Table View
 elif st.session_state.explore_reports_dataframe:

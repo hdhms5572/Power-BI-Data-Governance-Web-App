@@ -14,9 +14,13 @@ apply_sidebar_style()
 show_workspace()
 inject_external_style()
 
+col1, col2, col3 = st.columns(3)
+with col2:
+    st.image("./images/dover_log.png")
+
 st.markdown("<h1 style='text-align: center;'>📊 Datasets</h1>", unsafe_allow_html=True)
 st.markdown("""
-<div style='text-align: center; font-size: 1.05rem; color: #777; background-color: #12192E; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
+<div style='text-align: center; font-size: 1.05rem; background-color: #E7DBF3; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
 This dashboard provides an in-depth overview of Power BI datasets available in  selected workspaces. 
 Track dataset freshness, refreshability, creation trends, and dataset-to-report relationships using visual summaries and interactive tables.
 </div><hr>
@@ -56,7 +60,6 @@ st.session_state.setdefault("dataset_filter_status", None)
 st.session_state.setdefault("view_datasets", False)
 st.session_state.setdefault("explore_datasets_dataframe", False)
 
-# KPI Filters
 col1, col2, col3, col4 = st.columns(4)
 with col1:
     if st.button("🧮 Total Datasets"):
@@ -154,17 +157,17 @@ if st.session_state.dataset_filter_status:
         group = group[display_cols + ["webUrl"]]  # Keep webUrl for Explore button
 
         # Header row (ID removed)
-        header1, header2, header3, header4, header5, header6 = st.columns([3, 3, 2, 2, 2, 2])
+        header1, header2, header3, header4, header5, header6 = st.columns([3, 4, 2, 2, 2, 2])
         header1.markdown("**Name**")
         header2.markdown("**By**")
         header3.markdown("**Created Date**")
-        header4.markdown("** Status**")
-        header5.markdown("** Refreshable**")
+        header4.markdown("**Status**")
+        header5.markdown("**Refreshable**")
         header6.markdown("**🔍 Link**")
 
         for _, row in group.iterrows():
             with st.container():
-                col1, col2, col3, col4, col5, col6 = st.columns([3, 3, 2, 2, 2, 2])
+                col1, col2, col3, col4, col5, col6 = st.columns([3, 4, 2, 2, 2, 2])
                 col1.markdown(f"**{row['name']}**")
                 col2.markdown(row["configuredBy"])
                 col3.markdown(str(row["createdDate"]))

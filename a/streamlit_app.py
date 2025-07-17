@@ -1,37 +1,29 @@
+
 import streamlit as st
 import requests
-from utils import apply_sidebar_style, get_base64_image
-from utils import theme_selector, set_theme
-from utils import render_user_profile
+from utils import apply_sidebar_style
+from utils import  render_profile_header
 
-
-
-
-st.set_page_config(page_title="Power BI Governance Dashboard", layout="wide", page_icon="📊")
 def inject_external_style():
     with open("./static/style.css") as f:
         css = f.read()
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 apply_sidebar_style()
+render_profile_header()
 inject_external_style()
 
+st.set_page_config(page_title="Power BI Governance Dashboard", layout="wide", page_icon="📊")
 
- 
-render_user_profile()
-mode = theme_selector()  
-set_theme(mode)              
+col1, col2, col3 = st.columns(3)
+with col2:
+    st.image("./images/dover_log.png")
 
+col4, col5, col6 = st.columns([1,6,1])
+with col5:
+    st.title("📊 Power BI Governance Dashboard")
 
-
-logo_base64 = get_base64_image("static/dover_logo.png")  # use relative path from the app root
-
-st.markdown(f"""
-    <div style='display: flex; align-items: center; justify-content: center; gap: 20px;'>
-        <img src='data:image/png;base64,{logo_base64}' width='80'>
-        <h1 style='text-align: center;'>📊 Power BI Governance Dashboard</h1>
-    </div>
-""", unsafe_allow_html=True)
+st.markdown("---")
 
 # Reset session state
 def reset_session():
@@ -80,17 +72,22 @@ if not st.session_state.get("logged_in"):
                     else:
                         st.error("No workspaces found for this email.")
 else:
-    # Sidebar logout button
     with st.sidebar:
+   
+
+        # 📁 List selected workspaces
+        workspace_names = st.session_state.get("workspace_names", [])
+        if workspace_names:
+            st.markdown("**Selected Workspaces:**")
+            for name in workspace_names:
+                st.markdown(f"- {name}")
+
+        # 🚪 Logout button
         if st.button("🚪 Logout"):
             reset_session()
             st.rerun()
 
-    # Workspace selection
-    st.subheader(f"✅ Logged in as {st.session_state.user_email}")
     workspace_options = st.session_state.get("workspace_options", {})
-    st.markdown("---")
-
     select_all = st.checkbox("Select All Workspaces")
     workspace_names = list(workspace_options.keys())
     default_selection = workspace_names if select_all else st.session_state.get("workspace_names", [])

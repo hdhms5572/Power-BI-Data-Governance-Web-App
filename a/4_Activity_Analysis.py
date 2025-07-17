@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -209,12 +210,12 @@ elif selected_value == "users":
 elif selected_value == "reports":
     st.subheader("📌 Reports Latest Activity")
     st.info("Details of reports along with their last usage and activity status.")
-    st.dataframe(reports_df[["name","datasetStatus","outdated","Reportstatus Based on Dataset","Activity Status","Latest Artifact Activity"]])
+    st.dataframe(reports_df[["name","Reportstatus Based on Dataset","Activity Status","Latest Artifact Activity"]])
 
 elif selected_value == "datasets":
     st.subheader("📌 Datasets Latest Activity")
     st.info("Displays dataset-level activity insights, freshness status, and usage history.")
-    st.dataframe(datasets_df[[ "name","configuredBy","isRefreshable","createdDate","outdated","datasetStatus","Activity Status","Latest Artifact Activity"]])
+    st.dataframe(datasets_df[[ "name","configuredBy","isRefreshable","createdDate","outdated","Dataset Freshness Status","Activity Status","Latest Artifact Activity"]])
 
 elif selected_value == "artifacts":
     st.info("Lists reports and datasets that haven't been accessed at all recently. Useful for cleanup.")

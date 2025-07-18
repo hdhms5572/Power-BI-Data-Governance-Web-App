@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
-
+from utils import  render_profile_header
 def inject_external_style():
     with open("static/style.css") as f:
         css = f.read()
@@ -12,7 +12,7 @@ def inject_external_style():
 apply_sidebar_style()
 show_workspace()
 inject_external_style()
-
+render_profile_header()
 col1, col2, col3 = st.columns(3)
 with col2:
     st.image("./images/dover_log.png")
@@ -108,9 +108,37 @@ with st.expander("📊 User Insights"):
     # Title
     ax.set_title("Access Heatmap")
 
-   
+    # Display on Streamlit
     st.pyplot(fig)
-   
+    # with col2:
+    #     st.subheader("User Activity Status")
+    #     fig, ax = plt.subplots(figsize=(3, 5))
+    #     sns.countplot(data=users_df, x="activityStatus", palette={"Active": "green", "Inactive": "red"}, ax=ax)
+    #     ax.set_title("User Activity")
+    #     st.pyplot(fig)
+
+
+
+    # st.subheader("📊 Full Artifact Access Heatmap")
+
+    # activity_df["User email"] = activity_df["User email"].astype(str).str.strip().str.lower()
+    # activity_df["Artifact Name"] = activity_df["Artifact Name"].astype(str).str.strip()
+    # activity_df = activity_df.dropna(subset=["User email", "Artifact Name"])
+    # all_users = activity_df["User email"].unique()
+    # all_artifacts = activity_df["Artifact Name"].unique()
+
+    # access_counts = activity_df.groupby(["User email", "Artifact Name"]).size().reset_index(name="Access Count")
+    # full_grid = pd.MultiIndex.from_product([all_users, all_artifacts], names=["User email", "Artifact Name"]).to_frame(index=False)
+    # full_matrix = pd.merge(full_grid, access_counts, on=["User email", "Artifact Name"], how="left")
+    # full_matrix["Access Count"] = full_matrix["Access Count"].fillna(0)
+    # heatmap_data = full_matrix.pivot(index="User email", columns="Artifact Name", values="Access Count")
+    # fig, ax = plt.subplots(figsize=(12, len(heatmap_data) * 0.3)) 
+    # sns.heatmap(heatmap_data, cmap="YlGnBu", linewidths=0.3, ax=ax, cbar=True)
+    # ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
+    # ax.set_yticklabels(ax.get_yticklabels(), rotation=0)
+    # ax.set_title("📊 Full Artifact Access Heatmap")
+    # st.pyplot(fig)
+
 # Usage Trends
 with st.expander("📈 Usage Trends"):
     col3, col4 = st.columns(2)

@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 from utils import apply_sidebar_style
+from utils import  render_profile_header
 
 def inject_external_style():
     with open("./static/style.css") as f:
@@ -9,7 +10,7 @@ def inject_external_style():
 
 apply_sidebar_style()
 inject_external_style()
-
+render_profile_header()
 st.set_page_config(page_title="Power BI Governance Dashboard", layout="wide", page_icon="📊")
 
 col1, col2, col3 = st.columns(3)
@@ -75,10 +76,9 @@ else:
             reset_session()
             st.rerun()
 
-    # Workspace selection
-    st.subheader(f"✅ Logged in as {st.session_state.user_email}")
+   
     workspace_options = st.session_state.get("workspace_options", {})
-    st.markdown("---")
+ 
 
     select_all = st.checkbox("Select All Workspaces")
     workspace_names = list(workspace_options.keys())

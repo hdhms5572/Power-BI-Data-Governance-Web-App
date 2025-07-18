@@ -4,7 +4,7 @@ import seaborn as sns
 import pandas as pd
 import plotly.express as px
 from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
-
+from utils import  render_profile_header
 def inject_external_style():
     with open("static/style.css") as f:
         css = f.read()
@@ -13,7 +13,7 @@ def inject_external_style():
 apply_sidebar_style()
 show_workspace()
 inject_external_style()
-
+render_profile_header()
 col1, col2, col3 = st.columns(3)
 with col2:
     st.image("./images/dover_log.png")

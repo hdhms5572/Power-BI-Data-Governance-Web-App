@@ -17,8 +17,6 @@ def show_workspace():
         st.warning("⚠️ No workspace selected.")
         st.stop()
 
-
-# utils.py
 def apply_sidebar_style():
     st.markdown("""
     <style>
@@ -46,6 +44,57 @@ def apply_sidebar_style():
         }
     </style>
     """, unsafe_allow_html=True)
+
+def render_profile_header():
+    if st.session_state.get("logged_in"):
+        st.markdown("""
+            <style>
+                .top-right-profile {
+                    position: absolute;
+                    top: 1rem;
+                    right: 1rem;
+                    z-index: 1000;
+                    text-align: center;
+                    font-size: 1.5rem;
+                }
+
+                .top-right-profile input {
+                    display: none;
+                }
+
+                .top-right-profile label {
+                    cursor: pointer;
+                    border: 2px solid #2563EB;
+                    border-radius: 50%;
+                    padding: 0.4rem 0.6rem;
+                    transition: background-color 0.3s ease, transform 0.2s ease;
+                }
+
+                .top-right-profile label:hover {
+                    background-color: #2563EB;
+                    color: white;
+                    transform: scale(1.1);
+                }
+
+                .top-right-profile .email-reveal {
+                    margin-top: 6px;
+                    font-size: 0.8rem;
+                    font-weight: 500;
+                    color: #1F2937;
+                    display: none;
+                }
+
+                .top-right-profile input:checked + label + .email-reveal {
+                    display: block;
+                }
+            </style>
+
+            <div class="top-right-profile">
+                <input type="checkbox" id="toggleProfile" />
+                <label for="toggleProfile">👤</label>
+                <div class="email-reveal">{email}</div>
+            </div>
+        """.replace("{email}", st.session_state.get("user_email", "")), unsafe_allow_html=True)
 
     
 def call_powerbi_api(url, token):
@@ -81,33 +130,42 @@ def get_filtered_dataframes(token, workspace_id, user_email):
     datasets_df["createdDate"] = pd.to_datetime(datasets_df["createdDate"], errors="coerce").dt.tz_localize(None)
     cutoff = pd.Timestamp.now() - pd.DateOffset(months=12)
     datasets_df["outdated"] = datasets_df["createdDate"] < cutoff
-    datasets_df["datasetStatus"] = datasets_df["isRefreshable"].apply(lambda x: "Active" if x else "Inactive")
+   # Classify datasets based on refreshability
+    datasets_df["Dataset Freshness Status"] = datasets_df.apply(
+    lambda row: "Up to Date" if row["isRefreshable"] and not row["outdated"]
+    else ("Needs Attention" if row["isRefreshable"] and row["outdated"]
+    else "Expired"), axis=1
+)
 
+    # Merge dataset freshness status into reports
     reports_df = reports_df.merge(
-        datasets_df[['id', 'datasetStatus', 'outdated']],
+        datasets_df[['id', 'Dataset Freshness Status']],
         left_on="datasetId",
         right_on="id",
         how="left"
     )
 
-    #reports_df.drop(columns=['id_y','users','subscriptions'], inplace=True, errors='ignore')
-    reports_df.drop(columns=['id_y','users','subscriptions'], inplace=True, errors='ignore')
-    reports_df.rename(columns={"id_x":"id"}, inplace=True)
-    datasets_df.drop(columns=["isOnPremGatewayRequired"], inplace=True, errors='ignore')
-    datasets_df.drop(columns=[
-        "upstreamDatasets", "users", "addRowsAPIEnabled", "isEffectiveIdentityRequired",
-        "isEffectiveIdentityRolesRequired", "targetStorageMode",
-        "createReportEmbedURL", "qnaEmbedURL", "queryScaleOutSettings" ], inplace=True, errors='ignore')
+    # Clean and rename columns
+    reports_df.drop(columns=['id_y', 'users', 'subscriptions'], inplace=True, errors='ignore')
+    reports_df.rename(columns={"id_x": "id"}, inplace=True)
 
+    # Drop unnecessary columns from datasets
+    datasets_df.drop(columns=[
+        "isOnPremGatewayRequired", "upstreamDatasets", "users", "addRowsAPIEnabled",
+        "isEffectiveIdentityRequired", "isEffectiveIdentityRolesRequired", "targetStorageMode",
+        "createReportEmbedURL", "qnaEmbedURL", "queryScaleOutSettings"
+    ], inplace=True, errors='ignore')
+
+    # Classify reports based on dataset freshness
     def classify_report(row):
-        if row['datasetStatus'] == "Inactive":
-            return "Inactive"
-        elif row['datasetStatus'] == "Active" and row["outdated"]:
-            return 'Active (Outdated)'
-        elif row['datasetStatus'] == "Active":
-            return 'Active'
-        return 'Unknown'
+        status = row.get("Dataset Freshness Status")
+        if status == "Expired":
+            return "Expired"
+        elif status == "Needs Attention":
+            return "Needs Attention"
+        elif status == "Up to Date":
+            return "Up to Date"
+        return "Unknown"
 
     reports_df["Reportstatus Based on Dataset"] = reports_df.apply(classify_report, axis=1)
-
     return reports_df, datasets_df, users_df

@@ -16,36 +16,127 @@ def show_workspace():
     else:
         st.warning("⚠️ No workspace selected.")
         st.stop()
-
-
-# utils.py
 def apply_sidebar_style():
     st.markdown("""
     <style>
         [data-testid="stSidebar"] {
-            background-color: lightblack;
+            background-color: #00004d;
+            color: #F3F4F6;
             padding: 1.5rem 1rem;
-            border-right: 1px solid gray;
             font-family: 'Segoe UI', 'Inter', sans-serif;
+            border-right: 1px solid rgba(255,255,255,0.08);
         }
-        [data-testid="stSidebar"] ul {
-            padding-left: 0;
+
+        [data-testid="stSidebar"] * {
+            color: #F3F4F6 !important;
         }
-        [data-testid="stSidebar"] ul li a {
-            font-size: 1.05rem !important;
+
+        [data-testid="stSidebar"] a {
             font-weight: 600;
-            color: white !important;
-            padding: 0.5rem 0;
-            margin-bottom: 0.4rem;
-            border-radius: 6px;
-            display: block;
+            font-size: 1.05rem;
+            color: #F3F4F6 !important;
             text-decoration: none;
+            padding: 0.5rem 1rem;
+            display: block;
+            border-radius: 6px;
+            margin-bottom: 0.4rem;
+            transition: background 0.3s ease;
         }
-        [data-testid="stSidebar"] ul li a:hover {
-            background-color: lightblack !important;
+
+        [data-testid="stSidebar"] a:hover {
+            background-color: #1F2937 !important;
         }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #4B5563;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
     </style>
     """, unsafe_allow_html=True)
+def render_profile_header():
+    if st.session_state.get("logged_in"):
+        st.markdown("""
+            <style>
+                .top-right-profile {
+                    position: absolute;
+                    top: 1rem;
+                    right: 1rem;
+                    z-index: 1000;
+                    text-align: center;
+                    font-size: 1.5rem;
+                }
+
+                .top-right-profile input {
+                    display: none;
+                }
+
+                .top-right-profile label {
+                    cursor: pointer;
+                    border: 2px solid #2563EB;
+                    border-radius: 50%;
+                    padding: 0.4rem 0.6rem;
+                    transition: background-color 0.3s ease, transform 0.2s ease;
+                }
+
+                .top-right-profile label:hover {
+                    background-color: #2563EB;
+                    color: white;
+                    transform: scale(1.1);
+                }
+
+                .top-right-profile .email-reveal {
+                    margin-top: 6px;
+                    font-size: 0.8rem;
+                    font-weight: 500;
+                    color: #1F2937;
+                    display: none;
+                }
+
+                .top-right-profile input:checked + label + .email-reveal {
+                    display: block;
+                }
+            </style>
+
+            <div class="top-right-profile">
+                <input type="checkbox" id="toggleProfile" />
+                <label for="toggleProfile">👤</label>
+                <div class="email-reveal">{email}</div>
+            </div>
+        """.replace("{email}", st.session_state.get("user_email", "")), unsafe_allow_html=True)
+
+# # utils.py
+# def apply_sidebar_style():
+#     st.markdown("""
+#     <style>
+#         [data-testid="stSidebar"] {
+#             background-color: lightblack;
+#             padding: 1.5rem 1rem;
+#             border-right: 1px solid gray;
+#             font-family: 'Segoe UI', 'Inter', sans-serif;
+#         }
+#         [data-testid="stSidebar"] ul {
+#             padding-left: 0;
+#         }
+#         [data-testid="stSidebar"] ul li a {
+#             font-size: 1.05rem !important;
+#             font-weight: 600;
+#             color: white !important;
+#             padding: 0.5rem 0;
+#             margin-bottom: 0.4rem;
+#             border-radius: 6px;
+#             display: block;
+#             text-decoration: none;
+#         }
+#         [data-testid="stSidebar"] ul li a:hover {
+#             background-color: lightblack !important;
+#         }
+#     </style>
+#     """, unsafe_allow_html=True)
 
     
 def call_powerbi_api(url, token):

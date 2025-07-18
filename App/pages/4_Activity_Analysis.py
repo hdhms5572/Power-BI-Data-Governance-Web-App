@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
-
+from utils import  render_profile_header
 def inject_external_style():
     with open("static/style.css") as f:
         css = f.read()
@@ -12,7 +12,7 @@ def inject_external_style():
 apply_sidebar_style()
 show_workspace()
 inject_external_style()
-
+render_profile_header()
 col1, col2, col3 = st.columns(3)
 with col2:
     st.image("./images/dover_log.png")
@@ -88,20 +88,56 @@ datasets_df["Latest Artifact Activity"] = datasets_df.apply(
     lambda row: artifact_activity_map.get(row["id"]), axis=1)
 
 with st.expander("📊 User Insights"):
-    col1, col2 = st.columns([4, 2])
-    with col1:
-        st.subheader("Artifact Access Heatmap")
-        heatmap_data = activity_df.groupby(["User email", "Artifact Name"]).size().unstack(fill_value=0)
-        fig, ax = plt.subplots(figsize=(5, 3))
-        sns.heatmap(heatmap_data, cmap="YlGnBu", linewidths=0.3, ax=ax, cbar=False)
-        ax.set_title("Access Heatmap")
-        st.pyplot(fig)
-    with col2:
-        st.subheader("User Activity Status")
-        fig, ax = plt.subplots(figsize=(3, 5))
-        sns.countplot(data=users_df, x="activityStatus", palette={"Active": "green", "Inactive": "red"}, ax=ax)
-        ax.set_title("User Activity")
-        st.pyplot(fig)
+    # col1, col2 = st.columns([4, 2])
+    # with col1:
+    st.subheader("Artifact Access Heatmap")
+
+    # Grouping data
+    heatmap_data = activity_df.groupby(["User email", "Artifact Name"]).size().unstack(fill_value=0)
+
+    # Create larger figure for better readability
+    fig, ax = plt.subplots(figsize=(12, 6))  # Wider and taller
+
+    # Create heatmap with color bar
+    sns.heatmap(heatmap_data, cmap="YlGnBu", linewidths=0.3, ax=ax, cbar=True)
+
+    # Rotate axis labels for clarity
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
+    ax.set_yticklabels(ax.get_yticklabels(), rotation=0)
+
+    # Title
+    ax.set_title("Access Heatmap")
+
+    # Display on Streamlit
+    st.pyplot(fig)
+    # with col2:
+    #     st.subheader("User Activity Status")
+    #     fig, ax = plt.subplots(figsize=(3, 5))
+    #     sns.countplot(data=users_df, x="activityStatus", palette={"Active": "green", "Inactive": "red"}, ax=ax)
+    #     ax.set_title("User Activity")
+    #     st.pyplot(fig)
+
+
+
+    # st.subheader("📊 Full Artifact Access Heatmap")
+
+    # activity_df["User email"] = activity_df["User email"].astype(str).str.strip().str.lower()
+    # activity_df["Artifact Name"] = activity_df["Artifact Name"].astype(str).str.strip()
+    # activity_df = activity_df.dropna(subset=["User email", "Artifact Name"])
+    # all_users = activity_df["User email"].unique()
+    # all_artifacts = activity_df["Artifact Name"].unique()
+
+    # access_counts = activity_df.groupby(["User email", "Artifact Name"]).size().reset_index(name="Access Count")
+    # full_grid = pd.MultiIndex.from_product([all_users, all_artifacts], names=["User email", "Artifact Name"]).to_frame(index=False)
+    # full_matrix = pd.merge(full_grid, access_counts, on=["User email", "Artifact Name"], how="left")
+    # full_matrix["Access Count"] = full_matrix["Access Count"].fillna(0)
+    # heatmap_data = full_matrix.pivot(index="User email", columns="Artifact Name", values="Access Count")
+    # fig, ax = plt.subplots(figsize=(12, len(heatmap_data) * 0.3)) 
+    # sns.heatmap(heatmap_data, cmap="YlGnBu", linewidths=0.3, ax=ax, cbar=True)
+    # ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
+    # ax.set_yticklabels(ax.get_yticklabels(), rotation=0)
+    # ax.set_title("📊 Full Artifact Access Heatmap")
+    # st.pyplot(fig)
 
 # Usage Trends
 with st.expander("📈 Usage Trends"):
@@ -111,21 +147,29 @@ with st.expander("📈 Usage Trends"):
         top_reports = activity_df["Artifact Name"].value_counts().head(10).reset_index()
         top_reports.columns = ["Artifact Name", "Access Count"]
         fig, ax = plt.subplots(figsize=(6, 4))
-        sns.barplot(data=top_reports, x="Access Count", y="Artifact Name", palette="crest", ax=ax)
+        sns.barplot(
+            data=top_reports,
+            x="Access Count",
+            y="Artifact Name",
+            palette=["#87CEEB"] * len(top_reports),  
+        )
         ax.set_title("Top Artifacts")
         st.pyplot(fig)
+    
+  
     with col4:
         st.subheader("Usage Trends By Opcos")
         unique_users = activity_df.drop_duplicates(subset='User email')
         unique_users["domain"] = unique_users["User email"].str.split('@').str[-1]
         domain_counts = unique_users["domain"].value_counts()
         fig, ax = plt.subplots(figsize=(7, 2))
-        ax.bar(domain_counts.index, domain_counts.values, color='skyblue')
+        ax.bar(domain_counts.index, domain_counts.values, color="#87CEEB")  # Sky blue bars
         ax.set_title("Users per Opcos")
         ax.set_xlabel("Email Domain")
         ax.set_ylabel("Number of Users")
         ax.tick_params(axis='x', rotation=45)
         st.pyplot(fig)
+
 
 # Weekly & Monthly Access Patterns
 with st.expander("📅 Weekly and Monthly Access Patterns"):
@@ -193,12 +237,12 @@ elif selected_value == "users":
 elif selected_value == "reports":
     st.subheader("📌 Reports Latest Activity")
     st.info("Details of reports along with their last usage and activity status.")
-    st.dataframe(reports_df[["name","datasetStatus","outdated","Reportstatus Based on Dataset","Activity Status","Latest Artifact Activity"]])
+    st.dataframe(reports_df[["name","Reportstatus Based on Dataset","Activity Status","Latest Artifact Activity"]])
 
 elif selected_value == "datasets":
     st.subheader("📌 Datasets Latest Activity")
     st.info("Displays dataset-level activity insights, freshness status, and usage history.")
-    st.dataframe(datasets_df[[ "name","configuredBy","isRefreshable","createdDate","outdated","datasetStatus"]])
+    st.dataframe(datasets_df[[ "name","configuredBy","isRefreshable","createdDate","outdated","Dataset Freshness Status","Activity Status","Latest Artifact Activity"]])
 
 elif selected_value == "artifacts":
     st.info("Lists reports and datasets that haven't been accessed at all recently. Useful for cleanup.")

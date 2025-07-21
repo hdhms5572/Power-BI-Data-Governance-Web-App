@@ -1,10 +1,11 @@
+
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from utils import  render_profile_header
 import plotly.express as px
-from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
+from utils import get_cached_workspace_data, apply_sidebar_style, show_workspace
 
 def inject_external_style():
     with open("static/style.css") as f:
@@ -38,8 +39,9 @@ email = st.session_state.user_email
 workspace_map = {v: k for k, v in st.session_state.workspace_options.items()}
 
 reports_df_list, datasets_df_list, users_df_list = [], [], []
+
 for ws_id in workspace_ids:
-    reports, datasets, users = get_filtered_dataframes(token, ws_id, email)
+    reports, datasets, users = get_cached_workspace_data(token, ws_id, email)
     workspace_name = workspace_map.get(ws_id, "Unknown")
     for df in [reports, datasets, users]:
         df["workspace_id"] = ws_id
@@ -59,18 +61,22 @@ st.session_state.setdefault("dataset_filter_status", None)
 st.session_state.setdefault("view_datasets", False)
 st.session_state.setdefault("explore_datasets_dataframe", False)
 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3,col4 = st.columns(4)
 with col1:
-    if st.button("🧹 Up to Date"):
+    if st.button("🧮 Total Datasets"):
+        st.session_state.filter_status = None
+    st.markdown(f"<div class='grid-card'><div class='grid-title'>Total Datasets</div><div class='grid-value'>{len(datasets_df)}</div></div>", unsafe_allow_html=True)
+with col2:
+    if st.button("✅ Up to Date"):
         st.session_state.dataset_filter_status = "Up to Date"
     st.markdown(f"<div class='grid-card'><div class='grid-title'>Up to Date</div><div class='grid-value'>{(datasets_df['Dataset Freshness Status'] == 'Up to Date').sum()}</div></div>", unsafe_allow_html=True)
 
-with col2:
-    if st.button("⚠️ Needs Attention"):
+with col3:
+    if st.button("⏳ Needs Attention"):
         st.session_state.dataset_filter_status = "Needs Attention"
     st.markdown(f"<div class='grid-card'><div class='grid-title'>Needs Attention</div><div class='grid-value'>{(datasets_df['Dataset Freshness Status'] == 'Needs Attention').sum()}</div></div>", unsafe_allow_html=True)
 
-with col3:
+with col4:
     if st.button("🚫 Expired"):
         st.session_state.dataset_filter_status = "Expired"
     st.markdown(f"<div class='grid-card'><div class='grid-title'>Expired</div><div class='grid-value'>{(datasets_df['Dataset Freshness Status'] == 'Expired').sum()}</div></div>", unsafe_allow_html=True)

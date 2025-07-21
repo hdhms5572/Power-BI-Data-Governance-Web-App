@@ -4,16 +4,18 @@ import seaborn as sns
 import pandas as pd
 import plotly.express as px
 from utils import get_cached_workspace_data, apply_sidebar_style, show_workspace
-from utils import  render_profile_header
+from utils import  render_profile_header, add_logout_button
 def inject_external_style():
     with open("static/style.css") as f:
         css = f.read()
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 apply_sidebar_style()
+add_logout_button()
 show_workspace()
 inject_external_style()
 render_profile_header()
+
 col1, col2, col3 = st.columns(3)
 with col2:
     st.image("./images/dover_log.png")

@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 from utils import  apply_sidebar_style, show_workspace, render_profile_header
 from utils import handle_activity_upload,validate_session,apply_activity_status
-from utils import get_cached_workspace_data
+from utils import get_cached_workspace_data, add_logout_button
 
 def inject_external_style():
     with open("static/style.css") as f:
@@ -12,6 +12,7 @@ def inject_external_style():
 
 st.set_page_config(page_title="Active vs Inactive Summary", layout="wide", page_icon="📍")
 apply_sidebar_style()
+add_logout_button()
 show_workspace()
 inject_external_style()
 render_profile_header()

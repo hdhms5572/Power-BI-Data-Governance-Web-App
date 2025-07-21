@@ -2,7 +2,8 @@
 import streamlit as st
 import requests
 from utils import apply_sidebar_style
-from utils import  render_profile_header
+from utils import  render_profile_header, add_logout_button
+
 st.set_page_config(page_title="Power BI Governance Dashboard", layout="wide", page_icon="📊")
 def inject_external_style():
     with open("./static/style.css") as f:
@@ -84,10 +85,8 @@ if not st.session_state.get("logged_in"):
                         st.error("No workspaces found for this email.")
 else:
     # Sidebar logout button
-    with st.sidebar:
-        if st.button("🚪 Logout"):
-            reset_session()
-            st.rerun()
+    add_logout_button()
+
 
    
     workspace_options = st.session_state.get("workspace_options", {})

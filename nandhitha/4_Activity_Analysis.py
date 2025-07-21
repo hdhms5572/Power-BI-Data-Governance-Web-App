@@ -1,4 +1,5 @@
 
+
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -54,98 +55,29 @@ for ws_id in workspace_ids:
 reports_df = pd.concat(reports_df_list, ignore_index=True)
 datasets_df = pd.concat(datasets_df_list, ignore_index=True)
 users_df = pd.concat(users_df_list, ignore_index=True)
-#reports_df, datasets_df, users_df = get_combined_workspace_data()
 
-# Upload CSV via Streamlit
-# if "activity_df" not in st.session_state:
-#     uploaded_file = st.file_uploader("📤 Upload Activity CSV", type=["csv"])
-#     if uploaded_file:
-#         try:
-#             activity_df = pd.read_csv(uploaded_file)
-#             if activity_df.empty:
-#                 st.error("❌ Uploaded file is empty.")
-#                 st.stop()
-#             st.session_state["activity_df"] = activity_df
-#             st.session_state["activity_filename"] = uploaded_file.name
-#             st.rerun()
-#         except Exception as e:
-#             st.error(f"❌ Failed to read file: {e}")
-#             st.stop()
-#     else:
-#         st.warning("⚠️ Please upload an activity CSV file to continue.")
-#         st.stop()
-# else:
-#     activity_df = st.session_state["activity_df"]
-#     st.success(f"✅ Using uploaded file: {st.session_state['activity_filename']}")
-#     if st.button("🔄 Reset Activity CSV"):
-#         del st.session_state["activity_df"]
-#         del st.session_state["activity_filename"]
-#         st.rerun()
 activity_df = handle_activity_upload()
 if activity_df is None or activity_df.empty:
     st.warning("⚠️ No activity data found. Please upload a valid activity CSV.")
     st.stop()
 
 
-# activity_data = r"./sample_analysis/data.csv"
-# activity_df = pd.read_csv(activity_data)
-# activity_df["Activity time"] = pd.to_datetime(activity_df["Activity time"], errors="coerce")
-# activity_df = activity_df.sort_values("Activity time")
-# latest_access = activity_df.drop_duplicates(subset="Artifact Name", keep="last")
-# latest_access.rename(columns={"Activity time": "Latest Activity"}, inplace=True)
-# report_ids = set(reports_df["id"])
-# dataset_ids = set(datasets_df["id"])
-# dataset_to_report = dict(zip(reports_df["datasetId"], reports_df["id"]))
-# active_users = activity_df["User email"].dropna().unique()    
-# cutoff_date = pd.Timestamp.now() - pd.DateOffset(months=3)
-# recent_user_activity = activity_df[activity_df["Activity time"] >= cutoff_date]
-# active_users = recent_user_activity["User email"].dropna().unique()
-# users_df["activityStatus"] = users_df["emailAddress"].apply(
-#     lambda x: "Active" if x in active_users else "Inactive"
-# )
-
-# # Map latest activity time by user email
-# user_latest_activity_map = activity_df.sort_values("Activity time").drop_duplicates(subset="User email", keep="last")
-# user_latest_activity_map = user_latest_activity_map.set_index("User email")["Activity time"]
-
-# users_df["Latest Activity Time"] = users_df["emailAddress"].map(user_latest_activity_map)
-
-# active_artifacts = set(latest_access["ArtifactId"])
-# artifact_activity_map = dict(zip(latest_access["ArtifactId"], latest_access["Latest Activity"]))
-
-# reports_df["Activity Status"] = reports_df.apply(
-#     lambda row: "Active" if row["id"] in active_artifacts else "Inactive", axis=1)
-
 activity_df, reports_df, datasets_df, users_df, latest_access = apply_activity_status(
     activity_df, reports_df, datasets_df, users_df
 )
 
-# datasets_df["Activity Status"] = datasets_df.apply(
-#     lambda row: "Active" if row["id"] in active_artifacts else "Inactive", axis=1)
+
 
 with st.expander("📊 User Insights"):
         st.subheader("Artifact Access Heatmap")
-
-        # Grouping data
         heatmap_data = activity_df.groupby(["User email", "Artifact Name"]).size().unstack(fill_value=0)
-
-        # Create larger figure for better readability
-        fig, ax = plt.subplots(figsize=(12, 6))  # Wider and taller
-
-        # Create heatmap with color bar
+        fig, ax = plt.subplots(figsize=(12, 6))  
         sns.heatmap(heatmap_data, cmap="YlGnBu", linewidths=0.3, ax=ax, cbar=True)
-
-        # Rotate axis labels for clarity
         ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
         ax.set_yticklabels(ax.get_yticklabels(), rotation=0)
-
-        # Title
         ax.set_title("Access Heatmap")
-
-        # Display on Streamlit
         st.pyplot(fig)
 
-# Usage Trends
 with st.expander("📈 Usage Trends"):
     col3, col4 = st.columns(2)
     with col3:
@@ -176,8 +108,6 @@ with st.expander("📈 Usage Trends"):
         ax.tick_params(axis='x', rotation=45)
         st.pyplot(fig)
 
-
-# Weekly & Monthly Access Patterns
 with st.expander("📅 Weekly and Monthly Access Patterns"):
     col5, col6 = st.columns(2)
     with col5:
@@ -277,8 +207,6 @@ Each activity is grouped and downloadable for further audit or analysis.
 </div>
 """, unsafe_allow_html=True)
 
-
-# Collect filter inputs
 search_term = st.text_input("🔍 Search by artifact name, user email, or activity type", key="search_term")
 col1, col2 = st.columns(2)
 with col1:
@@ -297,7 +225,6 @@ if st.session_state.get("run_filter", False):
     if st.session_state.end_date:
         filtered_df = filtered_df[filtered_df["Activity time"] <= pd.to_datetime(st.session_state.end_date)]
 
-    # Apply keyword search
     if st.session_state.search_term:
         filtered_df = filtered_df[
             filtered_df["Artifact Name"].str.contains(st.session_state.search_term, case=False, na=False) |
@@ -305,7 +232,6 @@ if st.session_state.get("run_filter", False):
             filtered_df["Activity"].str.contains(st.session_state.search_term, case=False, na=False)
         ]
 
-    # Sort by latest activity time
     filtered_df = filtered_df.sort_values("Activity time", ascending=False).reset_index(drop=True)
 
     if "Activity" in filtered_df.columns:
@@ -323,6 +249,5 @@ if st.session_state.get("run_filter", False):
     else:
         st.info("⚠️ 'Activity' column is missing from the dataset.")
 
-    # Reset flag so it won't run again until explicitly triggered
     st.session_state.run_filter = False
     

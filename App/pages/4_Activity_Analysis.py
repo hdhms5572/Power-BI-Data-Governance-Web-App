@@ -5,7 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from utils import get_cached_workspace_data, apply_sidebar_style, show_workspace
-from utils import  render_profile_header
+from utils import  render_profile_header, add_logout_button
 from utils import handle_activity_upload,apply_activity_status
 
 def inject_external_style():
@@ -15,7 +15,7 @@ def inject_external_style():
 
 apply_sidebar_style()
 render_profile_header()
-
+add_logout_button()
 show_workspace()
 inject_external_style()
 

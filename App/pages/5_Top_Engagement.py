@@ -2,19 +2,23 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
-from utils import  render_profile_header
+from utils import  apply_sidebar_style, show_workspace, render_profile_header,get_cached_workspace_data, handle_activity_upload,apply_activity_status
+
 def inject_external_style():
     with open("static/style.css") as f:
         css = f.read()
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
-# Setup
+for key in ["activity_df", "activity_filename"]:
+    if key not in st.session_state:
+        st.session_state[key] = None
+
 st.set_page_config(page_title="Top Engagement Insights", layout="wide", page_icon="🏆")
 apply_sidebar_style()
 show_workspace()
 inject_external_style()
 render_profile_header()
+
 col1, col2, col3 = st.columns(3)
 with col2:
     st.image("./images/dover_log.png")
@@ -28,10 +32,8 @@ Use this view to understand usage behavior, improve resource visibility, and gui
 </div><hr>
 """, unsafe_allow_html=True)
 
-# Session Check
-if not (st.session_state.get("access_token") and
-        st.session_state.get("workspace_ids") and
-        st.session_state.get("user_email")):
+
+if not (st.session_state.get("access_token") and st.session_state.get("workspace_ids") and st.session_state.get("user_email")):
     st.warning("Missing credentials or workspace selection.")
     st.stop()
 
@@ -40,10 +42,10 @@ workspace_ids = st.session_state.workspace_ids
 email = st.session_state.user_email
 workspace_map = {v: k for k, v in st.session_state.workspace_options.items()}
 
-# Load data 
+
 reports_df_list, datasets_df_list, users_df_list = [], [], []
 for ws_id in workspace_ids:
-    reports, datasets, users = get_filtered_dataframes(token, ws_id, email)
+    reports, datasets, users = get_cached_workspace_data(token, ws_id, email)
     ws_name = workspace_map.get(ws_id, "Unknown")
     for df in [reports, datasets, users]:
         df["workspace_id"] = ws_id
@@ -56,33 +58,60 @@ reports_df = pd.concat(reports_df_list, ignore_index=True)
 datasets_df = pd.concat(datasets_df_list, ignore_index=True)
 users_df = pd.concat(users_df_list, ignore_index=True)
 
-activity_path = r"sample_analysis/data.csv"
-activity_df = pd.read_csv(activity_path)
+if st.session_state["activity_df"] is None:
+    uploaded_file = st.file_uploader("📤 Upload Activity CSV", type=["csv"])
+    if uploaded_file:
+        try:
+            activity_df = pd.read_csv(uploaded_file)
+            if activity_df.empty:
+                st.error("❌ Uploaded file is empty.")
+                st.stop()
+            st.session_state["activity_df"] = activity_df
+            st.session_state["activity_filename"] = uploaded_file.name
+            st.rerun()
+        except Exception as e:
+            st.error(f"❌ Failed to read file: {e}")
+            st.stop()
+    else:
+        st.warning("⚠️ Please upload an activity CSV file to continue.")
+        st.stop()
+else:
+    activity_df = st.session_state["activity_df"]
+    st.success(f"✅ Using uploaded file: {st.session_state['activity_filename']}")
+    if st.button("🔄 Reset Activity CSV"):
+        st.session_state["activity_df"] = None
+        st.session_state["activity_filename"] = None
+        st.rerun()
+# activity_df = handle_activity_upload()
+# if activity_df is None or activity_df.empty:
+#     st.warning("⚠️ No activity data found. Please upload a valid activity CSV.")
+#     st.stop()
+
+# ---- Prepare Activity Data ----
 activity_df["Activity time"] = pd.to_datetime(activity_df["Activity time"], errors="coerce")
 activity_df = activity_df.sort_values("Activity time")
 
-# Latest activity per report or dataset
+# ---- Latest activity per report or dataset ----
 latest_access = activity_df.drop_duplicates(subset="Artifact Name", keep="last")
 latest_access.rename(columns={"Activity time": "Latest Activity"}, inplace=True)
 
-# Prepare active mappings
+# ---- Prepare mappings and recent user activity ----
 report_ids = set(reports_df["id"])
 dataset_ids = set(datasets_df["id"])
-dataset_to_report = dict(zip(reports_df["datasetId"], reports_df["id"]))
-active_users = activity_df["User email"].dropna().unique()
 cutoff = pd.Timestamp.now() - pd.DateOffset(months=3)
+
 recent_user_activity = activity_df[activity_df["Activity time"] >= cutoff]
 recent_active_users = recent_user_activity["User email"].dropna().unique()
 
-users_df["activityStatus"] = users_df["emailAddress"].apply(lambda x: "Active" if x in recent_active_users else "Inactive")
+users_df["activityStatus"] = users_df["emailAddress"].apply(
+    lambda x: "Active" if x in recent_active_users else "Inactive"
+)
 
-# Visualizations
+# ---- Visualizations ----
 col1, col2 = st.columns(2)
-
-# Color choice — consistent across all charts
 standard_color = ["#87CEEB"] * 5  # Sky blue
 
-# Top 5 Reports
+# 📊 Top 5 Reports
 with col1:
     st.markdown("#### 📊 Top Reports")
     top_reports = activity_df[activity_df["ArtifactId"].isin(reports_df["id"])]
@@ -95,7 +124,7 @@ with col1:
     ax1.set_title("Top Reports")
     st.pyplot(fig1)
 
-# Top 5 Datasets
+# 📦 Top 5 Datasets
 with col2:
     st.markdown("#### 📦 Top Datasets")
     top_datasets = activity_df[activity_df["ArtifactId"].isin(datasets_df["id"])]
@@ -108,9 +137,8 @@ with col2:
     ax2.set_title("Top Datasets")
     st.pyplot(fig2)
 
-# Top 5 Users
+# 👤 Top 5 Users
 col3, col4 = st.columns(2)
-
 with col3:
     st.markdown("#### 👤 Top Users")
     user_activity = activity_df["User email"].value_counts().head(5).reset_index()
@@ -123,7 +151,7 @@ with col3:
     ax3.set_title("Top Users")
     st.pyplot(fig3)
 
-# Recent Activity (Last 3 Months)
+# ⏱️ Recent Activity (Last 3 Months)
 with col4:
     st.markdown("#### ⏱️ Recent Active Users (3 Months)")
     recent_activity = activity_df[activity_df["Activity time"] >= cutoff]

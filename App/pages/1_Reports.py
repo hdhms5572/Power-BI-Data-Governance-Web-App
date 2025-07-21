@@ -5,16 +5,19 @@ import matplotlib
 import plotly.express as px
 import seaborn as sns
 from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
+from utils import  render_profile_header
+from utils import get_cached_workspace_data
+
 
 def inject_external_style():
     with open("static/style.css") as f:
         css = f.read()
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
-# Initial UI setup
 apply_sidebar_style()
 show_workspace()
 inject_external_style()
+render_profile_header()
 
 col1, col2, col3 = st.columns(3)
 with col2:
@@ -22,7 +25,6 @@ with col2:
 
 st.markdown("<h1 style='text-align: center;'>📊 Reports</h1>", unsafe_allow_html=True)
 
-# Professional Dashboard Description
 st.markdown("""
 <div style='text-align: center; font-size: 1.05rem; background-color: #E7DBF3; padding: 14px 24px; border-left: 6px solid #673ab7; border-radius: 8px; margin-bottom: 25px;'>
 This dashboard provides a comprehensive view of Power BI reports across  selected workspaces. 
@@ -30,7 +32,7 @@ Analyze report statuses, explore associated datasets, and generate insights thro
 </div><hr>
 """, unsafe_allow_html=True)
 
-# Session Validation
+
 if not (st.session_state.get("access_token") and
         st.session_state.get("workspace_ids") and
         st.session_state.get("user_email")):
@@ -45,7 +47,7 @@ workspace_map = {v: k for k, v in st.session_state.workspace_options.items()}
 # Data Loading
 reports_df_list, datasets_df_list, users_df_list = [], [], []
 for ws_id in workspace_ids:
-    reports, datasets, users = get_filtered_dataframes(token, ws_id, email)
+    reports, datasets, users = get_cached_workspace_data(token, ws_id, email)
     reports["workspace_id"] = ws_id
     reports["workspace_name"] = workspace_map.get(ws_id, "Unknown")
     reports_df_list.append(reports)
@@ -73,17 +75,17 @@ with col1:
         st.session_state.filter_status = None
     st.markdown(f"<div class='grid-card'><div class='grid-title'>Total Reports</div><div class='grid-value'>{len(reports_df)}</div></div>", unsafe_allow_html=True)
 with col2:
-    if st.button("✅ Active"):
-        st.session_state.filter_status = "Active"
-    st.markdown(f"<div class='grid-card'><div class='grid-title'>Active</div><div class='grid-value'>{(status_series == 'Active').sum()}</div></div>", unsafe_allow_html=True)
+    if st.button("✅ Up to Date"):
+        st.session_state.filter_status = "Up to Date"
+    st.markdown(f"<div class='grid-card'><div class='grid-title'>Up to Date</div><div class='grid-value'>{(status_series == 'Up to Date').sum()}</div></div>", unsafe_allow_html=True)
 with col3:
-    if st.button("⏳ Outdated"):
-        st.session_state.filter_status = "Active (Outdated)"
-    st.markdown(f"<div class='grid-card'><div class='grid-title'>Active (Outdated)</div><div class='grid-value'>{(status_series == 'Active (Outdated)').sum()}</div></div>", unsafe_allow_html=True)
+    if st.button("⏳ Needs Attention"):
+        st.session_state.filter_status = "Active (Needs Attention)"
+    st.markdown(f"<div class='grid-card'><div class='grid-title'>Needs Attention</div><div class='grid-value'>{(status_series == 'Needs Attention').sum()}</div></div>", unsafe_allow_html=True)
 with col4:
-    if st.button("🚫 Inactive"):
-        st.session_state.filter_status = "Inactive"
-    st.markdown(f"<div class='grid-card'><div class='grid-title'>Inactive</div><div class='grid-value'>{(status_series == 'Inactive').sum()}</div></div>", unsafe_allow_html=True)
+    if st.button("🚫 Expired"):
+        st.session_state.filter_status = "Expired"
+    st.markdown(f"<div class='grid-card'><div class='grid-title'>Expired</div><div class='grid-value'>{(status_series == 'Expired').sum()}</div></div>", unsafe_allow_html=True)
 
 st.markdown("---")
 
@@ -91,21 +93,32 @@ st.markdown("---")
 
 col1, col2 = st.columns(2)
 with col1:
-    st.subheader("Report Status Distribution by Workspace")
-    workspace_names = reports_df["workspace_name"].unique()
-    workspace_palette = dict(zip(
-        workspace_names,
-        matplotlib.colormaps["tab10"].colors[:len(workspace_names)]
-    ))
-    fig, ax = plt.subplots(figsize=(8, 4))
-    sns.countplot(
-        data=reports_df,
-        x="Reportstatus Based on Dataset",
-        hue="workspace_name",
-        palette=workspace_palette,
-        ax=ax
+    st.subheader("📊 Report Status Based on Dataset")
+    report_data = reports_df.groupby(["workspace_name", "Reportstatus Based on Dataset"])["name"].agg(list).reset_index()
+    report_data["Count"] = report_data["name"].apply(len)
+    report_data["Report Names"] = report_data["name"].apply(lambda x: "<br>".join(x))
+    report_status_colors = {
+        "up to Date": "#87CEEB",          
+        "Needs Attention": "#3F51B5",          
+        "Expired": "#F44336",         
+        "Unknown": "#a6a6a6",          
+    }
+
+    # Plotly stacked bar chart
+    fig = px.bar(
+        report_data,
+        x="workspace_name",
+        y="Count",
+        color="Reportstatus Based on Dataset",
+        text="Count",
+        color_discrete_map=report_status_colors,
+        hover_data={"Report Names": True, "Count": True, "workspace_name": False, "name": False},
+        labels={"workspace_name": "Workspace", "Count": "Number of Reports"},
     )
-    st.pyplot(fig)
+
+    fig.update_layout(barmode="stack", xaxis_tickangle=-45)
+
+    st.plotly_chart(fig, use_container_width=True)
 
 with col2:
     st.subheader("Overall Report Status Share")
@@ -124,34 +137,8 @@ with col2:
     ax.axis("equal")
     st.pyplot(fig)
 
-# Top Datasets by Report Count
-st.header('Top Datasets by Report Count')
-dataset_counts = reports_df['datasetId'].value_counts().reset_index()
-dataset_counts.columns = ['datasetId', 'report_count']
-
-# Step 2: Merge with dataset names
-top_datasets = pd.merge(
-    dataset_counts.head(10),
-    datasets_df[['id', 'name']],
-    left_on='datasetId',
-    right_on='id',
-    how='left'
-)
-top_datasets.rename(columns={'name': 'Dataset Name'}, inplace=True)
-top_datasets = top_datasets.sort_values(by='report_count', ascending=True)
-
-fig = px.pie(
-    top_datasets,
-    names='Dataset Name',
-    values='report_count',
-    hole=0.4,
-    color_discrete_sequence=px.colors.sequential.Blues,
-   
-)
-st.plotly_chart(fig, use_container_width=True)
 
 
-# View Toggles 
 colA, colB = st.columns([1, 1])
 with colA:
     if st.button("📋 View Reports"):
@@ -255,7 +242,7 @@ elif st.session_state.view_reports:
 
 # Explore Reports Table View
 elif st.session_state.explore_reports_dataframe:
-    st.markdown("## 📊 Full Reports Table Grouped by Workspace")
+    st.header(" 📊 Full Reports Table Grouped by Workspace")
     for ws_name, group in reports_df.groupby("workspace_name"):
 
         renamed_df = group.rename(columns={
@@ -280,4 +267,4 @@ elif st.session_state.explore_reports_dataframe:
 
 
 
-        
+  

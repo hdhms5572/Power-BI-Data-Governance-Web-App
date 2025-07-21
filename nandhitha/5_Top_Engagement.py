@@ -2,21 +2,17 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils import  apply_sidebar_style, show_workspace, render_profile_header
-from utils import get_cached_workspace_data
-from utils import handle_activity_upload,apply_activity_status
+from utils import  apply_sidebar_style, show_workspace, render_profile_header,get_cached_workspace_data, handle_activity_upload,apply_activity_status
 
 def inject_external_style():
     with open("static/style.css") as f:
         css = f.read()
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
-# ---- Initialize session keys ----
 for key in ["activity_df", "activity_filename"]:
     if key not in st.session_state:
         st.session_state[key] = None
 
-# ---- Page Setup ----
 st.set_page_config(page_title="Top Engagement Insights", layout="wide", page_icon="🏆")
 apply_sidebar_style()
 show_workspace()
@@ -36,7 +32,7 @@ Use this view to understand usage behavior, improve resource visibility, and gui
 </div><hr>
 """, unsafe_allow_html=True)
 
-# ---- Session Check ----
+
 if not (st.session_state.get("access_token") and st.session_state.get("workspace_ids") and st.session_state.get("user_email")):
     st.warning("Missing credentials or workspace selection.")
     st.stop()
@@ -46,7 +42,7 @@ workspace_ids = st.session_state.workspace_ids
 email = st.session_state.user_email
 workspace_map = {v: k for k, v in st.session_state.workspace_options.items()}
 
-# ---- Load Workspace Data ----
+
 reports_df_list, datasets_df_list, users_df_list = [], [], []
 for ws_id in workspace_ids:
     reports, datasets, users = get_cached_workspace_data(token, ws_id, email)
@@ -62,35 +58,34 @@ reports_df = pd.concat(reports_df_list, ignore_index=True)
 datasets_df = pd.concat(datasets_df_list, ignore_index=True)
 users_df = pd.concat(users_df_list, ignore_index=True)
 
-# # ---- Upload CSV or Use Existing ----
-# if st.session_state["activity_df"] is None:
-#     uploaded_file = st.file_uploader("📤 Upload Activity CSV", type=["csv"])
-#     if uploaded_file:
-#         try:
-#             activity_df = pd.read_csv(uploaded_file)
-#             if activity_df.empty:
-#                 st.error("❌ Uploaded file is empty.")
-#                 st.stop()
-#             st.session_state["activity_df"] = activity_df
-#             st.session_state["activity_filename"] = uploaded_file.name
-#             st.rerun()
-#         except Exception as e:
-#             st.error(f"❌ Failed to read file: {e}")
-#             st.stop()
-#     else:
-#         st.warning("⚠️ Please upload an activity CSV file to continue.")
-#         st.stop()
-# else:
-#     activity_df = st.session_state["activity_df"]
-#     st.success(f"✅ Using uploaded file: {st.session_state['activity_filename']}")
-#     if st.button("🔄 Reset Activity CSV"):
-#         st.session_state["activity_df"] = None
-#         st.session_state["activity_filename"] = None
-#         st.rerun()
-activity_df = handle_activity_upload()
-if activity_df is None or activity_df.empty:
-    st.warning("⚠️ No activity data found. Please upload a valid activity CSV.")
-    st.stop()
+if st.session_state["activity_df"] is None:
+    uploaded_file = st.file_uploader("📤 Upload Activity CSV", type=["csv"])
+    if uploaded_file:
+        try:
+            activity_df = pd.read_csv(uploaded_file)
+            if activity_df.empty:
+                st.error("❌ Uploaded file is empty.")
+                st.stop()
+            st.session_state["activity_df"] = activity_df
+            st.session_state["activity_filename"] = uploaded_file.name
+            st.rerun()
+        except Exception as e:
+            st.error(f"❌ Failed to read file: {e}")
+            st.stop()
+    else:
+        st.warning("⚠️ Please upload an activity CSV file to continue.")
+        st.stop()
+else:
+    activity_df = st.session_state["activity_df"]
+    st.success(f"✅ Using uploaded file: {st.session_state['activity_filename']}")
+    if st.button("🔄 Reset Activity CSV"):
+        st.session_state["activity_df"] = None
+        st.session_state["activity_filename"] = None
+        st.rerun()
+# activity_df = handle_activity_upload()
+# if activity_df is None or activity_df.empty:
+#     st.warning("⚠️ No activity data found. Please upload a valid activity CSV.")
+#     st.stop()
 
 # ---- Prepare Activity Data ----
 activity_df["Activity time"] = pd.to_datetime(activity_df["Activity time"], errors="coerce")

@@ -5,7 +5,7 @@ import matplotlib
 import plotly.express as px
 import seaborn as sns
 from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
-from utils import  render_profile_header
+from utils import  render_profile_header, add_logout_button
 from utils import get_cached_workspace_data
 
 
@@ -15,6 +15,7 @@ def inject_external_style():
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 apply_sidebar_style()
+add_logout_button()
 show_workspace()
 inject_external_style()
 render_profile_header()

@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils import  apply_sidebar_style, show_workspace, render_profile_header,get_cached_workspace_data, handle_activity_upload,apply_activity_status
+from utils import  apply_sidebar_style, show_workspace, render_profile_header,get_cached_workspace_data, add_logout_button
 
 def inject_external_style():
     with open("static/style.css") as f:
@@ -15,6 +15,7 @@ for key in ["activity_df", "activity_filename"]:
 
 st.set_page_config(page_title="Top Engagement Insights", layout="wide", page_icon="🏆")
 apply_sidebar_style()
+add_logout_button()
 show_workspace()
 inject_external_style()
 render_profile_header()

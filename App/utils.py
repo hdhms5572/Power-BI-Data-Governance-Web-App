@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 import streamlit as st
 
+
 #Optimization: Cached API data loader
 @st.cache_data(ttl=3600)
 def get_cached_workspace_data(token, workspace_id, user_email):
@@ -193,6 +194,18 @@ def handle_activity_upload():
 
     return st.session_state["activity_df"]
 
+import streamlit as st
+
+def add_logout_button():
+    with st.sidebar:
+        if st.button("🚪 Logout"):
+            # Clear all relevant session keys
+            for key in [
+                "access_token", "user_email", "workspace_ids",
+                "workspace_names", "logged_in", "workspace_options",
+                "activity_df", "activity_filename", "activity_csv"
+            ]:
+                st.session_state.pop(key, None)
 
 # Annotate activity status on reports, datasets, users
 def apply_activity_status(activity_df, reports_df, datasets_df, users_df):

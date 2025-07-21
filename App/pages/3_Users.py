@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import plotly.express as px
-from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
+from utils import get_cached_workspace_data, apply_sidebar_style, show_workspace
 from utils import  render_profile_header
 def inject_external_style():
     with open("static/style.css") as f:
@@ -40,7 +40,8 @@ workspace_map = {v: k for k, v in st.session_state.workspace_options.items()}
 # Fetch user data across multiple workspaces
 users_df_list = []
 for ws_id in workspace_ids:
-    _, _, users = get_filtered_dataframes(token, ws_id, email)
+    reports, datasets, users = get_cached_workspace_data(token, ws_id, email)
+
     users["workspace_id"] = ws_id
     users["workspace_name"] = workspace_map.get(ws_id, "Unknown")
     users_df_list.append(users)

@@ -19,7 +19,9 @@ add_logout_button()
 show_workspace()
 inject_external_style()
 render_profile_header()
-
+if st.session_state.get("logged_out"):
+    st.session_state.pop("logged_out")
+    st.switch_page("Home.py")  
 col1, col2, col3 = st.columns(3)
 with col2:
     st.image("./images/dover_log.png")
@@ -90,16 +92,36 @@ with col4:
 
 st.markdown("---")
 
-# Visualizations
+#Visualisations
 
 col1, col2 = st.columns(2)
+
 with col1:
     st.subheader("📊 Report Status Based on Dataset")
+    if "show_vis_description" not in st.session_state:
+        st.session_state["show_vis_description"] = False
+    if st.button("ℹ️ Chart Info"):
+        st.session_state["show_vis_description"] = not st.session_state["show_vis_description"]
+    if st.session_state["show_vis_description"]:
+        st.markdown("""
+        <div style='background-color: #f3f0ff; padding: 12px 20px; border-left: 5px solid #673ab7; border-radius: 6px; font-size: 0.95rem; margin-bottom: 10px;'>
+        <b>Chart Description:</b><br>
+        This stacked bar chart illustrates the number of reports per workspace, categorized by dataset freshness status. Each bar is split into:
+        <ul style="padding-left: 18px;">
+          <li><span style="color:#87CEEB;"><b>Up to Date</b></span> – Refreshable datasets less than 12 months old.</li>
+          <li><span style="color:#3F51B5;"><b>Needs Attention</b></span> – Refreshable but outdated datasets.</li>
+          <li><span style="color:#F44336;"><b>Expired</b></span> – Non-refreshable datasets.</li>
+          <li><span style="color:#a6a6a6;"><b>Unknown</b></span> – Unclassified or missing status.</li>
+        </ul>
+        Hover over segments to see report names per category.
+        </div>
+        """, unsafe_allow_html=True)
+
     report_data = reports_df.groupby(["workspace_name", "Reportstatus Based on Dataset"])["name"].agg(list).reset_index()
     report_data["Count"] = report_data["name"].apply(len)
     report_data["Report Names"] = report_data["name"].apply(lambda x: "<br>".join(x))
     report_status_colors = {
-        "up to Date": "#87CEEB",          
+        "Up to Date": "#87CEEB",          
         "Needs Attention": "#3F51B5",          
         "Expired": "#F44336",         
         "Unknown": "#a6a6a6",          
@@ -120,6 +142,7 @@ with col1:
     fig.update_layout(barmode="stack", xaxis_tickangle=-45)
 
     st.plotly_chart(fig, use_container_width=True)
+
 
 with col2:
     st.subheader("Overall Report Status Share")

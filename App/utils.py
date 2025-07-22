@@ -194,18 +194,34 @@ def handle_activity_upload():
 
     return st.session_state["activity_df"]
 
-import streamlit as st
-
 def add_logout_button():
     with st.sidebar:
-        if st.button("🚪 Logout"):
-            # Clear all relevant session keys
-            for key in [
-                "access_token", "user_email", "workspace_ids",
-                "workspace_names", "logged_in", "workspace_options",
-                "activity_df", "activity_filename", "activity_csv"
-            ]:
-                st.session_state.pop(key, None)
+        st.markdown("""
+            <style>
+            div.stButton > button:first-child {
+                background-color: #f44336;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                padding: 0.5em 1em;
+                font-size: 16px;
+                transition: background-color 0.3s ease;
+            }
+            div.stButton > button:first-child:hover {
+                background-color: #d32f2f;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+
+        if st.session_state.get("access_token"):
+            if st.button("🚪 Logout"):
+                for key in [
+                    "access_token", "user_email", "workspace_ids",
+                    "workspace_names", "logged_in", "workspace_options",
+                    "activity_df", "activity_filename", "activity_csv"
+                ]:
+                    st.session_state.pop(key, None)
+
 
 # Annotate activity status on reports, datasets, users
 def apply_activity_status(activity_df, reports_df, datasets_df, users_df):

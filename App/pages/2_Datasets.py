@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -85,6 +84,10 @@ with col4:
 
 st.markdown("---")
 
+
+#VISUALISATIONS
+
+
 col1, col2 = st.columns(2)
 with col1:
     st.subheader("📈 Refreshable vs Static Datasets")
@@ -101,21 +104,39 @@ with col2:
     fig2, ax2 = plt.subplots(figsize=(6, 3))
     created_by_month.plot(kind="line", marker="o", color="steelblue", ax=ax2)
     st.pyplot(fig2)
-
 st.subheader("📊 Dataset Freshness Status")
+
+if "show_dataset_description" not in st.session_state:
+    st.session_state["show_dataset_description"] = False
+
+if st.button("ℹ️ Chart Info", key="dataset_info"):
+    st.session_state["show_dataset_description"] = not st.session_state["show_dataset_description"]
+
+if st.session_state["show_dataset_description"]:
+    st.markdown("""
+    <div style='background-color: #f3f0ff; padding: 12px 20px; border-left: 5px solid #009688; border-radius: 6px; font-size: 0.95rem; margin-bottom: 10px;'>
+    <b>Chart Description:</b><br>
+    This visualization displays the freshness status of datasets across workspaces. Each bar represents a workspace, segmented by:
+    <ul style="padding-left: 18px;">
+      <li><span style="color:green;"><b>Up to Date</b></span> – Refreshable datasets created within the last 12 months.</li>
+      <li><span style="color:orange;"><b>Needs Attention</b></span> – Refreshable but older than 12 months.</li>
+      <li><span style="color:red;"><b>Expired</b></span> – Not refreshable or deprecated datasets.</li>
+      <li><span style="color:#a6a6a6;"><b>Unknown</b></span> – Status could not be determined or missing.</li>
+    </ul>
+    Hover over bar segments to reveal the list of dataset names and their count.
+    </div>
+    """, unsafe_allow_html=True)
+
 health_data = datasets_df.groupby(["workspace_name", "Dataset Freshness Status"])["name"].agg(list).reset_index()
 health_data["Count"] = health_data["name"].apply(len)
-health_data["Dataset Names"] = health_data["name"].apply(lambda x: "<br>".join(x))  # Tooltip-friendly
+health_data["Dataset Names"] = health_data["name"].apply(lambda x: "<br>".join(x))
 
-# Define custom colors
 custom_colors = {
-    "up to Date": "green",          
-    "Needs Attention": "orange",          
-    "Expired": "red",         
-    "Unknown": "#a6a6a6",    
+    "Up to Date": "green",
+    "Needs Attention": "orange",
+    "Expired": "red",
+    "Unknown": "#a6a6a6",
 }
-
-# Plotly stacked bar chart
 fig = px.bar(
     health_data,
     x="workspace_name",
@@ -132,8 +153,6 @@ fig.update_layout(barmode="stack", xaxis_tickangle=-45)
 
 st.plotly_chart(fig, use_container_width=True)
 
-
-# View toggles
 colA, colB = st.columns([1, 1])
 with colA:
     if st.button("📋 View Datasets"):
@@ -147,7 +166,7 @@ with colB:
         st.session_state.explore_datasets_dataframe = True
         st.session_state.dataset_filter_status = None
 
-# Columns to display
+
 display_cols = ["name", "configuredBy", "isRefreshable", "createdDate", "outdated", "Dataset Freshness Status"]
 
 # Filtered View

@@ -122,7 +122,7 @@ with col1:
     report_data["Report Names"] = report_data["name"].apply(lambda x: "<br>".join(x))
     report_status_colors = {
         "Up to Date": "#87CEEB",          
-        "Needs Attention": "#3F51B5",          
+        "Needs Attention": "#E2C312",          
         "Expired": "#F44336",         
         "Unknown": "#a6a6a6",          
     }
@@ -153,7 +153,7 @@ with col2:
         status_counts,
         labels=status_counts.index,
         autopct="%1.1f%%",
-        colors=["green", "red", "orange"],
+        colors=[ "#87CEEB", "red", "orange","gray"],
         startangle=150
     )
     for text in texts:

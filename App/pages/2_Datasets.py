@@ -131,11 +131,11 @@ health_data = datasets_df.groupby(["workspace_name", "Dataset Freshness Status"]
 health_data["Count"] = health_data["name"].apply(len)
 health_data["Dataset Names"] = health_data["name"].apply(lambda x: "<br>".join(x))
 
-custom_colors = {
-    "Up to Date": "green",
-    "Needs Attention": "orange",
-    "Expired": "red",
-    "Unknown": "#a6a6a6",
+dataset_status_colors = {
+    "Up to Date": "#87CEEB",          
+    "Needs Attention": "#E2C312",          
+    "Expired": "#F44336",         
+    "Unknown": "#a6a6a6",          
 }
 fig = px.bar(
     health_data,
@@ -143,7 +143,7 @@ fig = px.bar(
     y="Count",
     color="Dataset Freshness Status",
     text="Count",
-    color_discrete_map=custom_colors,
+    color_discrete_map=dataset_status_colors,
     hover_data={"Dataset Names": True, "Count": True, "workspace_name": False, "name": False},
     labels={"workspace_name": "Workspace", "Count": "Number of Datasets"},
     title="Dataset Freshness Status by Workspace"

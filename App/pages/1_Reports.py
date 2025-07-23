@@ -7,18 +7,22 @@ import seaborn as sns
 from utils import get_filtered_dataframes, apply_sidebar_style, show_workspace
 from utils import  render_profile_header, add_logout_button
 from utils import get_cached_workspace_data
-
-
+apply_sidebar_style()
 def inject_external_style():
     with open("static/style.css") as f:
         css = f.read()
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
-
-apply_sidebar_style()
-add_logout_button()
-show_workspace()
 inject_external_style()
+
+if not (st.session_state.get("access_token") and
+        st.session_state.get("user_email")):
+    st.warning("🔐 Authentication Required")
+    st.stop()
+
+add_logout_button()
 render_profile_header()
+show_workspace()
+
 if st.session_state.get("logged_out"):
     st.session_state.pop("logged_out")
     st.switch_page("Home.py")  
@@ -36,11 +40,6 @@ Analyze report statuses, explore associated datasets, and generate insights thro
 """, unsafe_allow_html=True)
 
 
-if not (st.session_state.get("access_token") and
-        st.session_state.get("workspace_ids") and
-        st.session_state.get("user_email")):
-    st.warning("Missing credentials or workspace selection.")
-    st.stop()
 
 token = st.session_state.access_token
 workspace_ids = st.session_state.workspace_ids

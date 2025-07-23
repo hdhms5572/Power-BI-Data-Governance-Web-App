@@ -5,17 +5,23 @@ from utils import  apply_sidebar_style, show_workspace, render_profile_header
 from utils import handle_activity_upload,validate_session,apply_activity_status
 from utils import get_cached_workspace_data, add_logout_button
 
+apply_sidebar_style()
 def inject_external_style():
     with open("static/style.css") as f:
         css = f.read()
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+inject_external_style()
+
+if not (st.session_state.get("access_token") and
+        st.session_state.get("user_email")):
+    st.warning("🔐 Authentication Required")
+    st.stop()
+
+add_logout_button()
+render_profile_header()
+show_workspace()
 
 st.set_page_config(page_title="Active vs Inactive Summary", layout="wide", page_icon="📍")
-apply_sidebar_style()
-add_logout_button()
-show_workspace()
-inject_external_style()
-render_profile_header()
 
 col1, col2, col3 = st.columns(3)
 with col2:
@@ -29,11 +35,6 @@ Select the workspaces you want to analyze and click "View Summary" to load insig
 </div><hr>
 """, unsafe_allow_html=True)
 
-
-# # Load other data
-if not (st.session_state.get("access_token") and st.session_state.get("workspace_ids") and st.session_state.get("user_email")):
-    st.warning("❌ Missing access token or selected workspaces. Please authenticate.")
-    st.stop()
 
 if "last_selected_ws" not in st.session_state:
     st.session_state.last_selected_ws = []

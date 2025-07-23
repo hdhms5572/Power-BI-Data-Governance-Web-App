@@ -5,16 +5,22 @@ import pandas as pd
 import plotly.express as px
 from utils import get_cached_workspace_data, apply_sidebar_style, show_workspace
 from utils import  render_profile_header, add_logout_button
+
+apply_sidebar_style()
 def inject_external_style():
     with open("static/style.css") as f:
         css = f.read()
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
-
-apply_sidebar_style()
-add_logout_button()
-show_workspace()
 inject_external_style()
+
+if not (st.session_state.get("access_token") and
+        st.session_state.get("user_email")):
+    st.warning("🔐 Authentication Required")
+    st.stop()
+
+add_logout_button()
 render_profile_header()
+show_workspace()
 
 col1, col2, col3 = st.columns(3)
 with col2:
@@ -28,11 +34,6 @@ This dashboard offers a detailed overview of user access across selected Power B
 You can explore user roles, identify access patterns based on email domains, and analyze distribution of administrative privileges.
 </div><hr>
 """, unsafe_allow_html=True)
-
-# Validate required session state
-if not (st.session_state.get("access_token") and st.session_state.get("workspace_ids") and st.session_state.get("user_email")):
-    st.warning("❌ Missing access token or selected workspaces. Please authenticate.")
-    st.stop()
 
 token = st.session_state.access_token
 workspace_ids = st.session_state.workspace_ids

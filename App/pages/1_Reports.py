@@ -221,8 +221,11 @@ if st.session_state.filter_status:
         if st.session_state.selected_dataset_id == row['datasetId']:
             selected_dataset = datasets_df[datasets_df["id"] == row["datasetId"]]
             if not selected_dataset.empty:
-                st.markdown(f"### 📦 Dataset Info for `{row['datasetId']}`")
-                st.dataframe(selected_dataset, use_container_width=True)
+                st.markdown(f"### 📦 Dataset Info for `{row['name']}`")
+                st.dataframe(
+    selected_dataset[["name", "configuredBy", "isRefreshable", "createdDate", "outdated", "Dataset Freshness Status"]],
+    use_container_width=True
+)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -260,7 +263,7 @@ elif st.session_state.view_reports:
             if st.session_state.selected_dataset_id == row['datasetId']:
                 selected_dataset = datasets_df[datasets_df["id"] == row["datasetId"]]
                 if not selected_dataset.empty:
-                    st.markdown(f"Dataset Info for `{row['datasetId']}`")
+                    st.markdown(f"Dataset Info for `{row['name']}`")
                     st.dataframe(selected_dataset, use_container_width=True)
 
 # Explore Reports Table View

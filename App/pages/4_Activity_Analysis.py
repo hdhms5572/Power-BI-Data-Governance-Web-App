@@ -238,7 +238,7 @@
 #         grouped_actions = filtered_df.groupby("Activity")
 #         for action, group in grouped_actions:
 #             with st.expander(f"🧩 {action} ({len(group)} activities)", expanded=False):
-#                 st.dataframe(group[["User email", "Artifact Name", "ArtifactId", "Activity time"]])
+#                 st.dataframe(group[["User email", "Artifact Name", "Activity time"]])
 #                 csv = group.to_csv(index=False).encode("utf-8")
 #                 st.download_button(
 #                     label="📥 Download CSV",
@@ -504,7 +504,7 @@ if st.session_state.get("run_filter", False):
         grouped_actions = filtered_df.groupby("Activity")
         for action, group in grouped_actions:
             with st.expander(f"🧩 {action} ({len(group)} activities)", expanded=False):
-                st.dataframe(group[["User email", "Artifact Name", "ArtifactId", "Activity time"]])
+                st.dataframe(group[["User email", "Artifact Name", "Activity time"]])
                 csv = group.to_csv(index=False).encode("utf-8")
                 st.download_button(
                     label="📥 Download CSV",

@@ -89,12 +89,39 @@ st.markdown("---")
 #VISUALISATIONS
 col1, col2 = st.columns(2)
 with col1:
-    st.subheader("📈 Refreshable vs Static Datasets")
-    refresh_group = datasets_df["isRefreshable"].value_counts().rename({True: "Refreshable", False: "Static"})
-    fig1, ax1 = plt.subplots(figsize=(6, 3))
-    sns.barplot(x=refresh_group.index, y=refresh_group.values, palette=["#4CAF50", "#F44336"], ax=ax1)
-    ax1.set_ylabel("Count")
-    st.pyplot(fig1)
+    st.header("📊Refreshable vs Static Datasets")
+    datasets_df["RefreshType"] = datasets_df["isRefreshable"].map({True: "Refreshable", False: "Static"})
+    datasets_df["hover_info"] = datasets_df["name"]
+
+    grouped = (
+        datasets_df
+        .groupby(["workspace_name", "RefreshType"])
+        .agg(
+            Count=("name", "count"),
+            DatasetNames=("hover_info", lambda x: "<br>".join(x))
+        )
+        .reset_index()
+    )
+    # Total counts
+    total_refreshable = (datasets_df["RefreshType"] == "Refreshable").sum()
+    total_static = (datasets_df["RefreshType"] == "Static").sum()
+    st.write(f"✅ Refreshable Datasets: {total_refreshable}",f"🚫 Static Datasets: {total_static}")
+
+    fig = px.bar(
+        grouped,
+        x="workspace_name",
+        y="Count",
+        color="RefreshType",
+        text="Count",
+        hover_data={"DatasetNames": True, "Count": False, "RefreshType": True},
+        barmode="group",
+        color_discrete_map={"Refreshable": "#4CAF50", "Static": "#F44336"},
+        
+    )
+
+    fig.update_traces(textposition="outside")
+
+    st.plotly_chart(fig, use_container_width=True)
 
 with col2:
     st.subheader("📅 Dataset Creation Timeline")
@@ -170,7 +197,7 @@ display_cols = ["name", "configuredBy", "isRefreshable", "createdDate", "outdate
 
 # Filtered View
 if st.session_state.dataset_filter_status:
-    st.markdown(f"## 📦 Filtered Datasets: `{st.session_state.dataset_filter_status}`")
+    st.markdown(f"##  Filtered Datasets: `{st.session_state.dataset_filter_status}`")
     
     # Apply dataset status filter
     if st.session_state.dataset_filter_status == "Outdated":
@@ -186,7 +213,7 @@ if st.session_state.dataset_filter_status:
 
     # Display filtered datasets per workspace
     for ws_name, group in filtered_df.groupby("workspace_name"):
-        st.markdown(f"### 🏢 Workspace: `{ws_name}` ({len(group)} datasets)")
+        st.markdown(f"###  Workspace: `{ws_name}` ({len(group)} datasets)")
         group = group[display_cols + ["webUrl"]]  # Keep webUrl for Explore button
 
         st.markdown('<div class="classic-table">', unsafe_allow_html=True)

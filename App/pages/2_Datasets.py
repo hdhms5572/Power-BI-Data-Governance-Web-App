@@ -89,7 +89,7 @@ st.markdown("---")
 #VISUALISATIONS
 col1, col2 = st.columns(2)
 with col1:
-    st.header("📊Refreshable vs Static Datasets")
+    st.header( "📊Refreshable vs Static Datasets")
     datasets_df["RefreshType"] = datasets_df["isRefreshable"].map({True: "Refreshable", False: "Static"})
     datasets_df["hover_info"] = datasets_df["name"]
 
@@ -124,12 +124,32 @@ with col1:
     st.plotly_chart(fig, use_container_width=True)
 
 with col2:
-    st.subheader("📅 Dataset Creation Timeline")
+    st.header("📅 Dataset Creation Timeline")
     datasets_df["createdDate"] = pd.to_datetime(datasets_df["createdDate"], errors="coerce")
-    created_by_month = datasets_df["createdDate"].dt.to_period("M").value_counts().sort_index()
-    fig2, ax2 = plt.subplots(figsize=(6, 3))
-    created_by_month.plot(kind="line", marker="o", color="steelblue", ax=ax2)
-    st.pyplot(fig2)
+    datasets_df["createdTime"] = datasets_df["createdDate"].dt.to_period("M").astype(str)
+    datasets_df["hover_info"] = datasets_df["name"] + " (" + datasets_df["workspace_name"] + ")"
+
+    # Group and summarize
+    grouped = datasets_df.groupby("createdTime").agg({
+        "name": "count",
+        "hover_info": lambda x: "<br>".join(x)
+    }).rename(columns={"name": "Count", "hover_info": "Dataset Details"}).reset_index()
+
+    # Plotly line chart
+    fig = px.line(
+        grouped,
+        x="createdTime",
+        y="Count",
+        text="Count",
+        markers=True,
+        hover_data={"Dataset Details": True, "Count": False},
+        
+    )
+
+    fig.update_traces(textposition="top center")
+    st.plotly_chart(fig, use_container_width=True)
+        
+
 st.subheader("📊 Dataset Freshness Status")
 
 if "show_dataset_description" not in st.session_state:

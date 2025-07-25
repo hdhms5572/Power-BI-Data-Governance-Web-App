@@ -1,4 +1,201 @@
 ﻿Activity time,User email,Activity,ArtifactId,Artifact Name
+2025-07-19 14:38:00,ssunder@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-19 14:38:00,ssunder@dovercorp.com,ViewReport,e046a36e-1256-42a5-a3b1-1464c6413258,SDP Coverage
+2025-07-18 17:24:00,lalfaromontoya@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-18 15:19:00,ssunder@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-18 15:12:00,ssunder@dovercorp.com,ViewReport,4d2d7d3a-353d-4b2c-861d-7c460db61551,Azure Cost Analysis
+2025-07-18 15:12:00,ssunder@dovercorp.com,ViewReport,20da1c47-ccef-4131-91fa-52b4ae7b14cf,SDP - Analysis
+2025-07-18 14:09:00,ssunder@dovercorp.com,ExportReport,66638325-c5dc-4480-ac4b-33e149ef189b,PBI Audit Report
+2025-07-18 13:59:00,ssunder@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-18 12:26:00,ssunder@dovercorp.com,ViewReport,20da1c47-ccef-4131-91fa-52b4ae7b14cf,SDP - Analysis
+2025-07-18 11:49:00,bnovak@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-18 11:24:00,ssunder@dovercorp.com,ViewReport,4d2d7d3a-353d-4b2c-861d-7c460db61551,Azure Cost Analysis
+2025-07-18 11:24:00,ssunder@dovercorp.com,ViewReport,0754b5c9-7a65-47e5-b07a-2afcc91860cf,CDP Anomaly Detection
+2025-07-18 08:12:00,ssunder@dovercorp.com,ViewReport,e046a36e-1256-42a5-a3b1-1464c6413258,SDP Coverage
+2025-07-18 06:47:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-18 04:33:00,ssunder@dovercorp.com,ViewReport,e046a36e-1256-42a5-a3b1-1464c6413258,SDP Coverage
+2025-07-17 12:32:00,Ken.Visger@psgdover.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-17 12:30:00,Ken.Visger@psgdover.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-17 12:23:00,Ken.Visger@psgdover.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-17 12:22:00,Ken.Visger@psgdover.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-17 12:06:00,Ken.Visger@psgdover.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-17 11:26:00,c-djoshi3@dovercorp.com,ViewReport,00994fd4-0f42-425c-aab4-412a03d80cd8,SCDP Adoption
+2025-07-17 10:40:00,ssunder@dovercorp.com,ViewReport,e046a36e-1256-42a5-a3b1-1464c6413258,SDP Coverage
+2025-07-17 10:31:00,ssunder@dovercorp.com,ViewReport,0754b5c9-7a65-47e5-b07a-2afcc91860cf,CDP Anomaly Detection
+2025-07-17 10:31:00,ssunder@dovercorp.com,ViewReport,20da1c47-ccef-4131-91fa-52b4ae7b14cf,SDP - Analysis
+2025-07-17 07:16:00,vgandhi@markem-imaje.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-17 07:14:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-17 06:05:00,c-hs@dovercorp.com,ViewReport,e046a36e-1256-42a5-a3b1-1464c6413258,SDP Coverage
+2025-07-17 04:49:00,ssunder@dovercorp.com,ViewReport,20da1c47-ccef-4131-91fa-52b4ae7b14cf,SDP - Analysis
+2025-07-16 14:21:00,ssunder@dovercorp.com,ViewReport,20da1c47-ccef-4131-91fa-52b4ae7b14cf,SDP - Analysis
+2025-07-16 14:19:00,ssunder@dovercorp.com,ViewReport,20da1c47-ccef-4131-91fa-52b4ae7b14cf,SDP - Analysis
+2025-07-16 14:04:00,c-ajoshi@vsgdover.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-16 11:26:00,lalfaromontoya@dovercorp.com,RefreshDataset,445be7b4-c576-4d90-8a5f-789a97afccfd,Service Now Tickets
+2025-07-16 11:26:00,rranganath@dovercorp.com,ExportReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-16 11:26:00,rranganath@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-16 11:25:00,rranganath@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-16 07:05:00,ssunder@dovercorp.com,ViewReport,20da1c47-ccef-4131-91fa-52b4ae7b14cf,SDP - Analysis
+2025-07-16 06:57:00,ssunder@dovercorp.com,ViewReport,0754b5c9-7a65-47e5-b07a-2afcc91860cf,CDP Anomaly Detection
+2025-07-16 06:57:00,ssunder@dovercorp.com,ViewReport,20da1c47-ccef-4131-91fa-52b4ae7b14cf,SDP - Analysis
+2025-07-16 06:21:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-14 17:11:00,svc-pbi-rest-api@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-14 15:16:00,lalfaromontoya@dovercorp.com,ExportReport,20da1c47-ccef-4131-91fa-52b4ae7b14cf,SDP - Analysis
+2025-07-14 14:54:00,bnovak@dovercorp.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-14 14:50:00,bnovak@dovercorp.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-14 14:35:00,lalfaromontoya@dovercorp.com,ViewReport,20da1c47-ccef-4131-91fa-52b4ae7b14cf,SDP - Analysis
+2025-07-14 13:56:00,lalfaromontoya@dovercorp.com,ViewReport,20da1c47-ccef-4131-91fa-52b4ae7b14cf,SDP - Analysis
+2025-07-14 13:55:00,lalfaromontoya@dovercorp.com,ViewReport,5acc72ac-a8ab-400a-bba8-396f370830c7,CDP Data Governance
+2025-07-14 13:20:00,ekumar@dovercorp.com,ViewReport,5f1f75b9-3537-4ddd-bf44-eedc23642c54,SDP Data Governance
+2025-07-14 10:14:00,c-kkhandelwal@vsgdover.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-11 15:39:00,lalfaromontoya@dovercorp.com,EditDataset,3438f0fe-558e-4cb3-b95b-f3aef7cf0fa1,PBI Audit Report
+2025-07-11 15:30:00,lalfaromontoya@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-11 13:14:00,lalfaromontoya@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-11 13:12:00,c-ajoshi@vsgdover.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-11 05:31:00,rranganath@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-10 18:13:00,lalfaromontoya@dovercorp.com,EditDataset,3438f0fe-558e-4cb3-b95b-f3aef7cf0fa1,PBI Audit Report
+2025-07-10 18:11:00,lalfaromontoya@dovercorp.com,RefreshDataset,01829ef7-f0d7-452c-9946-9c2579f1058b,SCDP Adoption
+2025-07-10 18:10:00,lalfaromontoya@dovercorp.com,ViewReport,00994fd4-0f42-425c-aab4-412a03d80cd8,SCDP Adoption
+2025-07-10 12:49:00,c-ajoshi@vsgdover.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-10 12:33:00,c-djoshi3@dovercorp.com,ViewReport,00994fd4-0f42-425c-aab4-412a03d80cd8,SCDP Adoption
+2025-07-10 12:27:00,bnovak@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-10 11:55:00,c-ajoshi@vsgdover.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-10 07:40:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-09 16:47:00,bnovak@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-09 16:46:00,bnovak@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-09 16:17:00,bnovak@dovercorp.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-09 14:52:00,bnovak@dovercorp.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-09 14:50:00,bnovak@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-09 13:19:00,c-hs@dovercorp.com,ViewReport,9c7a8c6a-a6cb-4ee1-a0be-0207fb1b598c,Report Usage Metrics Report
+2025-07-09 12:41:00,c-djoshi3@dovercorp.com,ViewReport,00994fd4-0f42-425c-aab4-412a03d80cd8,SCDP Adoption
+2025-07-09 10:40:00,rranganath@dovercorp.com,ExportReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-09 10:39:00,lalfaromontoya@dovercorp.com,RefreshDataset,445be7b4-c576-4d90-8a5f-789a97afccfd,Service Now Tickets
+2025-07-09 10:39:00,rranganath@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-09 10:38:00,rranganath@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-09 10:37:00,rranganath@dovercorp.com,ExportReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-09 10:37:00,rranganath@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-09 08:51:00,c-hs@dovercorp.com,ViewReport,9cc4a64b-7463-46d4-8800-3f49191e41d0,Usage Metrics Report
+2025-07-09 08:29:00,ekumar@dovercorp.com,ViewReport,5f1f75b9-3537-4ddd-bf44-eedc23642c54,SDP Data Governance
+2025-07-09 07:28:00,rranganath@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-09 05:16:00,c-djoshi3@dovercorp.com,ViewReport,00994fd4-0f42-425c-aab4-412a03d80cd8,SCDP Adoption
+2025-07-08 19:31:00,lalfaromontoya@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-08 18:35:00,bnovak@dovercorp.com,ArtifactAccessRequest,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-08 15:14:00,c-kkhandelwal@vsgdover.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-08 13:52:00,tkorenman@doverfoodretail.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-08 13:09:00,lalfaromontoya@dovercorp.com,ViewReport,4d2d7d3a-353d-4b2c-861d-7c460db61551,Azure Cost Analysis
+2025-07-08 13:05:00,c-ajoshi@vsgdover.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-08 12:51:00,rranganath@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-08 11:01:00,bsprunger@doverfoodretail.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-08 10:59:00,smingawale@markem-imaje.com,ArtifactAccessRequest,4d2d7d3a-353d-4b2c-861d-7c460db61551,Azure Cost Analysis
+2025-07-08 06:00:00,c-nk3@dovercorp.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-08 05:57:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-07 19:40:00,lalfaromontoya@dovercorp.com,ViewReport,4d2d7d3a-353d-4b2c-861d-7c460db61551,Azure Cost Analysis
+2025-07-07 18:06:00,lalfaromontoya@dovercorp.com,EditReport,4d2d7d3a-353d-4b2c-861d-7c460db61551,Azure Cost Analysis
+2025-07-07 18:05:00,tkorenman@doverfoodretail.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-07 18:04:00,lalfaromontoya@dovercorp.com,ViewReport,4d2d7d3a-353d-4b2c-861d-7c460db61551,Azure Cost Analysis
+2025-07-07 17:53:00,tkorenman@doverfoodretail.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-07 14:57:00,c-ajoshi@vsgdover.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-07 11:07:00,c-hs@dovercorp.com,ViewReport,7dbfcb83-206e-4796-aa2d-13f11a16426c,DataGovernance
+2025-07-07 09:59:00,c-hs@dovercorp.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-07 09:58:00,c-hs@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-07 09:31:00,c-hs@dovercorp.com,AnalyzeInExcel,3438f0fe-558e-4cb3-b95b-f3aef7cf0fa1,PBI Audit Report
+2025-07-07 09:31:00,c-hs@dovercorp.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-07 09:29:00,c-hs@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-07 07:47:00,c-nk3@dovercorp.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-07 07:45:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-07 06:22:00,vgandhi@markem-imaje.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-04 10:24:00,ssubramanian@markem-imaje.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-03 13:38:00,svc-pbi-rest-api@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-03 13:14:00,lalfaromontoya@dovercorp.com,ViewReport,00994fd4-0f42-425c-aab4-412a03d80cd8,SCDP Adoption
+2025-07-03 13:00:00,lalfaromontoya@dovercorp.com,SetScheduledRefresh,01829ef7-f0d7-452c-9946-9c2579f1058b,SCDP Adoption
+2025-07-03 12:51:00,c-djoshi3@dovercorp.com,ViewReport,00994fd4-0f42-425c-aab4-412a03d80cd8,SCDP Adoption
+2025-07-03 10:45:00,c-djoshi3@dovercorp.com,ViewReport,00994fd4-0f42-425c-aab4-412a03d80cd8,SCDP Adoption
+2025-07-03 08:00:00,ssubramanian@markem-imaje.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-03 05:33:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-03 05:17:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-03 05:14:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-02 17:33:00,lalfaromontoya@dovercorp.com,ExportReport,e046a36e-1256-42a5-a3b1-1464c6413258,SDP Coverage
+2025-07-02 17:32:00,lalfaromontoya@dovercorp.com,ExportReport,e046a36e-1256-42a5-a3b1-1464c6413258,SDP Coverage
+2025-07-02 17:19:00,lalfaromontoya@dovercorp.com,EditReport,e046a36e-1256-42a5-a3b1-1464c6413258,SDP Coverage
+2025-07-02 17:17:00,lalfaromontoya@dovercorp.com,RefreshDataset,b9e57bed-ae04-485f-bcf6-60de6722077e,SDP Coverage
+2025-07-02 17:17:00,lalfaromontoya@dovercorp.com,ViewReport,e046a36e-1256-42a5-a3b1-1464c6413258,SDP Coverage
+2025-07-02 15:47:00,lalfaromontoya@dovercorp.com,ViewReport,00994fd4-0f42-425c-aab4-412a03d80cd8,SCDP Adoption
+2025-07-02 10:53:00,rranganath@dovercorp.com,ExportReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-02 10:51:00,rranganath@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-02 10:50:00,lalfaromontoya@dovercorp.com,RefreshDataset,445be7b4-c576-4d90-8a5f-789a97afccfd,Service Now Tickets
+2025-07-02 10:47:00,rranganath@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-02 10:46:00,lalfaromontoya@dovercorp.com,RefreshDataset,445be7b4-c576-4d90-8a5f-789a97afccfd,Service Now Tickets
+2025-07-02 10:44:00,rranganath@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-02 09:35:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-02 09:34:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-02 08:59:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-02 06:42:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-02 06:29:00,c-nk3@dovercorp.com,ViewReport,5acc72ac-a8ab-400a-bba8-396f370830c7,CDP Data Governance
+2025-07-02 06:29:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-02 06:28:00,c-nk3@dovercorp.com,ViewReport,5acc72ac-a8ab-400a-bba8-396f370830c7,CDP Data Governance
+2025-07-02 06:18:00,rranganath@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-02 06:15:00,rranganath@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-07-02 06:06:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-02 05:54:00,c-nk3@dovercorp.com,AnalyzeInExcel,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-02 05:52:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-02 05:03:00,c-hs@dovercorp.com,ViewReport,9cc4a64b-7463-46d4-8800-3f49191e41d0,Usage Metrics Report
+2025-07-02 05:02:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-02 04:50:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-02 04:49:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-01 17:41:00,lalfaromontoya@dovercorp.com,EditReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-01 17:11:00,lalfaromontoya@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-01 16:59:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-01 16:58:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-01 11:27:00,c-hs@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-07-01 07:13:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-30 15:40:00,c-ssahu@doverfoodretail.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-30 15:33:00,Ken.Visger@psgdover.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-30 15:32:00,Ken.Visger@psgdover.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-30 15:30:00,Ken.Visger@psgdover.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-30 15:23:00,Ken.Visger@psgdover.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-30 06:38:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-30 06:37:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-30 06:36:00,c-hs@dovercorp.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-30 06:36:00,c-hs@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-30 06:33:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-29 20:40:00,lalfaromontoya@dovercorp.com,ViewReport,20da1c47-ccef-4131-91fa-52b4ae7b14cf,SDP - Analysis
+2025-06-29 17:00:00,c-nk3@dovercorp.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-29 16:58:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-29 16:57:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-27 20:26:00,lalfaromontoya@dovercorp.com,ViewReport,20da1c47-ccef-4131-91fa-52b4ae7b14cf,SDP - Analysis
+2025-06-27 20:07:00,lalfaromontoya@dovercorp.com,ViewReport,20da1c47-ccef-4131-91fa-52b4ae7b14cf,SDP - Analysis
+2025-06-27 19:23:00,lalfaromontoya@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-27 18:21:00,lalfaromontoya@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-27 17:19:00,lalfaromontoya@dovercorp.com,ViewReport,20da1c47-ccef-4131-91fa-52b4ae7b14cf,SDP - Analysis
+2025-06-27 15:18:00,c-ssahu@doverfoodretail.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-27 13:36:00,ekumar@dovercorp.com,ViewReport,5f1f75b9-3537-4ddd-bf44-eedc23642c54,SDP Data Governance
+2025-06-27 13:09:00,lalfaromontoya@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-06-27 12:39:00,c-ajoshi@vsgdover.com,RefreshDataset,445be7b4-c576-4d90-8a5f-789a97afccfd,Service Now Tickets
+2025-06-27 12:09:00,c-ajoshi@vsgdover.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-06-27 11:08:00,c-ajoshi@vsgdover.com,RefreshDataset,445be7b4-c576-4d90-8a5f-789a97afccfd,Service Now Tickets
+2025-06-27 11:08:00,c-ajoshi@vsgdover.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-06-27 11:07:00,c-ajoshi@vsgdover.com,RefreshDataset,445be7b4-c576-4d90-8a5f-789a97afccfd,Service Now Tickets
+2025-06-27 05:50:00,abharadwaj@dovercorp.com,DownloadReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-26 19:32:00,lalfaromontoya@dovercorp.com,EditDataset,3438f0fe-558e-4cb3-b95b-f3aef7cf0fa1,PBI Audit Report
+2025-06-26 15:41:00,lalfaromontoya@dovercorp.com,ViewReport,00994fd4-0f42-425c-aab4-412a03d80cd8,SCDP Adoption
+2025-06-26 13:21:00,c-djoshi3@dovercorp.com,ViewReport,00994fd4-0f42-425c-aab4-412a03d80cd8,SCDP Adoption
+2025-06-26 13:18:00,lalfaromontoya@dovercorp.com,ViewReport,00994fd4-0f42-425c-aab4-412a03d80cd8,SCDP Adoption
+2025-06-26 13:16:00,lalfaromontoya@dovercorp.com,RefreshDataset,01829ef7-f0d7-452c-9946-9c2579f1058b,SCDP Adoption
+2025-06-26 13:16:00,lalfaromontoya@dovercorp.com,SetScheduledRefresh,01829ef7-f0d7-452c-9946-9c2579f1058b,SCDP Adoption
+2025-06-26 13:13:00,c-djoshi3@dovercorp.com,ViewReport,00994fd4-0f42-425c-aab4-412a03d80cd8,SCDP Adoption
+2025-06-26 11:39:00,c-djoshi3@dovercorp.com,ViewReport,00994fd4-0f42-425c-aab4-412a03d80cd8,SCDP Adoption
+2025-06-26 10:24:00,rranganath@dovercorp.com,ExportReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-06-26 10:18:00,lalfaromontoya@dovercorp.com,RefreshDataset,445be7b4-c576-4d90-8a5f-789a97afccfd,Service Now Tickets
+2025-06-26 10:18:00,rranganath@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-06-26 10:16:00,rranganath@dovercorp.com,ViewReport,16f3bd12-0e52-4804-81b1-4b947a4db110,Service Now Tickets
+2025-06-26 09:49:00,ckondamudi@dovercorp.com,ShareReport,5f1f75b9-3537-4ddd-bf44-eedc23642c54,SDP Data Governance
+2025-06-26 09:47:00,ckondamudi@dovercorp.com,ViewReport,5f1f75b9-3537-4ddd-bf44-eedc23642c54,SDP Data Governance
+2025-06-26 09:35:00,ekumar@dovercorp.com,ViewReport,5f1f75b9-3537-4ddd-bf44-eedc23642c54,SDP Data Governance
+2025-06-26 09:34:00,ssunder@dovercorp.com,ViewReport,0754b5c9-7a65-47e5-b07a-2afcc91860cf,CDP Anomaly Detection
+2025-06-26 09:34:00,ssunder@dovercorp.com,ViewReport,5f1f75b9-3537-4ddd-bf44-eedc23642c54,SDP Data Governance
+2025-06-26 08:45:00,abharadwaj@dovercorp.com,DownloadReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-26 08:40:00,abharadwaj@dovercorp.com,DownloadReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-26 08:10:00,abharadwaj@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
+2025-06-26 05:50:00,c-nk3@dovercorp.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
 2025-06-25 19:12:00,brandon.anderson@colder.com,ExportReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
 2025-06-25 19:10:00,brandon.anderson@colder.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
 2025-06-25 18:29:00,brandon.anderson@colder.com,ViewReport,ccde9be1-e307-42e6-8a5b-895528b1a7e4,PBI Audit Report
